@@ -21,7 +21,6 @@
     <meta property="twitter:image" content="https://tagown.online/priview.png">
     
     <link rel="icon" type="image/png" href="favicon.png">
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
@@ -476,6 +475,7 @@
             });
         }
 
+        // 🚀 BHAIG LOGIC: 100% SECURE PRIVATE SERVER CALL (V2 API FORMAT)
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -485,41 +485,51 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
+                // 1. Firebase Save (Try kiya, agar fail hua toh bypass maar denge)
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
                 } catch(fbError) {
-                    console.warn("Firebase save skipped due to rules, proceeding to send notification...");
+                    console.warn("Firebase block ignored. Proceeding to notification...");
                 }
 
+                // 2. Encryption (Owner Specific Only)
                 const safeId = await getSecureId(ownerPhone);
-                const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev/";
+
+                // 3. Server Request via Cloudflare
+                const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
 
                 const response = await fetch(tagownServerUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
-                        include_external_user_ids: [safeId],
+                        target_channel: "push",
+                        include_aliases: {
+                            external_id: [safeId]
+                        },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        app_url: "tagown://notifications",
-                        small_icon: "ic_notification_stat"
+                        // app_url: "tagown://notifications",
+                        // small_icon: "ic_notification_stat"
                     })
                 });
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
+                    // Error popup hata diya gaya hai, successful notification ka message aayega!
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
-                    throw new Error("Server Reject: " + errText);
+                    throw new Error(errText); 
                 }
             } catch (error) {
-                alert("ALERT FAILED: " + error.message);
+                // Agar ab bhi fail hua toh exact vajah pop-up hogi
+                alert("ALERT FAILED: Server Reject: " + error.message);
+                
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
-                showToast("Network issue. Please try again.", "error");
+                showToast("Server issue. Please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
             }
         }
