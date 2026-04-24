@@ -525,8 +525,12 @@
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
-                } else throw new Error("API failed");
+                } else {
+                    const errorData = await response.text();
+                    throw new Error("OneSignal API Error: " + errorData);
+                }
             } catch (error) {
+                alert("SYSTEM ERROR: " + error.message); 
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
             }
