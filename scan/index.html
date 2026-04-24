@@ -40,7 +40,6 @@
         #landing-page { display: none; width: 100%; background: #ffffff; }
         .lp-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
         
-        /* Navbar */
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; border-bottom: 1px solid #e2e8f0; background: rgba(255,255,255,0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
         .nav-logo { font-size: 26px; font-weight: 900; color: #1e3a8a; font-style: italic; letter-spacing: -1px; }
         .nav-links { display: none; gap: 30px; }
@@ -50,7 +49,6 @@
         .nav-btn { background: #2563eb; color: #fff; font-weight: 800; padding: 12px 24px; border-radius: 100px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.2s; }
         .nav-btn:active { transform: scale(0.95); }
 
-        /* Hero Section */
         .hero { text-align: center; padding: 80px 20px 100px; background-color: #f8fafc; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 30px 30px; }
         .hero h1 { font-size: 42px; font-weight: 900; color: #0f172a; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px;}
         @media (min-width: 768px) { .hero h1 { font-size: 64px; } }
@@ -62,7 +60,6 @@
         .btn-primary { background: #2563eb; color: #fff; font-size: 18px; font-weight: 800; padding: 16px 32px; border-radius: 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(37,99,235,0.3); transition: 0.3s; }
         .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37,99,235,0.4); }
 
-        /* Features Section */
         .features { padding: 80px 20px; background: #fff; text-align: center; }
         .features h2 { font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 50px; }
         .grid { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 1200px; margin: 0 auto; }
@@ -73,7 +70,6 @@
         .card h3 { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
         .card p { font-size: 15px; color: #475569; line-height: 1.6; }
 
-        /* Footer */
         .footer { background: #0f172a; padding: 60px 20px; text-align: center; color: #94a3b8; }
         .footer h2 { font-size: 28px; font-weight: 900; color: #fff; font-style: italic; margin-bottom: 15px; }
         .footer-links { display: flex; justify-content: center; gap: 20px; margin: 25px 0; flex-wrap: wrap; }
@@ -150,7 +146,6 @@
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
-
       gtag('config', 'G-YWJP0MX98Q');
     </script>
 </head>
@@ -420,19 +415,9 @@
             plate.style.fontSize = "26px";
         }
 
-        // --- LANDING PAGE MODALS LOGIC ---
-        function openLpModal(id) {
-            document.getElementById('lp-overlay').classList.add('active');
-            document.getElementById(id).classList.add('active');
-        }
-        function closeLpModals() {
-            document.getElementById('lp-overlay').classList.remove('active');
-            document.getElementById('privacy-modal').classList.remove('active');
-            document.getElementById('terms-modal').classList.remove('active');
-            document.getElementById('contact-modal').classList.remove('active');
-        }
-
-        // --- SCANNER APP MODALS LOGIC ---
+        // --- MODALS LOGIC ---
+        function openLpModal(id) { document.getElementById('lp-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
+        function closeLpModals() { document.getElementById('lp-overlay').classList.remove('active'); document.getElementById('privacy-modal').classList.remove('active'); document.getElementById('terms-modal').classList.remove('active'); document.getElementById('contact-modal').classList.remove('active'); }
         function openModal(id) { document.getElementById('main-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('main-overlay').classList.remove('active'); document.querySelectorAll('.bottom-sheet, .center-modal').forEach(el => el.classList.remove('active')); }
         function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
@@ -495,6 +480,7 @@
             });
         }
 
+        // 🚀 BHAIG LOGIC: EXECUTE ALERT (FIXED WITH CORS PROXY)
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -504,16 +490,26 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
+                // 1. Firebase Database Backup Alert
                 const alertRef = database.ref('Alerts').child(ownerPhone).push();
                 await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
 
+                // 2. Encryption
                 const safeId = await getSecureId(ownerPhone);
-                const response = await fetch("https://onesignal.com/api/v1/notifications", {
+
+                // 3. API Push through Proxy (Bypasses Browser Security Block)
+                const proxyUrl = 'https://corsproxy.io/?';
+                const targetUrl = 'https://onesignal.com/api/v1/notifications';
+                
+                const response = await fetch(proxyUrl + encodeURIComponent(targetUrl), {
                     method: "POST",
-                    headers: { "Content-Type": "application/json; charset=UTF-8", "Authorization": "Basic " + ONESIGNAL_API_KEY },
+                    headers: { 
+                        "Content-Type": "application/json; charset=UTF-8", 
+                        "Authorization": "Basic " + ONESIGNAL_API_KEY 
+                    },
                     body: JSON.stringify({
                         app_id: ONESIGNAL_APP_ID,
-                        include_external_user_ids: [safeId],
+                        include_external_user_ids: [safeId], // ✨ SIRF USI OWNER KO JAYEGA JISKA QR HAI
                         headings: {"en": "🚨 Web Alert: " + regNoFromDb},
                         contents: {"en": msg},
                         app_url: "tagown://notifications",
@@ -527,11 +523,13 @@
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
                 } else {
                     const errorData = await response.text();
-                    throw new Error("OneSignal API Error: " + errorData);
+                    throw new Error("API Error: " + errorData);
                 }
             } catch (error) {
-                alert("SYSTEM ERROR: " + error.message); 
+                // Remove the raw alert and display a clean toast
+                console.error(error);
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
+                showToast("Network issue, please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
             }
         }
