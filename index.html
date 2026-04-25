@@ -389,6 +389,7 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
+                resetInactivityTimer(); // Start 5 min lock timer
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -396,9 +397,7 @@
         };
 
         function goToHome() {
-            window.history.pushState({}, document.title, window.location.pathname);
-            document.getElementById('scanner-page').style.display = 'none';
-            document.getElementById('landing-page').style.display = 'block';
+            window.location.href = window.location.pathname; // Clear URL parameters properly
         }
 
         function showToast(msg, type = "normal") {
@@ -480,7 +479,7 @@
             });
         }
 
-        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & WHATSAPP POPUP LOGIC
+        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION 
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -519,10 +518,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 POPUP TRIGGER: existing_android_channel_id hamesha ke liye hata diya gaya hai. Koi error nahi aayega!
                         priority: 10,           
-                        android_visibility: 1,
-                        android_sound: "default",
+                        android_visibility: 1,  
                         small_icon: "ic_notification_stat"
                     })
                 });
@@ -543,13 +540,48 @@
             }
         }
 
-        // 🛡️ SECURITY FUNCTION (NEVER REMOVED)
+        // 🛡️ SECURITY FUNCTION
         async function getSecureId(phone) {
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
+
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK)
+        let inactivityTimer;
+        const FIVE_MINUTES = 5 * 60 * 1000;
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            if (qrIdFromUrl) {
+                inactivityTimer = setTimeout(() => {
+                    window.location.href = window.location.pathname; 
+                }, FIVE_MINUTES);
+            }
+        }
+
+        // Reset timer if user interacts with the page
+        ['touchstart', 'click', 'mousemove', 'scroll', 'keypress'].forEach(evt => {
+            document.addEventListener(evt, resetInactivityTimer, false);
+        });
+
+        // Background to Foreground Check
+        document.addEventListener("visibilitychange", function() {
+            if (document.visibilityState === 'hidden') {
+                localStorage.setItem('tagown_away_time', Date.now());
+            } else if (document.visibilityState === 'visible') {
+                let awayTime = localStorage.getItem('tagown_away_time');
+                if (awayTime && qrIdFromUrl) {
+                    let diff = Date.now() - parseInt(awayTime);
+                    if (diff > FIVE_MINUTES) {
+                        window.location.href = window.location.pathname; 
+                    } else {
+                        resetInactivityTimer();
+                    }
+                }
+            }
+        });
     </script>
 </body>
 </html>
