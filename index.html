@@ -498,13 +498,12 @@
                     console.warn("Firebase save skipped. Proceeding to notification...");
                 }
 
-                // 2. SECURITY: Number ko clean karke (space aur +91 hatake) encrypt karenge
-                // Isse data 100% secure bhi rahega aur Android/Website ID 100% match hogi.
+                // 2. SECURITY: Number ko clean karke encrypt karenge
                 let cleanPhone = ownerPhone.replace(/\D/g, ''); 
                 if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
                     cleanPhone = cleanPhone.slice(-10);
                 }
-                const safeId = await getSecureId(cleanPhone); // Ye code usko secret hash me badlega
+                const safeId = await getSecureId(cleanPhone);
 
                 // 3. CLOUDFLARE SECURE SERVER CALL
                 const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
@@ -516,13 +515,12 @@
                         app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
                         target_channel: "push",
                         include_aliases: {
-                            external_id: [safeId] // Sirf is encrypted id wale phone ko jayega
+                            external_id: [safeId] 
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        priority: 10,           // 🔥 WHATSAPP STYLE POPUP LAANE KE LIYE
-                        android_visibility: 1,  // 🔥 LOCK SCREEN PAR DIKHANE KE LIYE
-                        android_sound: "default", // 🔥 FORCE SOUND FOR POPUP
+                        priority: 10,           
+                        android_visibility: 1,  
                         small_icon: "ic_notification_stat"
                     })
                 });
