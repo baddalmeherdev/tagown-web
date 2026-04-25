@@ -515,8 +515,9 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        priority: 10,  // 🔥 HIGH PRIORITY: WhatsApp jaisa heads-up popup laane ke liye
-                        small_icon: "ic_notification_stat" // 🔥 CUSTOM ICON: Status bar icon ke liye
+                        priority: 10,  // 🔥 HIGH PRIORITY
+                        small_icon: "ic_notification_stat", // 🔥 CUSTOM ICON
+                        android_channel_id: "tagown_urgent_alerts" // 🔥 POPUP CHANNEL ID (Forces heads-up notification)
                     })
                 });
 
@@ -537,7 +538,6 @@
         }
 
         async function getSecureId(phone) {
-            // JS TextEncoder by default uses UTF-8, making it a perfect match with Android Java's getBytes("UTF-8")
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
