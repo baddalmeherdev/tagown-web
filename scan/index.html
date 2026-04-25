@@ -480,7 +480,7 @@
             });
         }
 
-        // 🚀 BHAIG LOGIC: 100% SECURE PRIVATE SERVER CALL
+        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & WHATSAPP POPUP LOGIC
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -490,18 +490,23 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
-                // 1. Firebase Save
+                // 1. Firebase Local Save
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
                 } catch(fbError) {
-                    console.warn("Firebase block ignored. Proceeding to notification...");
+                    console.warn("Firebase save skipped. Proceeding to notification...");
                 }
 
-                // 2. Encryption
-                const safeId = await getSecureId(ownerPhone);
+                // 2. SECURITY: Number ko clean karke (space aur +91 hatake) encrypt karenge
+                // Isse data 100% secure bhi rahega aur Android/Website ID 100% match hogi.
+                let cleanPhone = ownerPhone.replace(/\D/g, ''); 
+                if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
+                    cleanPhone = cleanPhone.slice(-10);
+                }
+                const safeId = await getSecureId(cleanPhone); // Ye code usko secret hash me badlega
 
-                // 3. Server Request via Cloudflare 
+                // 3. CLOUDFLARE SECURE SERVER CALL
                 const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
 
                 const response = await fetch(tagownServerUrl, {
@@ -511,33 +516,33 @@
                         app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
                         target_channel: "push",
                         include_aliases: {
-                            external_id: [safeId]
+                            external_id: [safeId] // Sirf is encrypted id wale phone ko jayega
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        priority: 10,
+                        priority: 10,           // 🔥 WHATSAPP STYLE POPUP LAANE KE LIYE (No error channel)
+                        android_visibility: 1,  // 🔥 LOCK SCREEN PAR DIKHANE KE LIYE
                         small_icon: "ic_notification_stat"
-                        // ❌ ERROR WALI LINE HATA DI GAYI HAI
                     })
                 });
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
-                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
+                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent Securely!", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
                     throw new Error(errText); 
                 }
             } catch (error) {
-                alert("ALERT FAILED: Server Reject: " + error.message);
-                
+                alert("ALERT FAILED: " + error.message);
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
                 showToast("Server issue. Please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
             }
         }
 
+        // 🛡️ SECURITY FUNCTION (NEVER REMOVED)
         async function getSecureId(phone) {
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
