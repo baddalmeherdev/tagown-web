@@ -389,7 +389,8 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
-                resetInactivityTimer(); // Start 5 min lock timer
+                // Start privacy lock timer
+                resetInactivityTimer();
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -397,7 +398,7 @@
         };
 
         function goToHome() {
-            window.location.href = window.location.pathname; // Clear URL parameters properly
+            window.location.href = window.location.pathname; 
         }
 
         function showToast(msg, type = "normal") {
@@ -479,7 +480,7 @@
             });
         }
 
-        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION 
+        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & WHATSAPP POPUP LOGIC
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -519,7 +520,8 @@
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
                         priority: 10,           
-                        android_visibility: 1,  
+                        android_visibility: 1,
+                        android_sound: "default",
                         small_icon: "ic_notification_stat"
                     })
                 });
@@ -527,7 +529,7 @@
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
-                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent!", "success"); }, 1500);
+                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent Securely!", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
                     throw new Error(errText); 
