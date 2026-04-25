@@ -519,12 +519,10 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 POPUP TRIGGER: Ye 4 lines WhatsApp jaisa popup layengi (Error channel hata diya gaya)
+                        // 🔥 POPUP TRIGGER: Ye error channel hata diya, priority 10 popup layegi.
                         priority: 10,           
                         android_visibility: 1,  
-                        android_sound: "default",
-                        small_icon: "ic_notification_stat",
-                        existing_android_channel_id: "tagown_urgent_alerts" 
+                        small_icon: "ic_notification_stat"
                     })
                 });
 
