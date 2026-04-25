@@ -300,9 +300,14 @@
                 <select id="issue-selector" class="input-field">
                     <option value="🚨 Towing van is nearby!">🚨 Towing van is nearby!</option>
                     <option value="⚠️ Your vehicle is parked wrongly.">⚠️ Parked wrongly</option>
+                    <option value="🚗 You are blocking my vehicle.">🚗 Blocking my vehicle</option>
+                    <option value="💥 Someone hit your vehicle!">💥 Someone hit your vehicle!</option>
                     <option value="💡 Your headlights are ON.">💡 Headlights are ON</option>
                     <option value="🪟 Window is open.">🪟 Window is open</option>
-                    <option value="🚗 You are blocking my vehicle.">🚗 Blocking my vehicle</option>
+                    <option value="🔑 Keys are left inside/on the vehicle.">🔑 Keys left in vehicle</option>
+                    <option value="🐶 Pet/Kid is locked inside!">🐶 Pet/Kid locked inside!</option>
+                    <option value="⚙️ You have a flat tire.">⚙️ Flat tire</option>
+                    <option value="🔥 Emergency! Please check your vehicle.">🔥 Emergency! Check vehicle</option>
                 </select>
                 <textarea id="custom-msg" class="input-field" rows="3" placeholder="Or type your custom message here..."></textarea>
                 <button id="send-alert-btn" onclick="executeAlert()" class="app-primary-btn">SEND NOW</button>
@@ -475,7 +480,7 @@
             });
         }
 
-        // 🚀 BHAIG LOGIC: 100% SECURE PRIVATE SERVER CALL (V2 API FORMAT)
+        // 🚀 BHAIG LOGIC: 100% SECURE SERVER CALL (V2 API) & WHATSAPP LIKE POPUP (PRIORITY 10)
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -485,7 +490,7 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
-                // 1. Firebase Save (Try kiya, agar fail hua toh bypass maar denge)
+                // 1. Firebase Save
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
@@ -510,8 +515,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // app_url: "tagown://notifications",
-                        // small_icon: "ic_notification_stat"
+                        priority: 10,  // 🔥 HIGH PRIORITY: WhatsApp jaisa heads-up popup laane ke liye
+                        small_icon: "ic_notification_stat" // 🔥 CUSTOM ICON: Status bar icon ke liye
                     })
                 });
 
