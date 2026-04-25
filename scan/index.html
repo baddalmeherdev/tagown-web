@@ -13,6 +13,12 @@
     <meta property="og:title" content="Tagown - Smart Vehicle Security">
     <meta property="og:description" content="100% Anonymous Vehicle Alerts. Get notified instantly via push notifications.">
     <meta property="og:image" content="https://tagown.online/priview.png">
+
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://tagown.online/">
+    <meta property="twitter:title" content="Tagown - Smart Vehicle Security">
+    <meta property="twitter:description" content="100% Anonymous Vehicle Alerts. Get notified instantly via push notifications.">
+    <meta property="twitter:image" content="https://tagown.online/priview.png">
     
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,62 +28,125 @@
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800;900&display=swap');
+        
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
         html, body { width: 100%; overflow-x: hidden; background-color: #f8fafc; }
         a { text-decoration: none; }
+
+        /* ========================================== */
+        /* 🌐 1. LANDING PAGE STYLES                  */
+        /* ========================================== */
         #landing-page { display: none; width: 100%; background: #ffffff; }
         .lp-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
         .navbar { display: flex; justify-content: space-between; align-items: center; height: 80px; border-bottom: 1px solid #e2e8f0; background: rgba(255,255,255,0.95); position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); }
         .nav-logo { font-size: 26px; font-weight: 900; color: #1e3a8a; font-style: italic; letter-spacing: -1px; }
         .nav-links { display: none; gap: 30px; }
         @media (min-width: 768px) { .nav-links { display: flex; } }
         .nav-links a { color: #475569; font-weight: 600; transition: color 0.2s; }
-        .nav-btn { background: #2563eb; color: #fff; font-weight: 800; padding: 12px 24px; border-radius: 100px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
-        .hero { text-align: center; padding: 80px 20px 100px; background-color: #f8fafc; }
-        .hero h1 { font-size: 42px; font-weight: 900; color: #0f172a; line-height: 1.1; margin-bottom: 20px;}
+        .nav-links a:hover { color: #2563eb; }
+        .nav-btn { background: #2563eb; color: #fff; font-weight: 800; padding: 12px 24px; border-radius: 100px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.2s; }
+        .nav-btn:active { transform: scale(0.95); }
+
+        .hero { text-align: center; padding: 80px 20px 100px; background-color: #f8fafc; background-image: radial-gradient(#cbd5e1 1px, transparent 1px); background-size: 30px 30px; }
+        .hero h1 { font-size: 42px; font-weight: 900; color: #0f172a; line-height: 1.1; margin-bottom: 20px; letter-spacing: -1px;}
+        @media (min-width: 768px) { .hero h1 { font-size: 64px; } }
         .gradient-text { background: linear-gradient(135deg, #1e3a8a, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { max-width: 600px; margin: 0 auto 40px; font-size: 18px; color: #475569; }
-        .btn-primary { background: #2563eb; color: #fff; font-size: 18px; font-weight: 800; padding: 16px 32px; border-radius: 16px; display: inline-flex; align-items: center; gap: 10px; }
+        .hero p { max-width: 600px; margin: 0 auto 40px; font-size: 18px; color: #475569; line-height: 1.6; font-weight: 500;}
+        
+        .hero-btns { display: flex; flex-direction: column; gap: 15px; justify-content: center; align-items: center; }
+        @media (min-width: 600px) { .hero-btns { flex-direction: row; gap: 20px; } }
+        .btn-primary { background: #2563eb; color: #fff; font-size: 18px; font-weight: 800; padding: 16px 32px; border-radius: 16px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 25px rgba(37,99,235,0.3); transition: 0.3s; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(37,99,235,0.4); }
+
         .features { padding: 80px 20px; background: #fff; text-align: center; }
+        .features h2 { font-size: 32px; font-weight: 900; color: #0f172a; margin-bottom: 50px; }
         .grid { display: grid; grid-template-columns: 1fr; gap: 30px; max-width: 1200px; margin: 0 auto; }
         @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } }
-        .card { background: #f8fafc; padding: 40px 30px; border-radius: 24px; border: 1px solid #f1f5f9; }
+        .card { background: #f8fafc; padding: 40px 30px; border-radius: 24px; border: 1px solid #f1f5f9; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
         .card-icon { width: 70px; height: 70px; background: #dbeafe; color: #2563eb; border-radius: 20px; display: flex; justify-content: center; align-items: center; font-size: 30px; margin: 0 auto 20px; }
+        .card h3 { font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 12px; }
+        .card p { font-size: 15px; color: #475569; line-height: 1.6; }
+
         .footer { background: #0f172a; padding: 60px 20px; text-align: center; color: #94a3b8; }
-        .footer h2 { font-size: 28px; color: #fff; font-style: italic; }
-        .footer-links { display: flex; justify-content: center; gap: 20px; margin: 25px 0; }
-        .footer-links a { color: #cbd5e1; cursor: pointer; }
+        .footer h2 { font-size: 28px; font-weight: 900; color: #fff; font-style: italic; margin-bottom: 15px; }
+        .footer-links { display: flex; justify-content: center; gap: 20px; margin: 25px 0; flex-wrap: wrap; }
+        .footer-links a { color: #cbd5e1; font-weight: 600; cursor: pointer; }
+        .footer-links a:hover { color: #fff; }
+        .footer p { font-size: 14px; line-height: 1.8; }
+
+        /* ========================================== */
+        /* 📱 2. SCANNER APP UI STYLES                */
+        /* ========================================== */
         #scanner-page { display: none; justify-content: center; min-height: 100vh; background: #f1f5f9; }
-        .app-container { width: 100%; max-width: 420px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; }
-        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; }
+        .app-container { width: 100%; max-width: 420px; background-color: #ffffff; min-height: 100vh; position: relative; display: flex; flex-direction: column; box-shadow: 0 0 20px rgba(0,0,0,0.05); overflow: hidden; }
+        
+        .app-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #f8fafc; }
         .app-header h1 { font-size: 20px; font-weight: 800; color: #1565C0; }
-        .icon-btn { background: none; border: none; font-size: 22px; cursor: pointer; }
+        .icon-btn { background: none; border: none; font-size: 22px; cursor: pointer; outline: none; }
+        
         .content { padding: 24px 20px; flex: 1; }
         .title-text { font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 12px; }
-        .number-plate { display: flex; border: 3px solid #0f172a; border-radius: 8px; margin-bottom: 15px; height: 70px; }
-        .ind-strip { background: linear-gradient(180deg, #1e3a8a, #1d4ed8); width: 40px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; }
-        .plate-text { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; letter-spacing: 2px; }
+        
+        .number-plate { display: flex; border: 3px solid #0f172a; border-radius: 8px; margin-bottom: 15px; background: #fff; height: 70px; }
+        .ind-strip { background: linear-gradient(180deg, #1e3a8a, #1d4ed8); width: 40px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 4px; border-right: 2px solid #e2e8f0; }
+        .ind-strip span { font-size: 10px; font-weight: 900; color: #fff; }
+        .plate-text { flex: 1; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 900; color: #1e293b; letter-spacing: 2px; }
+        
+        .privacy-badge { display: flex; align-items: center; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 30px; }
+        .green-box { width: 12px; height: 12px; background-color: #22c55e; border-radius: 3px; margin-right: 8px; }
+
         .btn-row { display: flex; gap: 12px; margin-bottom: 30px; }
-        .action-btn { flex: 1; background: #fff; border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .action-btn { flex: 1; background: #fff; border-radius: 16px; padding: 20px 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .action-btn:active { transform: scale(0.95); }
         .call-btn { border: 2px solid #fcd34d; }
         .msg-btn { border: 2px solid #22c55e; }
         .action-btn i { font-size: 26px; margin-bottom: 10px; }
-        .emergency-btn { width: 100%; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; border-radius: 100px; padding: 18px; font-size: 18px; font-weight: 800; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .action-btn span { font-size: 14px; font-weight: 800; text-align: center; }
+        
+        .emergency-btn { width: 100%; background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; border: none; border-radius: 100px; padding: 18px; font-size: 18px; font-weight: 800; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.3); margin-bottom: 12px; position: relative; }
+        .emergency-btn i { position: absolute; right: 24px; font-size: 20px; }
+        .emergency-hint { text-align: center; font-size: 11px; font-weight: 600; color: #64748b; }
+
+        /* OVERLAYS & MODALS */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 100; opacity: 0; pointer-events: none; transition: 0.3s; }
         .overlay.active { opacity: 1; pointer-events: all; }
-        .bottom-sheet { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: 100%; max-width: 420px; background: #fff; border-radius: 24px 24px 0 0; padding: 24px; z-index: 101; transition: transform 0.3s; }
+        
+        .bottom-sheet { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%) translateY(100%); width: 100%; max-width: 420px; background: #fff; border-radius: 24px 24px 0 0; padding: 24px; z-index: 101; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 -5px 25px rgba(0,0,0,0.1); }
         .bottom-sheet.active { transform: translateX(-50%) translateY(0); }
-        .center-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 360px; background: #fff; border-radius: 20px; padding: 24px; z-index: 102; opacity: 0; pointer-events: none; transition: 0.3s; }
+        
+        .center-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 90%; max-width: 360px; background: #fff; border-radius: 20px; padding: 24px; z-index: 102; opacity: 0; pointer-events: none; transition: 0.3s; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .center-modal.active { opacity: 1; pointer-events: all; transform: translate(-50%, -50%) scale(1); }
+
         .sheet-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .sheet-header h3 { font-size: 18px; font-weight: 800; color: #0f172a; }
         .close-btn { font-size: 24px; color: #94a3b8; background: none; border: none; cursor: pointer; }
-        .input-field { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; margin-bottom: 16px; outline: none; }
-        .app-primary-btn { width: 100%; background: #16a34a; color: white; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
-        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #334155; color: white; padding: 12px 24px; border-radius: 100px; z-index: 999; transition: 0.4s; display: flex; align-items: center; gap: 10px; }
+
+        .input-field { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; margin-bottom: 16px; background: #f8fafc; outline: none; }
+        .input-field:focus { border-color: #3b82f6; }
+        .app-primary-btn { width: 100%; background: #16a34a; color: white; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3); }
+
+        .em-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; margin-bottom: 12px; text-decoration: none; color: #fff; font-weight: 800; transition: 0.2s; }
+        .em-item:active { transform: scale(0.98); }
+        .em-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-size: 20px; }
+        .em-text-box { display: flex; flex-direction: column; }
+        .em-title { font-size: 15px; }
+        .em-desc { font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px; }
+
+        .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px); background: #334155; color: white; padding: 12px 24px; border-radius: 100px; font-size: 13px; font-weight: 600; z-index: 999; transition: 0.4s; box-shadow: 0 4px 15px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 10px; }
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast.error { background: #dc2626; }
         .toast.success { background: #16a34a; }
     </style>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YWJP0MX98Q"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-YWJP0MX98Q');
+    </script>
 </head>
 <body>
 
@@ -89,8 +158,9 @@
                 <div class="nav-logo">TAGOWN</div>
                 <div class="nav-links">
                     <a href="#features">Features</a>
+                    <a href="#how-it-works">How It Works</a>
                 </div>
-                <a href="#" class="nav-btn">Get The App</a>
+                <a href="https://play.google.com/store/apps/details?id=com.tagown.app" class="nav-btn">Get The App</a>
             </div>
         </nav>
 
@@ -99,7 +169,30 @@
                 <h1>Smart Vehicle Security.<br><span class="gradient-text">Complete Privacy.</span></h1>
                 <p>Stick the Tagown QR on your vehicle. Anyone can scan it to alert you during parking issues or emergencies without ever seeing your phone number.</p>
                 <div class="hero-btns">
-                    <a href="#" class="btn-primary"><i class="fa-brands fa-google-play"></i> Download App</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.tagown.app" class="btn-primary"><i class="fa-brands fa-google-play"></i> Download App</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="features" class="features">
+            <div class="lp-container">
+                <h2>Why Choose Tagown?</h2>
+                <div class="grid">
+                    <div class="card">
+                        <div class="card-icon"><i class="fa-solid fa-user-secret"></i></div>
+                        <h3>100% Anonymous</h3>
+                        <p>Your phone number is completely hidden. Connect via secure toll-free calls and smart push notifications.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="color:#dc2626; background:#fee2e2;"><i class="fa-solid fa-bell-concierge"></i></div>
+                        <h3>Instant Emergency Alerts</h3>
+                        <p>Anyone can scan it and contact you instantly without knowing your phone number. Your number always remains private.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon" style="color:#16a34a; background:#dcfce3;"><i class="fa-solid fa-file-shield"></i></div>
+                        <h3>Digital Document Vault</h3>
+                        <p>Store your RC, Insurance, and DL securely inside the app, protected by Biometric Lock.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,9 +201,51 @@
             <div class="lp-container">
                 <h2>TAGOWN</h2>
                 <p style="color:#e2e8f0; font-weight:600; margin-bottom:10px;">A product by Tagown | Made In India </p>
+                <div class="footer-links">
+                    <a href="javascript:void(0)" onclick="openLpModal('privacy-modal')">Privacy Policy</a>
+                    <a href="javascript:void(0)" onclick="openLpModal('terms-modal')">Terms of Service</a>
+                    <a href="javascript:void(0)" onclick="openLpModal('contact-modal')">Contact Us</a>
+                </div>
                 <p>© 2026 Tagown. All rights reserved. Founder: Badal Meher</p>
             </div>
         </footer>
+
+        <div id="lp-overlay" class="overlay" onclick="closeLpModals()"></div>
+
+        <div id="privacy-modal" class="center-modal" style="max-height: 80vh; overflow-y: auto;">
+            <div class="sheet-header" style="margin-bottom: 10px;">
+                <h3 style="color: #1e3a8a;"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h3>
+                <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">We only collect necessary data to provide vehicle security services.</p>
+            <ul style="font-size: 13px; color: #475569; line-height: 1.6; padding-left: 20px;">
+                <li style="margin-bottom: 5px;"><b>Data:</b> Phone number for registration and vehicle number to link the Tag.</li>
+                <li><b>Security:</b> Your number is encrypted and never displayed to anyone scanning the QR.</li>
+            </ul>
+        </div>
+
+        <div id="terms-modal" class="center-modal" style="max-height: 80vh; overflow-y: auto;">
+            <div class="sheet-header" style="margin-bottom: 10px;">
+                <h3 style="color: #1e3a8a;"><i class="fa-solid fa-file-contract"></i> Terms of Service</h3>
+                <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to the following:</p>
+            <ul style="font-size: 13px; color: #475569; line-height: 1.6; padding-left: 20px;">
+                <li style="margin-bottom: 5px;">Tagown is a communication bridge, not a physical security rescue service.</li>
+                <li>Users must not misuse the alert system for spamming or harassment.</li>
+            </ul>
+        </div>
+
+        <div id="contact-modal" class="center-modal" style="text-align: center;">
+            <div class="sheet-header" style="margin-bottom: 15px; display: flex; justify-content: center; position: relative;">
+                <h3 style="color: #1e3a8a;"><i class="fa-solid fa-headset"></i> Contact Us</h3>
+                <button onclick="closeLpModals()" class="close-btn" style="position: absolute; right: 0; top: -5px;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 15px;">Tagown Customer Support is here to help you 24/7.</p>
+            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>📍 Office:</b> India, Odisha, Bargarh District, Kuchipali, Kuamania</p>
+            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>📧 Email:</b> baddalmeherdev@gmail.com</p>
+            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>Founder:</b> Badal Meher</p>
+        </div>
     </div>
 
     <div id="scanner-page">
@@ -118,22 +253,24 @@
             <div class="app-header">
                 <button class="icon-btn" style="color: #2563eb;" onclick="goToHome()"><i class="fa-solid fa-angles-left"></i></button>
                 <h1>Tagown Tag</h1>
-                <button class="icon-btn" style="color: #16a34a;"><i class="fa-solid fa-circle-info"></i></button>
+                <button onclick="openModal('info-modal')" class="icon-btn" style="color: #16a34a;"><i class="fa-solid fa-circle-info"></i></button>
             </div>
 
             <div class="content">
                 <h2 class="title-text">Contact vehicle owner</h2>
 
                 <div class="number-plate">
-                    <div class="ind-strip"><span style="color:white; font-size:10px; font-weight:900;">IND</span></div>
+                    <div class="ind-strip"><span>IND</span></div>
                     <div class="plate-text">
-                        <span id="display-reg-no" style="color: #1e293b; font-size: 32px;">Loading...</span>
+                        <span id="display-reg-no" style="color: #94a3b8; font-size: 24px;">Loading...</span>
                     </div>
                 </div>
 
                 <div class="privacy-badge">
                     <div class="green-box"></div> Your privacy is our top service priority.
                 </div>
+
+                <h2 class="title-text">Call or Notify the owner?</h2>
 
                 <div class="btn-row">
                     <button onclick="handleCallClick()" class="action-btn call-btn">
@@ -146,6 +283,11 @@
                         <span style="color: #1e293b;">Notify Owner</span>
                     </button>
                 </div>
+
+                <button onclick="openEmergencySheet()" class="emergency-btn">
+                    Emergency <i class="fa-solid fa-plus"></i>
+                </button>
+                <p class="emergency-hint">Vehicle accident or contact family? Use Emergency.</p>
             </div>
 
             <div id="main-overlay" class="overlay" onclick="closeAll()"></div>
@@ -159,15 +301,58 @@
                     <option value="🚨 Towing van is nearby!">🚨 Towing van is nearby!</option>
                     <option value="⚠️ Your vehicle is parked wrongly.">⚠️ Parked wrongly</option>
                     <option value="💡 Your headlights are ON.">💡 Headlights are ON</option>
+                    <option value="🪟 Window is open.">🪟 Window is open</option>
+                    <option value="🚗 You are blocking my vehicle.">🚗 Blocking my vehicle</option>
                 </select>
                 <textarea id="custom-msg" class="input-field" rows="3" placeholder="Or type your custom message here..."></textarea>
                 <button id="send-alert-btn" onclick="executeAlert()" class="app-primary-btn">SEND NOW</button>
             </div>
-            
+
+            <div id="emergency-sheet" class="bottom-sheet">
+                <div class="sheet-header">
+                    <h3 style="color: #dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Action Plan</h3>
+                    <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <a href="tel:18001234567" class="em-item" style="background: #f59e0b;">
+                    <div class="em-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly in emergencies</span></div>
+                </a>
+                <a href="tel:112" class="em-item" style="background: #1d4ed8;">
+                    <div class="em-icon"><i class="fa-solid fa-building-shield"></i></div>
+                    <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance in any emergency</span></div>
+                </a>
+                <a href="tel:108" class="em-item" style="background: #16a34a;">
+                    <div class="em-icon"><i class="fa-solid fa-truck-medical"></i></div>
+                    <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for immediate medical assistance</span></div>
+                </a>
+                <a href="tel:101" class="em-item" style="background: #dc2626;">
+                    <div class="em-icon"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                    <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for fire related emergencies</span></div>
+                </a>
+                <a href="tel:1091" class="em-item" style="background: #e06666;">
+                    <div class="em-icon"><i class="fa-solid fa-person-dress"></i></div>
+                    <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">24/7 helpline for women in distress</span></div>
+                </a>
+                <a href="tel:1033" class="em-item" style="background: #4f81bd;">
+                    <div class="em-icon"><i class="fa-solid fa-truck-pickup"></i></div>
+                    <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Highway rescue, towing, and traffic emergencies</span></div>
+                </a>
+            </div>
+
             <div id="call-lock-modal" class="center-modal">
-                <h3 style="text-align: center; font-size: 18px; margin-bottom: 10px;">Safety Check 🛡️</h3>
-                <p style="text-align: center; font-size: 13px; margin-bottom: 20px;">Please send an alert message first for privacy reasons.</p>
-                <button onclick="closeAll(); openMessageSheet();" class="app-primary-btn">SEND MESSAGE</button>
+                <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-shield-halved" style="font-size: 40px; color: #f59e0b;"></i></div>
+                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Safety Check 🛡️</h3>
+                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">For the owner's privacy, please send an alert message detailing the issue first. Calling will be automatically enabled after sending.</p>
+                <button onclick="closeAll(); openMessageSheet();" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer;">SEND MESSAGE NOW</button>
+            </div>
+
+            <div id="info-modal" class="center-modal">
+                <div class="sheet-header" style="margin-bottom: 10px;">
+                    <h3 style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> Safe & Secure</h3>
+                    <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 15px;"><strong>Tagown Privacy Guarantee:</strong><br>Tagown acts as a highly secure communication bridge. The vehicle owner's personal details and phone number are completely hidden and encrypted.</p>
+                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is provided for communication assistance only. Tagown does not take responsibility for the actions of users or the immediate physical rescue of the vehicle. In case of legal or medical emergencies, please use the Emergency options to contact Govt. authorities directly.</p>
             </div>
         </div>
     </div>
@@ -188,6 +373,8 @@
         let ownerPhone = "";
         let qrIdFromUrl = "";
         let regNoFromDb = "";
+        let isMessageSent = false;
+        let isInvalidTag = false;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -203,7 +390,12 @@
             }
         };
 
-        function goToHome() { window.location.href = "/"; }
+        function goToHome() {
+            window.history.pushState({}, document.title, window.location.pathname);
+            document.getElementById('scanner-page').style.display = 'none';
+            document.getElementById('landing-page').style.display = 'block';
+        }
+
         function showToast(msg, type = "normal") {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
@@ -211,73 +403,136 @@
             setTimeout(() => { toast.classList.remove('show'); }, 3000);
         }
 
+        function setInvalidTag() {
+            isInvalidTag = true;
+            const plate = document.getElementById('display-reg-no');
+            plate.innerText = "INVALID TAG";
+            plate.style.color = "#dc2626";
+            plate.style.fontSize = "26px";
+        }
+
+        function openLpModal(id) { document.getElementById('lp-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
+        function closeLpModals() { document.getElementById('lp-overlay').classList.remove('active'); document.getElementById('privacy-modal').classList.remove('active'); document.getElementById('terms-modal').classList.remove('active'); document.getElementById('contact-modal').classList.remove('active'); }
         function openModal(id) { document.getElementById('main-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('main-overlay').classList.remove('active'); document.querySelectorAll('.bottom-sheet, .center-modal').forEach(el => el.classList.remove('active')); }
-        function openMessageSheet() { if(!ownerPhone) { showToast("Loading owner...", "normal"); return; } openModal('msg-sheet'); }
-        function handleCallClick() { if(!ownerPhone) { showToast("Loading owner...", "normal"); return; } openModal('call-lock-modal'); }
+        function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
+        function openEmergencySheet() { openModal('emergency-sheet'); }
+
+        function handleCallClick() {
+            if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
+            if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
+            if(!isMessageSent) { openModal('call-lock-modal'); } 
+            else { window.location.href = "tel:18001234567"; }
+        }
 
         function fetchVehicleOwner(qrId) {
             database.ref('LinkedTags').child(qrId).once('value').then((snap) => {
                 if(snap.exists()){
                     regNoFromDb = snap.val();
-                    document.getElementById('display-reg-no').innerText = regNoFromDb;
+                    const plate = document.getElementById('display-reg-no');
+                    plate.innerText = regNoFromDb;
+                    plate.style.color = "#1e293b";
+                    plate.style.fontSize = "32px";
                     findOwnerPhone(regNoFromDb);
-                } else { showToast("Invalid Tag", "error"); }
-            });
+                } else { setInvalidTag(); }
+            }).catch(err => { setInvalidTag(); showToast("Network Error", "error"); });
         }
 
         function findOwnerPhone(regNo) {
             const searchReg = regNo.replace(/ /g, "").toUpperCase();
             database.ref('Vehicles').once('value').then((snapshot) => {
+                let found = false;
                 snapshot.forEach((phoneNode) => {
-                    const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
-                    if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = phoneNode.child('ownerPhone').val() || phoneNode.key; }
+                    if (found) return;
+                    const phone = phoneNode.key;
+                    if (phoneNode.hasChild("registrationNumber") || phoneNode.hasChild("regNo")) {
+                        const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
+                        if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = phoneNode.child('ownerPhone').val() || phone; found = true; }
+                    } else {
+                        phoneNode.forEach((vNode) => {
+                            const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
+                            if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = vNode.child('ownerPhone').val() || phone; found = true; }
+                        });
+                    }
                 });
+                if (!found) {
+                    database.ref('MyVehicles').once('value').then((mySnap) => {
+                         mySnap.forEach((phoneNode) => {
+                            if (found) return;
+                            const phone = phoneNode.key;
+                            if (phoneNode.hasChild("registrationNumber") || phoneNode.hasChild("regNo")) {
+                                const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
+                                if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = phoneNode.child('ownerPhone').val() || phone; found = true; }
+                            } else {
+                                phoneNode.forEach((vNode) => {
+                                    const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
+                                    if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = vNode.child('ownerPhone').val() || phone; found = true; }
+                                });
+                            }
+                        });
+                    });
+                }
             });
         }
 
-        // 🚀 SECURE SERVER CALL (NO API KEY EXPOSED)
+        // 🚀 BHAIG LOGIC: 100% SECURE PRIVATE SERVER CALL (V2 API FORMAT)
         async function executeAlert() {
-            const msg = document.getElementById('custom-msg').value.trim() || document.getElementById('issue-selector').value;
+            const issueSelector = document.getElementById('issue-selector').value;
+            const customMsg = document.getElementById('custom-msg').value;
+            const msg = customMsg.trim() !== "" ? customMsg : issueSelector;
             const btn = document.getElementById('send-alert-btn');
+            
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
-                // Number Encryption (Privacy Safe)
+                // 1. Firebase Save (Try kiya, agar fail hua toh bypass maar denge)
+                try {
+                    const alertRef = database.ref('Alerts').child(ownerPhone).push();
+                    await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
+                } catch(fbError) {
+                    console.warn("Firebase block ignored. Proceeding to notification...");
+                }
+
+                // 2. Encryption (Owner Specific Only - 100% Privacy Protected)
                 const safeId = await getSecureId(ownerPhone);
-                
-                // Aapka Secure Cloudflare Server
+
+                // 3. Server Request via Cloudflare 
                 const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
 
                 const response = await fetch(tagownServerUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
+                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
                         target_channel: "push",
                         include_aliases: {
                             external_id: [safeId]
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
-                        contents: {"en": msg}
+                        contents: {"en": msg},
+                        // app_url: "tagown://notifications",
+                        // small_icon: "ic_notification_stat"
                     })
                 });
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
-                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent!", "success"); }, 1500);
+                    isMessageSent = true;
+                    setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
                     throw new Error(errText); 
                 }
             } catch (error) {
-                alert("ERROR: Server Issue. " + error.message);
-                btn.innerText = "FAILED"; btn.style.background = "#dc2626";
+                alert("ALERT FAILED: Server Reject: " + error.message);
+                btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
+                showToast("Server issue. Please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
             }
         }
 
         async function getSecureId(phone) {
+            // JS TextEncoder by default uses UTF-8, making it a perfect match with Android Java's getBytes("UTF-8")
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
