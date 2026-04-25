@@ -480,7 +480,7 @@
             });
         }
 
-        // 🚀 BHAIG LOGIC: 100% SECURE SERVER CALL (V2 API) & WHATSAPP LIKE POPUP (PRIORITY 10)
+        // 🚀 BHAIG LOGIC: 100% SECURE PRIVATE SERVER CALL (V2 API FORMAT)
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -490,7 +490,7 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
-                // 1. Firebase Save
+                // 1. Firebase Save (Try kiya, agar fail hua toh bypass maar denge)
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
@@ -517,20 +517,23 @@
                         contents: {"en": msg},
                         priority: 10,  // 🔥 HIGH PRIORITY
                         small_icon: "ic_notification_stat", // 🔥 CUSTOM ICON
-                        android_channel_id: "tagown_urgent_alerts" // 🔥 POPUP CHANNEL ID (Forces heads-up notification)
+                        existing_android_channel_id: "tagown_urgent_alerts" // 🔥 CORRECT FIXED ID 
                     })
                 });
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
+                    // Error popup hata diya gaya hai, successful notification ka message aayega!
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Message Sent! Owner Alerted.", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
                     throw new Error(errText); 
                 }
             } catch (error) {
+                // Agar ab bhi fail hua toh exact vajah pop-up hogi
                 alert("ALERT FAILED: Server Reject: " + error.message);
+                
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
                 showToast("Server issue. Please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
@@ -538,6 +541,7 @@
         }
 
         async function getSecureId(phone) {
+            // JS TextEncoder by default uses UTF-8, making it a perfect match with Android Java's getBytes("UTF-8")
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
