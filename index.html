@@ -389,8 +389,6 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
-                // Start privacy lock timer
-                resetInactivityTimer();
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -480,7 +478,7 @@
             });
         }
 
-        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION 
+        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & WHATSAPP POPUP LOGIC
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -519,10 +517,10 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 POPUP TRIGGER: Ye priority 10 aur correct channel ko hit karega popup laane ke liye (Bina error ke)
-                        existing_android_channel_id: "tagown_urgent_alerts",
+                        existing_android_channel_id: "tagown_urgent_alerts", // Added channel for popup routing
                         priority: 10,           
-                        android_visibility: 1,  
+                        android_visibility: 1,
+                        android_sound: "default",
                         small_icon: "ic_notification_stat"
                     })
                 });
@@ -543,7 +541,7 @@
             }
         }
 
-        // 🛡️ SECURITY FUNCTION
+        // 🛡️ SECURITY FUNCTION (NEVER REMOVED)
         async function getSecureId(phone) {
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
@@ -551,40 +549,48 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK)
-        let inactivityTimer;
-        const FIVE_MINUTES = 5 * 60 * 1000;
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF
+        const FIVE_MINUTES = 5 * 60 * 1000; 
 
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
+        function updateActiveTime() {
             if (qrIdFromUrl) {
-                inactivityTimer = setTimeout(() => {
-                    window.location.href = window.location.pathname; 
-                }, FIVE_MINUTES);
+                localStorage.setItem('tagown_last_active', Date.now());
             }
         }
 
-        // Reset timer if user interacts with the page
-        ['touchstart', 'click', 'mousemove', 'scroll', 'keypress'].forEach(evt => {
-            document.addEventListener(evt, resetInactivityTimer, false);
-        });
+        if (window.location.search.includes('id=')) {
+            // Setup initial time
+            updateActiveTime();
 
-        // Background to Foreground Check
-        document.addEventListener("visibilitychange", function() {
-            if (document.visibilityState === 'hidden') {
-                localStorage.setItem('tagown_away_time', Date.now());
-            } else if (document.visibilityState === 'visible') {
-                let awayTime = localStorage.getItem('tagown_away_time');
-                if (awayTime && qrIdFromUrl) {
-                    let diff = Date.now() - parseInt(awayTime);
-                    if (diff > FIVE_MINUTES) {
-                        window.location.href = window.location.pathname; 
-                    } else {
-                        resetInactivityTimer();
+            // Track user activity
+            ['touchstart', 'click', 'scroll', 'keypress'].forEach(evt => {
+                document.addEventListener(evt, updateActiveTime, {passive: true});
+            });
+
+            // Check continuously (works when browser wakes up from background)
+            setInterval(() => {
+                let lastActive = localStorage.getItem('tagown_last_active');
+                if (lastActive) {
+                    if (Date.now() - parseInt(lastActive) >= FIVE_MINUTES) {
+                        localStorage.removeItem('tagown_last_active');
+                        window.location.replace(window.location.pathname); // Strips ?id= param and reloads
                     }
                 }
-            }
-        });
+            }, 2000);
+
+            // Force check on tab focus
+            document.addEventListener("visibilitychange", function() {
+                if (document.visibilityState === 'visible') {
+                    let lastActive = localStorage.getItem('tagown_last_active');
+                    if (lastActive && (Date.now() - parseInt(lastActive) >= FIVE_MINUTES)) {
+                        localStorage.removeItem('tagown_last_active');
+                        window.location.replace(window.location.pathname);
+                    } else {
+                        updateActiveTime();
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
