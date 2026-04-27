@@ -389,7 +389,6 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
-                checkPrivacyLock(); // 🔥 NAYA BULLETPROOF CHECK
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -518,6 +517,9 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
+                        // 🔥 POPUP TRIGGER: Channel ID is back to ensure it goes to Emergency Alerts
+                        existing_android_channel_id: "tagown_urgent_alerts",
+                        android_sound: "default",
                         priority: 10,           
                         android_visibility: 1,  
                         small_icon: "ic_notification_stat"
