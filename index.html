@@ -517,8 +517,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        app_url: "tagown://notifications", // 🔥 CLICK TO OPEN APP FIX
-                        existing_android_channel_id: "tagown_urgent_alerts", // 🔥 POPUP CHANNEL FIX
+                        app_url: "tagown://notifications",
+                        existing_android_channel_id: "tagown_urgent_alerts", 
                         priority: 10,           
                         android_visibility: 1,
                         android_sound: "default",
@@ -550,60 +550,27 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% BULLETPROOF
-        const FIVE_MINUTES_MS = 5 * 60 * 1000;
-        let idleTimer;
-
+        // 🔒 IMMEDIATE PRIVACY LOCK (INSTANT REDIRECT)
         function enforcePrivacyLock() {
             window.location.replace(window.location.pathname);
         }
 
         if (window.location.search.includes('id=')) {
-            
-            // 1. Idle Timer (Jab Screen ON ho par user kuch na kare)
-            function resetIdleTimer() {
-                clearTimeout(idleTimer);
-                idleTimer = setTimeout(enforcePrivacyLock, FIVE_MINUTES_MS);
-            }
-
-            // Har touch, click, scroll pe timer reset hoga
-            ['touchstart', 'click', 'scroll', 'keypress', 'mousemove'].forEach(evt => {
-                document.addEventListener(evt, resetIdleTimer, {passive: true});
-            });
-            resetIdleTimer();
-
-            // 2. Background / Screen Lock Tracker (Sabse important)
+            // 1. Tab Switch / App Minimize / Screen Lock
             document.addEventListener("visibilitychange", function() {
                 if (document.visibilityState === 'hidden') {
-                    // Jaise hi browser minimize/hide hua, exact time save kar lo
-                    localStorage.setItem('tagown_exit_time', Date.now());
-                } else if (document.visibilityState === 'visible') {
-                    // Wapas aate hi check karo kitni der bahar tha
-                    let exitTime = localStorage.getItem('tagown_exit_time');
-                    if (exitTime) {
-                        let timeAway = Date.now() - parseInt(exitTime, 10);
-                        if (timeAway >= FIVE_MINUTES_MS) {
-                            localStorage.removeItem('tagown_exit_time');
-                            enforcePrivacyLock(); // 5 min se upar? seedha bahar!
-                        } else {
-                            localStorage.removeItem('tagown_exit_time');
-                            resetIdleTimer(); // 5 min se kam hai toh timer wapas start
-                        }
-                    }
+                    enforcePrivacyLock();
                 }
             });
 
-            // 3. Back Button / BF-Cache Tracker (Jo pichli baar fail hua tha)
-            window.addEventListener('pageshow', function(event) {
-                if (event.persisted) {
-                    let exitTime = localStorage.getItem('tagown_exit_time');
-                    if (exitTime && (Date.now() - parseInt(exitTime, 10) >= FIVE_MINUTES_MS)) {
-                        localStorage.removeItem('tagown_exit_time');
-                        enforcePrivacyLock();
-                    } else {
-                        resetIdleTimer();
-                    }
-                }
+            // 2. Window Blur (Switching to another app or tab)
+            window.addEventListener("blur", function() {
+                enforcePrivacyLock();
+            });
+
+            // 3. Page Hide / Back Button
+            window.addEventListener("pagehide", function() {
+                enforcePrivacyLock();
             });
         }
     </script>
