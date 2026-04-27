@@ -389,8 +389,6 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
-                // Start privacy lock timer
-                checkPrivacyLock();
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -519,10 +517,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 NAYA: Notification par tap karne se "Notifications" page khulega
                         app_url: "tagown://notifications",
-                        // 🔥 POPUP TRIGGER: Ye priority 10 aur correct channel ko hit karega popup laane ke liye
-                        existing_android_channel_id: "tagown_urgent_alerts",
+                        existing_android_channel_id: "tagown_urgent_alerts", 
                         priority: 10,           
                         android_visibility: 1,
                         android_sound: "default",
@@ -554,46 +550,52 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF (BACK BUTTON FIX)
         const FIVE_MINUTES = 5 * 60 * 1000;
 
         function updateSessionTime() {
-            sessionStorage.setItem('tagown_last_active', Date.now());
+            localStorage.setItem('tagown_last_active', Date.now());
         }
 
         function checkPrivacyLock() {
-            updateSessionTime();
-
-            // 1. Check Every 3 Seconds (Works when app is active)
-            setInterval(() => {
-                let lastActive = sessionStorage.getItem('tagown_last_active');
-                if (lastActive && (Date.now() - parseInt(lastActive) > FIVE_MINUTES)) {
-                    sessionStorage.removeItem('tagown_last_active');
+            let lastActive = localStorage.getItem('tagown_last_active');
+            if (lastActive) {
+                let timeAway = Date.now() - parseInt(lastActive, 10);
+                if (timeAway >= FIVE_MINUTES) {
+                    localStorage.removeItem('tagown_last_active');
                     window.location.replace(window.location.pathname);
                 }
-            }, 3000);
+            }
+        }
 
-            // 2. Track Screen Touches to Keep Session Alive
+        if (window.location.search.includes('id=')) {
+            updateSessionTime();
+
+            // 1. Keep alive on interaction
             ['touchstart', 'click', 'scroll', 'keypress'].forEach(evt => {
                 document.addEventListener(evt, () => {
+                    checkPrivacyLock(); // Check pehle, phir update
                     updateSessionTime();
                 }, {passive: true});
             });
 
-            // 3. The Magic Bullet: Check instantly when browser comes back from background
+            // 2. Background continuous check
+            setInterval(checkPrivacyLock, 2000);
+
+            // 3. Tab Switch / Phone Lock
             document.addEventListener("visibilitychange", function() {
                 if (document.visibilityState === 'visible') {
-                    let lastActive = sessionStorage.getItem('tagown_last_active');
-                    if (lastActive) {
-                        let timeAway = Date.now() - parseInt(lastActive);
-                        if (timeAway > FIVE_MINUTES) {
-                            sessionStorage.removeItem('tagown_last_active');
-                            window.location.replace(window.location.pathname);
-                        } else {
-                            updateSessionTime(); // Welcome back, resume timer
-                        }
-                    }
+                    checkPrivacyLock();
+                    updateSessionTime();
+                } else {
+                    updateSessionTime(); // Record accurate exit time
                 }
+            });
+
+            // 4. THE MAGIC FIX: Back Button / Cache Restore (BFCache)
+            window.addEventListener('pageshow', function(event) {
+                checkPrivacyLock();
+                updateSessionTime();
             });
         }
     </script>
