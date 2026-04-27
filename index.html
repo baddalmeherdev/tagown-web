@@ -389,6 +389,8 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
+                // Start privacy lock timer
+                checkPrivacyLock();
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -517,11 +519,13 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 POPUP TRIGGER: Channel ID is back to ensure it goes to Emergency Alerts
+                        // 🔥 NAYA: Notification par tap karne se "Notifications" page khulega
+                        app_url: "tagown://notifications",
+                        // 🔥 POPUP TRIGGER: Ye priority 10 aur correct channel ko hit karega popup laane ke liye
                         existing_android_channel_id: "tagown_urgent_alerts",
-                        android_sound: "default",
                         priority: 10,           
-                        android_visibility: 1,  
+                        android_visibility: 1,
+                        android_sound: "default",
                         small_icon: "ic_notification_stat"
                     })
                 });
@@ -550,7 +554,7 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - THE BULLETPROOF FIX
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF
         const FIVE_MINUTES = 5 * 60 * 1000;
 
         function updateSessionTime() {
