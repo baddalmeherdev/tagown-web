@@ -389,6 +389,7 @@
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
                 fetchVehicleOwner(qrIdFromUrl);
+                checkPrivacyLock(); // 🔥 NAYA BULLETPROOF CHECK
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
                 document.getElementById('landing-page').style.display = 'block';
@@ -478,7 +479,7 @@
             });
         }
 
-        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & WHATSAPP POPUP LOGIC
+        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION 
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -517,10 +518,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        existing_android_channel_id: "tagown_urgent_alerts", // Added channel for popup routing
                         priority: 10,           
-                        android_visibility: 1,
-                        android_sound: "default",
+                        android_visibility: 1,  
                         small_icon: "ic_notification_stat"
                     })
                 });
@@ -541,7 +540,7 @@
             }
         }
 
-        // 🛡️ SECURITY FUNCTION (NEVER REMOVED)
+        // 🛡️ SECURITY FUNCTION
         async function getSecureId(phone) {
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
@@ -549,44 +548,44 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF
-        const FIVE_MINUTES = 5 * 60 * 1000; 
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - THE BULLETPROOF FIX
+        const FIVE_MINUTES = 5 * 60 * 1000;
 
-        function updateActiveTime() {
-            if (qrIdFromUrl) {
-                localStorage.setItem('tagown_last_active', Date.now());
-            }
+        function updateSessionTime() {
+            sessionStorage.setItem('tagown_last_active', Date.now());
         }
 
-        if (window.location.search.includes('id=')) {
-            // Setup initial time
-            updateActiveTime();
+        function checkPrivacyLock() {
+            updateSessionTime();
 
-            // Track user activity
+            // 1. Check Every 3 Seconds (Works when app is active)
+            setInterval(() => {
+                let lastActive = sessionStorage.getItem('tagown_last_active');
+                if (lastActive && (Date.now() - parseInt(lastActive) > FIVE_MINUTES)) {
+                    sessionStorage.removeItem('tagown_last_active');
+                    window.location.replace(window.location.pathname);
+                }
+            }, 3000);
+
+            // 2. Track Screen Touches to Keep Session Alive
             ['touchstart', 'click', 'scroll', 'keypress'].forEach(evt => {
-                document.addEventListener(evt, updateActiveTime, {passive: true});
+                document.addEventListener(evt, () => {
+                    updateSessionTime();
+                }, {passive: true});
             });
 
-            // Check continuously (works when browser wakes up from background)
-            setInterval(() => {
-                let lastActive = localStorage.getItem('tagown_last_active');
-                if (lastActive) {
-                    if (Date.now() - parseInt(lastActive) >= FIVE_MINUTES) {
-                        localStorage.removeItem('tagown_last_active');
-                        window.location.replace(window.location.pathname); // Strips ?id= param and reloads
-                    }
-                }
-            }, 2000);
-
-            // Force check on tab focus
+            // 3. The Magic Bullet: Check instantly when browser comes back from background
             document.addEventListener("visibilitychange", function() {
                 if (document.visibilityState === 'visible') {
-                    let lastActive = localStorage.getItem('tagown_last_active');
-                    if (lastActive && (Date.now() - parseInt(lastActive) >= FIVE_MINUTES)) {
-                        localStorage.removeItem('tagown_last_active');
-                        window.location.replace(window.location.pathname);
-                    } else {
-                        updateActiveTime();
+                    let lastActive = sessionStorage.getItem('tagown_last_active');
+                    if (lastActive) {
+                        let timeAway = Date.now() - parseInt(lastActive);
+                        if (timeAway > FIVE_MINUTES) {
+                            sessionStorage.removeItem('tagown_last_active');
+                            window.location.replace(window.location.pathname);
+                        } else {
+                            updateSessionTime(); // Welcome back, resume timer
+                        }
                     }
                 }
             });
