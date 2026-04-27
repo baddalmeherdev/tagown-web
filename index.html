@@ -517,8 +517,8 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        app_url: "tagown://notifications",
-                        existing_android_channel_id: "tagown_urgent_alerts", 
+                        app_url: "tagown://notifications", // 🔥 CLICK TO OPEN APP FIX
+                        existing_android_channel_id: "tagown_urgent_alerts", // 🔥 POPUP CHANNEL FIX
                         priority: 10,           
                         android_visibility: 1,
                         android_sound: "default",
@@ -550,52 +550,60 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% MOBILE PROOF (BACK BUTTON FIX)
-        const FIVE_MINUTES = 5 * 60 * 1000;
+        // 🔒 5-MINUTE AUTO-REDIRECT (PRIVACY LOCK) - 100% BULLETPROOF
+        const FIVE_MINUTES_MS = 5 * 60 * 1000;
+        let idleTimer;
 
-        function updateSessionTime() {
-            localStorage.setItem('tagown_last_active', Date.now());
-        }
-
-        function checkPrivacyLock() {
-            let lastActive = localStorage.getItem('tagown_last_active');
-            if (lastActive) {
-                let timeAway = Date.now() - parseInt(lastActive, 10);
-                if (timeAway >= FIVE_MINUTES) {
-                    localStorage.removeItem('tagown_last_active');
-                    window.location.replace(window.location.pathname);
-                }
-            }
+        function enforcePrivacyLock() {
+            window.location.replace(window.location.pathname);
         }
 
         if (window.location.search.includes('id=')) {
-            updateSessionTime();
+            
+            // 1. Idle Timer (Jab Screen ON ho par user kuch na kare)
+            function resetIdleTimer() {
+                clearTimeout(idleTimer);
+                idleTimer = setTimeout(enforcePrivacyLock, FIVE_MINUTES_MS);
+            }
 
-            // 1. Keep alive on interaction
-            ['touchstart', 'click', 'scroll', 'keypress'].forEach(evt => {
-                document.addEventListener(evt, () => {
-                    checkPrivacyLock(); // Check pehle, phir update
-                    updateSessionTime();
-                }, {passive: true});
+            // Har touch, click, scroll pe timer reset hoga
+            ['touchstart', 'click', 'scroll', 'keypress', 'mousemove'].forEach(evt => {
+                document.addEventListener(evt, resetIdleTimer, {passive: true});
             });
+            resetIdleTimer();
 
-            // 2. Background continuous check
-            setInterval(checkPrivacyLock, 2000);
-
-            // 3. Tab Switch / Phone Lock
+            // 2. Background / Screen Lock Tracker (Sabse important)
             document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === 'visible') {
-                    checkPrivacyLock();
-                    updateSessionTime();
-                } else {
-                    updateSessionTime(); // Record accurate exit time
+                if (document.visibilityState === 'hidden') {
+                    // Jaise hi browser minimize/hide hua, exact time save kar lo
+                    localStorage.setItem('tagown_exit_time', Date.now());
+                } else if (document.visibilityState === 'visible') {
+                    // Wapas aate hi check karo kitni der bahar tha
+                    let exitTime = localStorage.getItem('tagown_exit_time');
+                    if (exitTime) {
+                        let timeAway = Date.now() - parseInt(exitTime, 10);
+                        if (timeAway >= FIVE_MINUTES_MS) {
+                            localStorage.removeItem('tagown_exit_time');
+                            enforcePrivacyLock(); // 5 min se upar? seedha bahar!
+                        } else {
+                            localStorage.removeItem('tagown_exit_time');
+                            resetIdleTimer(); // 5 min se kam hai toh timer wapas start
+                        }
+                    }
                 }
             });
 
-            // 4. THE MAGIC FIX: Back Button / Cache Restore (BFCache)
+            // 3. Back Button / BF-Cache Tracker (Jo pichli baar fail hua tha)
             window.addEventListener('pageshow', function(event) {
-                checkPrivacyLock();
-                updateSessionTime();
+                if (event.persisted) {
+                    let exitTime = localStorage.getItem('tagown_exit_time');
+                    if (exitTime && (Date.now() - parseInt(exitTime, 10) >= FIVE_MINUTES_MS)) {
+                        localStorage.removeItem('tagown_exit_time');
+                        enforcePrivacyLock();
+                    } else {
+                        resetIdleTimer();
+                    }
+                }
             });
         }
     </script>
