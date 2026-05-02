@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Secure Login</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #0D47A1; 
+            --primary-green: #00C853;
+            --title-red: #E53935;
+            --text-main: #1C1C1E;
+            --text-sub: #8E8E93;
+        }
+        
+        /* Dark Transparent Background for Popup Effect */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: rgba(0, 0, 0, 0.6); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            display: flex; flex-direction: column; justify-content: flex-end; align-items: center; 
+            height: 100vh; overflow: hidden; backdrop-filter: blur(3px);
+        }
+
+        /* 📦 Popup Bottom Sheet Container */
+        .auth-view { 
+            display: none; background: #FFFFFF; width: 100%; max-width: 500px; 
+            border-radius: 24px 24px 0 0; padding: 25px 20px 30px 20px; 
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.15); box-sizing: border-box;
+            animation: slideUp 0.3s ease-out forwards; position: relative;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .active-view { display: block; }
+        
+        @keyframes slideUp { 
+            from { transform: translateY(100%); } 
+            to { transform: translateY(0); } 
+        }
+
+        /* UI Elements */
+        .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
+        
+        /* Typography Matching App */
+        .auth-title-red { color: var(--title-red); font-size: 20px; font-weight: bold; text-align: center; margin: 0 0 25px 0; font-style: italic;}
+        .auth-title-black { color: #222; font-size: 20px; font-weight: bold; text-align: center; margin: 0 0 25px 0; font-style: italic;}
+        .auth-label { font-size: 14px; font-weight: 700; color: #333; margin-left: 5px; margin-bottom: 8px; display: block; font-style: italic;}
+
+        /* Inputs & Buttons */
+        .auth-input { width: 100%; padding: 16px; margin-bottom: 20px; border: none; border-radius: 8px; background: #F5F7FA; font-size: 15px; box-sizing: border-box; font-style: italic; color: #555;}
+        .auth-input:focus { outline: 1px solid #ccc; background: white; }
+        
+        .btn-blue { width: 100%; padding: 16px; background: var(--primary-blue); color: white; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; box-shadow: 0 4px 10px rgba(13, 71, 161, 0.2); }
+        .btn-outline-blue { width: 100%; padding: 16px; background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); border-radius: 8px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; }
+        .btn-green { background: var(--primary-green); color: white; padding: 16px 20px; border: none; border-radius: 8px; font-weight: bold; font-style: italic; cursor: pointer; white-space: nowrap; box-shadow: 0 4px 10px rgba(0, 200, 83, 0.2); }
+
+        .link-text-green { color: var(--primary-green); font-weight: bold; font-size: 15px; text-align: center; display: block; margin: 20px 0; cursor: pointer; font-style: italic;}
+        .or-divider { display: flex; align-items: center; text-align: center; color: #888; font-size: 14px; margin: 25px 0; font-style: italic; letter-spacing: 2px;}
+        .or-divider::before, .or-divider::after { content: ''; flex: 1; border-bottom: 1px dashed #ccc; }
+        
+        .otp-row { display: flex; gap: 10px; margin-bottom: 20px; }
+        .otp-row input { margin-bottom: 0; }
+    </style>
+</head>
+<body>
+
+    <div id="viewSignIn" class="auth-view active-view">
+        <div class="drag-handle"></div>
+        <button class="close-btn" onclick="window.location.href='index.html'">×</button>
+        <h2 class="auth-title-red">Login to access all features</h2>
+        
+        <label class="auth-label">Mobile Number</label>
+        <input type="tel" id="loginPhone" class="auth-input" placeholder="Enter mobile number" maxlength="10">
+        
+        <label class="auth-label">Password</label>
+        <input type="password" id="loginPass" class="auth-input" placeholder="Enter your password">
+        
+        <button class="btn-blue" onclick="doLogin()">SIGN IN</button>
+        <span class="link-text-green" onclick="toggleView('viewForgot')">Forgot Password?</span>
+        <div class="or-divider">OR</div>
+        <button class="btn-outline-blue" onclick="toggleView('viewSignUp')">CREATE NEW ACCOUNT</button>
+    </div>
+
+    <div id="viewSignUp" class="auth-view">
+        <div class="drag-handle"></div>
+        <button class="close-btn" onclick="window.location.href='index.html'">×</button>
+        <h2 class="auth-title-black">Join Tagown today</h2>
+        
+        <label class="auth-label">Full Name</label>
+        <input type="text" id="regName" class="auth-input" placeholder="Enter your full name">
+        
+        <label class="auth-label">Mobile Number</label>
+        <div class="otp-row">
+            <input type="tel" id="regPhone" class="auth-input" placeholder="10-digit mobile number" maxlength="10">
+            <button class="btn-green" onclick="sendSignupOTP()" id="btnSendOtp">SEND OTP</button>
+        </div>
+        
+        <div id="recaptcha-container"></div>
+        
+        <input type="number" id="regOtp" class="auth-input" placeholder="Enter 6-digit OTP" style="display:none; text-align: center; letter-spacing: 3px; font-weight: bold; margin-bottom: 20px;">
+        
+        <label class="auth-label">Password</label>
+        <input type="password" id="regPass" class="auth-input" placeholder="Create a password">
+        
+        <label class="auth-label">Confirm Password</label>
+        <input type="password" id="regPassConf" class="auth-input" placeholder="Confirm your password">
+        
+        <button class="btn-blue" onclick="doRegister()">CREATE ACCOUNT</button>
+        <span class="link-text-green" onclick="toggleView('viewSignIn')" style="margin-top: 25px;">Already have an account? Sign In</span>
+    </div>
+
+    <div id="viewForgot" class="auth-view">
+        <div class="drag-handle"></div>
+        <button class="close-btn" onclick="window.location.href='index.html'">×</button>
+        <h2 class="auth-title-black" style="line-height: 1.4; padding: 0 10px;">Enter your mobile number to reset password</h2>
+        
+        <label class="auth-label" style="margin-top: 30px;">Mobile Number</label>
+        <input type="tel" id="resetPhone" class="auth-input" placeholder="Enter your registered mobile number" maxlength="10">
+        
+        <button class="btn-green" style="width: 100%; margin-top: 10px;" onclick="alert('Please contact Support on WhatsApp to Reset Password securely.')">RESET PASSWORD</button>
+        <span class="link-text-green" onclick="toggleView('viewSignIn')" style="margin-top: 30px;">Back to Sign In</span>
+    </div>
+
+    <script>
+        // 🚀 BHAIG LOGIC: Aapka asli Firebase data add kar diya gaya hai!
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio",
+            storageBucket: "meherdevlopstudio.appspot.com",
+            messagingSenderId: "93808024784",
+            appId: "1:93808024784:web:6987775b7714651c1252d5"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+        let confirmationResult;
+
+        // Internal UI Switcher
+        function toggleView(viewId) {
+            document.querySelectorAll('.auth-view').forEach(view => view.classList.remove('active-view'));
+            document.getElementById(viewId).classList.add('active-view');
+        }
+
+        // =====================================
+        // 🔒 1. LOGIN LOGIC
+        // =====================================
+        function doLogin() {
+            const phone = document.getElementById('loginPhone').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            
+            if(phone.length !== 10 || !pass) { alert("Please enter valid 10-digit number and password."); return; }
+
+            // Checking the exact 'Users' folder in your Realtime DB
+            db.ref('Users/' + phone).once('value').then((snapshot) => {
+                if(snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if(userData.password === pass) {
+                        localStorage.setItem("tagownUserPhone", phone);
+                        window.location.href = 'vehicles.html'; // Go to vehicles after login
+                    } else { alert("Incorrect Password!"); }
+                } else { alert("Account not found! Please Create a New Account."); }
+            }).catch((error) => { alert("Error: " + error.message); });
+        }
+
+        // =====================================
+        // 🔒 2. SIGN UP LOGIC (OTP & SAVE TO DB)
+        // =====================================
+        function sendSignupOTP() {
+            const phone = document.getElementById('regPhone').value.trim();
+            if(phone.length !== 10) { alert("Enter a valid 10-digit mobile number first."); return; }
+
+            if(!window.recaptchaVerifier) {
+                window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', { 'size': 'invisible' });
+            }
+            
+            const btnOtp = document.getElementById('btnSendOtp');
+            btnOtp.innerText = "SENDING..."; btnOtp.disabled = true;
+
+            auth.signInWithPhoneNumber("+91" + phone, window.recaptchaVerifier)
+                .then((result) => {
+                    confirmationResult = result;
+                    btnOtp.innerText = "SENT ✅"; btnOtp.style.background = "#8E8E93";
+                    document.getElementById('regOtp').style.display = "block";
+                }).catch((error) => {
+                    alert("Failed to send OTP. Ensure phone auth is enabled in Firebase. Error: " + error.message);
+                    btnOtp.innerText = "SEND OTP"; btnOtp.disabled = false;
+                    window.recaptchaVerifier.render().then((widgetId) => grecaptcha.reset(widgetId));
+                });
+        }
+
+        function doRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const otp = document.getElementById('regOtp').value.trim();
+            const pass = document.getElementById('regPass').value;
+            const passConf = document.getElementById('regPassConf').value;
+
+            if(!name || phone.length !== 10 || !otp || !pass) { alert("Please fill all details."); return; }
+            if(pass !== passConf) { alert("Passwords do not match!"); return; }
+            if(!confirmationResult) { alert("Please verify OTP first."); return; }
+
+            // Verify OTP
+            confirmationResult.confirm(otp).then((result) => {
+                
+                // Saving exact structure to show up in Admin App
+                const userData = {
+                    name: name,
+                    phone: phone,
+                    password: pass,
+                    EmergencyContacts: "" // Empty array ready for app
+                };
+
+                db.ref('Users/' + phone).set(userData).then(() => {
+                    localStorage.setItem("tagownUserPhone", phone);
+                    alert("Account Created Successfully! Welcome to Tagown.");
+                    window.location.href = 'vehicles.html'; 
+                }).catch((dbError) => {
+                    alert("Database Error: Could not save profile.");
+                });
+
+            }).catch((error) => { alert("Invalid OTP! Please try again."); });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Settings & Profile</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #1565C0; 
+            --bg-color: #F4F6F9; 
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #555555;
+            --danger-red: #D32F2F;
+            --warning-orange: #FF9800;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 50px;
+        }
+
+        /* 📱 Top Header (Blue) */
+        .header {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--primary-blue); padding: 18px 20px;
+            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn { 
+            position: absolute; left: 20px;
+            background: transparent; border: none; font-size: 24px; color: white; 
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+        }
+        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+
+        /* 📦 Main Container */
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 👤 Profile Card */
+        .profile-card {
+            background: var(--card-bg); border-radius: 16px; padding: 20px; margin-top: 10px; margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center;
+        }
+        .profile-info h2 { margin: 0; font-size: 22px; font-style: italic; color: #222; }
+        .profile-info p { margin: 5px 0 0 0; font-size: 14px; color: var(--text-sub); font-style: italic; }
+        .edit-icon { color: #64B5F6; font-size: 20px; cursor: pointer; }
+
+        /* 🗂️ Section Headers */
+        .section-header {
+            font-size: 12px; font-weight: bold; color: #757575; letter-spacing: 1px;
+            margin: 0 0 10px 15px; font-style: italic; text-transform: uppercase;
+        }
+
+        /* 📋 Grouped Lists (iOS Style) */
+        .list-group {
+            background: var(--card-bg); border-radius: 16px; margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden;
+        }
+        .list-item {
+            display: flex; align-items: center; padding: 18px 20px;
+            text-decoration: none; color: var(--text-main); font-size: 16px; font-weight: 600; font-style: italic;
+            border-bottom: 1px solid #F0F0F0; cursor: pointer; transition: background 0.2s;
+        }
+        .list-item:active { background: #F9F9F9; }
+        .list-item:last-child { border-bottom: none; }
+        
+        .item-icon { margin-right: 12px; font-size: 18px; }
+        .text-red { color: var(--danger-red); }
+        .text-orange { color: var(--warning-orange); }
+
+        /* 💖 Footer */
+        .footer {
+            text-align: center; margin-top: 30px; font-size: 13px; color: #9E9E9E; font-style: italic; font-weight: bold; line-height: 1.6;
+        }
+
+        /* 🔒 PREMIUM LOGIN REQUIRED MODAL */
+        .modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; 
+            backdrop-filter: blur(4px);
+        }
+        .modal-box { 
+            background: white; border-radius: 20px; width: 85%; max-width: 350px; 
+            text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden;
+            animation: scaleUp 0.3s ease;
+        }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-header-red {
+            background: #B71C1C; color: white; padding: 25px 20px;
+        }
+        .modal-header-red h3 { margin: 0; font-size: 22px; font-style: italic; letter-spacing: 1px;}
+        .modal-header-red p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.9; font-style: italic;}
+        
+        .modal-body { padding: 25px 20px; }
+        
+        .btn-modal-primary { 
+            background: var(--primary-blue); color: white; padding: 14px; width: 100%; 
+            border: none; border-radius: 12px; font-weight: bold; font-size: 15px; 
+            cursor: pointer; box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2); font-style: italic;
+        }
+        .btn-modal-cancel { 
+            background: transparent; color: #888; padding: 12px; width: 100%; 
+            border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='index.html'">«</button>
+        <div class="header-title">Settings & Profile</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="profile-card">
+            <div class="profile-info">
+                <h2 id="userNameDisplay">Guest User</h2>
+                <p id="userPhoneDisplay">Not Logged In</p>
+            </div>
+            <div class="edit-icon" onclick="alert('Profile editing will be available soon.')">✏️</div>
+        </div>
+
+        <div class="section-header">SECURITY & EMERGENCY</div>
+        <div class="list-group">
+            <div class="list-item text-red" onclick="handleSecureAction('emergency')">
+                <span class="item-icon">🚨</span> Setup Emergency Contact
+            </div>
+        </div>
+
+        <div class="section-header">LEGAL & POLICIES</div>
+        <div class="list-group">
+            <div class="list-item" onclick="window.location.href='legal.html#privacy'">Privacy Policy</div>
+            <div class="list-item" onclick="window.location.href='legal.html#terms'">Terms & Conditions</div>
+            <div class="list-item" onclick="window.location.href='legal.html#disclaimer'">Disclaimer</div>
+            <div class="list-item" onclick="window.location.href='legal.html#copyright'">Copyright Info</div>
+        </div>
+
+        <div class="section-header">ACCOUNT ACTIONS</div>
+        <div class="list-group">
+            <div class="list-item text-orange" onclick="handleSecureAction('logout')">
+                Log Out
+            </div>
+            <div class="list-item text-red" onclick="handleSecureAction('delete')">
+                Delete Account Permanently
+            </div>
+        </div>
+
+        <div class="footer">
+            App Version 1.0<br>
+            Made in India with ❤️
+        </div>
+
+    </div>
+
+    <div id="loginRequiredModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
+                <h3>Not Logged In!</h3>
+                <p>Login now to secure your vehicle and access all premium services.</p>
+            </div>
+            <div class="modal-body">
+                <button class="btn-modal-primary" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Maybe Later</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🚀 BHAIG LOGIC: FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        // Check if user is logged in
+        const currentUserPhone = localStorage.getItem("tagownUserPhone");
+
+        if (!currentUserPhone) {
+            document.getElementById('userNameDisplay').innerText = "Guest User";
+            document.getElementById('userPhoneDisplay').innerText = "Not Logged In";
+        } else {
+            document.getElementById('userPhoneDisplay').innerText = "+91 " + currentUserPhone;
+            
+            db.ref('Users/' + currentUserPhone).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    document.getElementById('userNameDisplay').innerText = userData.name || "Tagown User";
+                }
+            }).catch(err => console.error("Could not load profile:", err));
+        }
+
+        // =====================================
+        // 🔒 SECURE ACTION HANDLER (The Fix)
+        // =====================================
+        function handleSecureAction(action) {
+            // Agar user login nahi hai, toh premium popup dikhao
+            if (!currentUserPhone) {
+                document.getElementById('loginRequiredModal').style.display = 'flex';
+                return;
+            }
+
+            // Agar login hai, toh jo action maanga gaya hai wo execute karo
+            if (action === 'emergency') {
+                window.location.href = 'emergency.html';
+            } else if (action === 'logout') {
+                logout();
+            } else if (action === 'delete') {
+                deleteAccount();
+            }
+        }
+
+        // =====================================
+        // 🚪 LOGOUT LOGIC
+        // =====================================
+        function logout() {
+            if(confirm("Are you sure you want to log out?")) {
+                localStorage.removeItem("tagownUserPhone");
+                auth.signOut().then(() => {
+                    window.location.href = 'index.html'; 
+                }).catch(() => {
+                    window.location.href = 'index.html'; 
+                });
+            }
+        }
+
+        // =====================================
+        // 🗑️ DELETE ACCOUNT LOGIC
+        // =====================================
+        function deleteAccount() {
+            const confirm1 = confirm("⚠️ WARNING: This will permanently delete your account, vehicles, and all linked data. Do you want to proceed?");
+            if(confirm1) {
+                const confirm2 = prompt("Type 'DELETE' to confirm:");
+                if(confirm2 === "DELETE") {
+                    
+                    // Database se delete karo
+                    db.ref('Users/' + currentUserPhone).remove();
+                    db.ref('Vehicles/' + currentUserPhone).remove().then(() => {
+                        
+                        alert("Your account and all data have been permanently deleted.");
+                        localStorage.removeItem("tagownUserPhone");
+                        
+                        // Firebase Auth delete
+                        const user = auth.currentUser;
+                        if(user) {
+                            user.delete().then(() => { window.location.href = 'index.html'; })
+                            .catch(() => { auth.signOut(); window.location.href = 'index.html'; });
+                        } else {
+                            auth.signOut();
+                            window.location.href = 'index.html';
+                        }
+                        
+                    }).catch((err) => {
+                        alert("Error deleting data: " + err.message);
+                    });
+
+                } else {
+                    alert("Account deletion cancelled. You must type exactly 'DELETE' (in capital letters).");
+                }
+            }
+        }
+    </script>
+</body>
+</html>

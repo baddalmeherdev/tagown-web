@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scan Tagown | Secure QR</title>
+    
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary: #0D47A1; 
+            --bg-color: #F4F6F9; 
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #8E8E93;
+            --sos-red: #D32F2F;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #000000; /* Dark background for scanner */
+            margin: 0; padding: 0; color: #FFFFFF; 
+            -webkit-font-smoothing: antialiased;
+            height: 100vh; display: flex; flex-direction: column;
+        }
+
+        /* 📱 Top Header (Transparent for Scanner) */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 20px; z-index: 50; background: rgba(0,0,0,0.5);
+        }
+        .back-btn { 
+            background: rgba(255,255,255,0.2); border: none; border-radius: 50%; 
+            width: 40px; height: 40px; display: flex; justify-content: center; align-items: center;
+            color: white; font-size: 20px; cursor: pointer; backdrop-filter: blur(10px);
+        }
+        .header-title { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+        .help-btn { color: white; font-size: 22px; cursor: pointer; }
+
+        /* 📷 Scanner Container */
+        .scanner-container {
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            position: relative; padding: 20px;
+        }
+
+        .camera-wrapper {
+            position: relative; width: 100%; max-width: 400px;
+            border-radius: 24px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #111; border: 2px solid rgba(255,255,255,0.1);
+        }
+
+        /* Overriding the library's default video styles for iOS/Android perfection */
+        #reader { width: 100%; border-radius: 24px; overflow: hidden; }
+        #reader video { object-fit: cover !important; border-radius: 24px; }
+        
+        /* Focus Frame Design */
+        .scan-frame {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 220px; height: 220px;
+            border: 2px solid rgba(255,255,255,0.5); border-radius: 20px;
+            box-shadow: 0 0 0 4000px rgba(0,0,0,0.4); /* Darkens everything outside frame */
+            pointer-events: none; z-index: 10;
+        }
+        .scan-frame::before, .scan-frame::after {
+            content: ''; position: absolute; width: 30px; height: 30px; border-color: #00C853; border-style: solid;
+        }
+        .scan-frame::before { top: -2px; left: -2px; border-width: 4px 0 0 4px; border-top-left-radius: 20px; }
+        .scan-frame::after { bottom: -2px; right: -2px; border-width: 0 4px 4px 0; border-bottom-right-radius: 20px; }
+
+        /* Status & Privacy Text */
+        .status-text {
+            text-align: center; margin-top: 25px; font-size: 15px; font-weight: 600; padding: 0 20px;
+        }
+        .privacy-note {
+            text-align: center; margin-top: 15px; font-size: 11px; color: #8E8E93;
+            max-width: 300px; line-height: 1.4;
+        }
+        .privacy-icon { font-size: 14px; margin-right: 4px; }
+
+        /* Error Box (If permission denied) */
+        .error-box {
+            display: none; background: #2C2C2E; padding: 25px; border-radius: 20px;
+            text-align: center; margin-top: 20px; border: 1px solid #3A3A3C;
+        }
+        .btn-primary { 
+            background: var(--primary); color: white; padding: 14px 24px; 
+            border: none; border-radius: 12px; font-weight: bold; font-size: 15px; 
+            cursor: pointer; margin-top: 15px; width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+        <div class="header-title">Scan Tagown QR</div>
+        <div class="help-btn" onclick="alert('Point your camera directly at the Tagown sticker to contact the owner.')">❓</div>
+    </div>
+
+    <div class="scanner-container">
+        
+        <div class="camera-wrapper">
+            <div id="reader"></div>
+            <div class="scan-frame" id="scanFrame" style="display: none;"></div>
+        </div>
+
+        <div class="status-text" id="statusText">
+            Requesting camera access...
+        </div>
+
+        <div class="privacy-note">
+            <span class="privacy-icon">🔒</span> <b>Privacy Guaranteed:</b> Your camera is only used locally on your device to scan the QR code. No video is recorded or sent to our servers.
+        </div>
+
+        <div class="error-box" id="errorBox">
+            <div style="font-size: 40px; margin-bottom: 10px;">📷</div>
+            <h3 style="margin: 0 0 10px 0; color: white;">Camera Blocked</h3>
+            <p style="color: var(--text-sub); font-size: 14px; line-height: 1.5; margin-bottom: 20px;">
+                Please allow camera access in your browser settings to scan the vehicle QR code.
+            </p>
+            <button class="btn-primary" onclick="location.reload()">Reload & Try Again</button>
+            <button class="btn-primary" style="background: transparent; border: 1px solid #8E8E93; color: white; margin-top: 10px;" onclick="window.location.href='index.html'">Go Back</button>
+        </div>
+
+    </div>
+
+    <script>
+        // Initialize Core Engine
+        const html5QrCode = new Html5Qrcode("reader");
+        const statusText = document.getElementById("statusText");
+        const errorBox = document.getElementById("errorBox");
+        const scanFrame = document.getElementById("scanFrame");
+
+        // Configuration for iOS/Android cameras
+        const config = { 
+            fps: 10, 
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0 // Ensures it looks square and fits nicely on mobile
+        };
+
+        // 🚀 START SCANNING AUTOMATICALLY (Triggers System OS Permission)
+        html5QrCode.start(
+            { facingMode: "environment" }, // Forces back camera
+            config,
+            onScanSuccess,
+            onScanFailure
+        ).then(() => {
+            // Permission Granted & Camera Running
+            statusText.innerText = "Point camera at the Tagown sticker";
+            scanFrame.style.display = "block"; // Show the targeting frame
+        }).catch((err) => {
+            // Permission Denied by User or OS
+            statusText.style.display = "none";
+            errorBox.style.display = "block";
+            console.error("Camera error:", err);
+        });
+
+        // ✅ ON SUCCESSFUL SCAN
+        function onScanSuccess(decodedText) {
+            // STRICT SECURITY: Only accept Tagown URLs or IDs
+            if(decodedText.includes('tagown.online/scan?id=') || decodedText.startsWith('TAGOWN-V1-')) {
+                
+                // Stop camera immediately to save battery
+                html5QrCode.stop().then(() => {
+                    statusText.innerHTML = "<span style='color:#00C853;'>Verified Tagown QR! Redirecting...</span>";
+                    
+                    // Redirect to the correct owner page
+                    if(decodedText.startsWith('http')) {
+                        window.location.href = decodedText;
+                    } else {
+                        window.location.href = 'https://tagown.online/scan?id=' + decodedText;
+                    }
+                });
+
+            } else {
+                // If it's a random phonePe/GPay/Website QR code
+                alert("Invalid QR! We only support genuine Tagown Stickers.");
+                // Note: We don't stop the camera here, let them try scanning the correct one
+            }
+        }
+
+        // ❌ ON FAILED FRAME (Runs continuously, ignored)
+        function onScanFailure(error) {
+            // Do nothing. It just means the current frame doesn't have a clear QR code.
+        }
+    </script>
+
+</body>
+</html>

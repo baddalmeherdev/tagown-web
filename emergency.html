@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Emergency Profile</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #1565C0; 
+            --title-red: #D32F2F;
+            --bg-color: #F4F6F9; 
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #555555;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 50px;
+        }
+
+        /* 📱 Top Header (Blue) */
+        .header {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--primary-blue); padding: 18px 20px;
+            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn { 
+            position: absolute; left: 20px;
+            background: transparent; border: none; font-size: 24px; color: white; 
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+        }
+        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+
+        /* 📦 Main Container */
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 🚨 Emergency Form Card */
+        .form-card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px 20px; margin-top: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .page-title { display: flex; align-items: center; color: var(--title-red); font-size: 20px; font-weight: bold; font-style: italic; margin: 0 0 10px 0; }
+        .info-icon { color: var(--primary-blue); font-size: 22px; margin-left: 8px; cursor: pointer; font-style: normal;}
+        
+        .description { font-size: 13px; color: #444; font-weight: 600; font-style: italic; line-height: 1.4; margin-bottom: 25px; }
+
+        /* Section Titles */
+        .section-title { color: var(--primary-blue); font-size: 14px; font-weight: bold; font-style: italic; margin: 25px 0 10px 0; }
+        .sub-label { font-size: 12px; color: #888; font-weight: bold; font-style: italic; margin-bottom: 5px; display: block; }
+
+        /* Inputs */
+        .form-input, .form-select {
+            width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #E0E0E0; border-radius: 8px; 
+            font-size: 15px; box-sizing: border-box; font-style: italic; color: #333; background: #FFFFFF;
+        }
+        .form-input:focus, .form-select:focus { outline: 1px solid var(--primary-blue); }
+        
+        /* Contact Block */
+        .contact-block { margin-bottom: 20px; }
+
+        /* Save Button */
+        .btn-save {
+            background: var(--primary-blue); color: white; padding: 16px; width: 100%;
+            border: none; border-radius: 8px; font-weight: bold; font-size: 14px; font-style: italic;
+            cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2);
+            margin-top: 10px; transition: transform 0.2s;
+        }
+        .btn-save:active { transform: scale(0.98); }
+
+        /* ⚖️ Legal Info Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px);}
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.2); animation: scaleUp 0.3s ease;}
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .btn-close-modal { background: #E53935; color: white; padding: 12px; width: 100%; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 20px;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='settings.html'">«</button>
+        <div class="header-title">Settings & Profile</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="form-card">
+            <h2 class="page-title">🚨 Emergency Profile <span class="info-icon" onclick="openLegalInfo()">ⓘ</span></h2>
+            <p class="description">Add your critical health details and trusted contacts. This data is private and only visible to authorized Admin apps during emergencies.</p>
+            
+            <div class="section-title">Your Medical Details</div>
+            
+            <input type="number" id="inpAge" class="form-input" placeholder="Age (e.g., 25)">
+            
+            <div class="sub-label">Gender</div>
+            <select id="inpGender" class="form-select">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <div class="sub-label">Blood Group</div>
+            <select id="inpBlood" class="form-select">
+                <option value="">Select Blood Group</option>
+                <option value="A+">A+</option><option value="A-">A-</option>
+                <option value="B+">B+</option><option value="B-">B-</option>
+                <option value="O+">O+</option><option value="O-">O-</option>
+                <option value="AB+">AB+</option><option value="AB-">AB-</option>
+            </select>
+
+            <div class="section-title">Trusted Contacts</div>
+            
+            <div class="contact-block">
+                <div class="sub-label">Contact 1 (Primary)</div>
+                <input type="text" id="c1Name" class="form-input" placeholder="Name (e.g. Brother)">
+                <input type="tel" id="c1Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+            </div>
+
+            <div class="contact-block">
+                <div class="sub-label">Contact 2</div>
+                <input type="text" id="c2Name" class="form-input" placeholder="Name">
+                <input type="tel" id="c2Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+            </div>
+
+            <div class="contact-block">
+                <div class="sub-label">Contact 3</div>
+                <input type="text" id="c3Name" class="form-input" placeholder="Name">
+                <input type="tel" id="c3Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+            </div>
+
+            <button class="btn-save" onclick="saveEmergencyProfile()">SECURE & SAVE DETAILS</button>
+        </div>
+
+    </div>
+
+    <div id="legalModal" class="modal">
+        <div class="modal-content">
+            <div style="font-size: 40px; margin-bottom:10px;">🔒</div>
+            <h2 style="margin-top: 0; color: var(--primary-blue); font-style: italic;">Data Privacy & Legal Notice</h2>
+            <p style="font-size: 14px; color: #444; line-height: 1.5; text-align: left; font-weight: 500;">
+                By saving these details, you acknowledge and agree that:
+                <br><br>
+                1. <b>Purpose:</b> This data is collected solely for life-saving purposes during vehicle emergencies or accidents.
+                <br><br>
+                2. <b>Access:</b> It is securely encrypted and will ONLY be accessed by authorized First Responders, Police, or Tagown Admins when your vehicle's QR is scanned in an emergency.
+                <br><br>
+                3. <b>Privacy:</b> We do not sell, share, or use your medical details or contact numbers for marketing. Your privacy is our top priority.
+            </p>
+            <button class="btn-close-modal" onclick="closeLegalInfo()">I Understand</button>
+        </div>
+    </div>
+
+    <script>
+        // 🚀 BHAIG LOGIC: FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Check Login Status
+        const currentUserPhone = localStorage.getItem("tagownUserPhone");
+        if (!currentUserPhone) {
+            alert("Security Alert: Please login to update Emergency details.");
+            window.location.href = 'auth.html';
+        }
+
+        // =====================================
+        // ⚖️ MODAL LOGIC
+        // =====================================
+        function openLegalInfo() { document.getElementById('legalModal').style.display = 'flex'; }
+        function closeLegalInfo() { document.getElementById('legalModal').style.display = 'none'; }
+
+        // =====================================
+        // 📥 FETCH EXISTING DATA (If User Already Filled)
+        // =====================================
+        function loadExistingData() {
+            db.ref('Users/' + currentUserPhone).once('value').then((snapshot) => {
+                if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    
+                    // Load Medical
+                    if(data.age) document.getElementById('inpAge').value = data.age;
+                    if(data.gender) document.getElementById('inpGender').value = data.gender;
+                    if(data.bloodGroup) document.getElementById('inpBlood').value = data.bloodGroup;
+
+                    // Load Contacts
+                    if(data.EmergencyContacts) {
+                        const ec = data.EmergencyContacts;
+                        if(ec.Contact1) {
+                            document.getElementById('c1Name').value = ec.Contact1.name || '';
+                            document.getElementById('c1Phone').value = ec.Contact1.phone || '';
+                        }
+                        if(ec.Contact2) {
+                            document.getElementById('c2Name').value = ec.Contact2.name || '';
+                            document.getElementById('c2Phone').value = ec.Contact2.phone || '';
+                        }
+                        if(ec.Contact3) {
+                            document.getElementById('c3Name').value = ec.Contact3.name || '';
+                            document.getElementById('c3Phone').value = ec.Contact3.phone || '';
+                        }
+                    }
+                }
+            });
+        }
+        
+        loadExistingData();
+
+        // =====================================
+        // 💾 SAVE EMERGENCY PROFILE (SYNC WITH APP)
+        // =====================================
+        function saveEmergencyProfile() {
+            // Medical
+            const age = document.getElementById('inpAge').value.trim();
+            const gender = document.getElementById('inpGender').value;
+            const bloodGroup = document.getElementById('inpBlood').value;
+
+            // Contacts
+            const c1Name = document.getElementById('c1Name').value.trim();
+            const c1Phone = document.getElementById('c1Phone').value.trim();
+            const c2Name = document.getElementById('c2Name').value.trim();
+            const c2Phone = document.getElementById('c2Phone').value.trim();
+            const c3Name = document.getElementById('c3Name').value.trim();
+            const c3Phone = document.getElementById('c3Phone').value.trim();
+
+            if(!c1Name || c1Phone.length !== 10) {
+                alert("Please provide at least Contact 1 (Primary) with a valid 10-digit number.");
+                return;
+            }
+
+            // Structure data exactly as App expects
+            const updateData = {
+                age: age || "Not Provided",
+                gender: gender || "Not Provided",
+                bloodGroup: bloodGroup || "Not Provided",
+                EmergencyContacts: {
+                    Contact1: { name: c1Name, phone: c1Phone }
+                }
+            };
+
+            // Add optional contacts if filled
+            if(c2Name && c2Phone.length === 10) { updateData.EmergencyContacts.Contact2 = { name: c2Name, phone: c2Phone }; }
+            if(c3Name && c3Phone.length === 10) { updateData.EmergencyContacts.Contact3 = { name: c3Name, phone: c3Phone }; }
+
+            // Save to exact same folder in Firebase (Users -> Phone)
+            db.ref('Users/' + currentUserPhone).update(updateData)
+            .then(() => {
+                alert("Emergency Profile Secured! Data synced with Tagown App.");
+                window.location.href = 'settings.html';
+            })
+            .catch((error) => {
+                alert("Database Error: " + error.message);
+            });
+        }
+    </script>
+</body>
+</html>

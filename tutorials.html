@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Video Guides</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #1565C0; 
+            --bg-color: #F4F6F9; 
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #666666;
+            --yt-red: #D32F2F; /* Matching app primary for better look */
+            --ig-pink: #E1306C;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 100px;
+        }
+
+        /* 📱 Top Header (Blue) */
+        .header {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--primary-blue); padding: 18px 20px;
+            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn { 
+            position: absolute; left: 20px;
+            background: transparent; border: none; font-size: 24px; color: white; 
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+        }
+        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+
+        /* 📦 Main Container */
+        .container { padding: 20px 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .page-intro { text-align: center; margin-bottom: 30px; }
+        .page-intro h2 { font-size: 20px; color: #222; font-style: italic; margin: 0; }
+        .page-intro p { font-size: 13px; color: var(--text-sub); font-weight: 600; margin-top: 5px; font-style: italic; }
+
+        /* 📋 Compact Tutorial List (Redesigned) */
+        .tutorial-list { display: flex; flex-direction: column; gap: 15px; }
+        
+        .tutorial-item {
+            background: var(--card-bg); border-radius: 12px; padding: 18px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #E5E5EA;
+            transition: 0.2s; cursor: pointer; text-decoration: none;
+        }
+        .tutorial-item:active { background: #F5F7FA; transform: scale(0.98); }
+
+        .item-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; max-width: 80%;}
+        
+        /* Dynamic Platform Icon Placeholder */
+        .platform-icon {
+            width: 40px; height: 40px; border-radius: 50%; display: flex; 
+            justify-content: center; align-items: center; font-size: 20px;
+            flex-shrink: 0;
+        }
+        .yt-icon { background: #FFEBEE; color: #FF0000; }
+        .ig-icon { background: #FCE4EC; color: #E91E63; }
+        .other-icon { background: #E3F2FD; color: #1976D2; }
+
+        .item-title { font-size: 15px; font-weight: bold; color: #111; margin: 0; line-height: 1.4; font-style: italic;}
+        
+        /* Action Icon (Trailing Play) */
+        .item-action {
+            color: #8E8E93; font-size: 16px; font-weight: bold;
+        }
+
+        /* Loader */
+        .loader { text-align: center; padding: 50px; color: #888; font-style: italic; font-weight: bold; }
+
+        /* 🧭 Floating Bottom Nav */
+        .bottom-nav {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; }
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.location.href='index.html'">«</button>
+        <div class="header-title">How to Use Tagown</div>
+    </div>
+
+    <div class="container">
+        <div class="page-intro">
+            <h2>Official Video Guides</h2>
+            <p>Simple step-by-step tutorials for your security.</p>
+        </div>
+
+        <div id="tutorialList" class="tutorial-list">
+            <div class="loader">Fetching latest guides...</div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp"><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp"><span>Shop</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp"><span>Settings</span>
+        </div>
+    </div>
+
+    <script>
+        // 🚀 FIREBASE CONFIGURATION (Meherdevlopstudio Project)
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // 📺 FETCH & RENDER COMPACT LIST
+        function loadTutorials() {
+            const listDiv = document.getElementById('tutorialList');
+            
+            // Listening to 'Tutorials' node exactly like the Admin App
+            db.ref('Tutorials').on('value', (snapshot) => {
+                listDiv.innerHTML = ''; // Clear loader
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const data = child.val();
+                        
+                        // Smart Platform Icon Logic
+                        let iconClass = 'other-icon';
+                        let platformText = '📹'; // default
+
+                        const platform = (data.platform || '').toLowerCase();
+                        if (platform.includes('youtube')) {
+                            iconClass = 'yt-icon';
+                            platformText = '▶️'; // Red play
+                        } else if (platform.includes('instagram')) {
+                            iconClass = 'ig-icon';
+                            platformText = '📸'; // Camera/Pink
+                        } else if (platform.includes('shorts')) {
+                            iconClass = 'yt-icon';
+                            platformText = '🩳'; // YouTube Shorts
+                        }
+
+                        // THE FIX: Title and Play Icon only compact design
+                        listDiv.innerHTML += `
+                            <div class="tutorial-item" onclick="window.open('${data.videoUrl}', '_blank')">
+                                <div class="item-left">
+                                    <div class="platform-icon ${iconClass}">${platformText}</div>
+                                    <h3 class="item-title">${data.title}</h3>
+                                </div>
+                                <div class="item-action">
+                                    <span style="color:var(--primary-blue);">▶</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    listDiv.innerHTML = '<div style="text-align:center; color:#888; padding:30px; font-style:italic;">No tutorials found. Add them from Admin App!</div>';
+                }
+            });
+        }
+
+        // Initialize loading
+        loadTutorials();
+    </script>
+</body>
+</html>

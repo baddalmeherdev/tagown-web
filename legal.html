@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Legal Documents</title>
+    
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #1565C0; 
+            --bg-color: #F4F6F9; 
+            --card-bg: #FFFFFF;
+            --text-main: #1C1C1E;
+            --text-sub: #444444;
+            --danger-red: #D32F2F;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 50px; line-height: 1.6;
+        }
+
+        /* 📱 Top Header */
+        .header {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--primary-blue); padding: 18px 20px;
+            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .back-btn { 
+            position: absolute; left: 20px;
+            background: transparent; border: none; font-size: 24px; color: white; 
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+        }
+        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+
+        /* 📦 Main Container */
+        .container { padding: 15px; max-width: 700px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 📜 Legal Sections (Hidden by default, controlled by JS) */
+        .legal-section { display: none; }
+
+        .legal-card {
+            background: var(--card-bg); border-radius: 16px; padding: 25px 20px; margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #E5E5EA;
+        }
+        
+        .legal-title { 
+            color: var(--primary-blue); font-size: 22px; font-weight: 800; font-style: italic; 
+            margin: 0 0 15px 0; border-bottom: 2px solid #F0F0F0; padding-bottom: 10px;
+        }
+        
+        .legal-h3 { font-size: 16px; font-weight: bold; color: #111; margin: 25px 0 8px 0; }
+        .legal-text { font-size: 14px; color: var(--text-sub); margin: 0 0 15px 0; text-align: justify; }
+        .legal-list { margin: 0 0 15px 20px; padding: 0; font-size: 14px; color: var(--text-sub); }
+        .legal-list li { margin-bottom: 8px; text-align: justify; }
+
+        /* Highlight Boxes for App Store Compliance */
+        .highlight-box {
+            background: #E3F2FD; border-left: 4px solid #1976D2; padding: 15px;
+            border-radius: 4px; font-size: 13px; color: #0D47A1; margin: 20px 0; font-weight: 600;
+        }
+
+        .danger-box {
+            background: #FFEBEE; border-left: 4px solid var(--danger-red); padding: 15px;
+            border-radius: 4px; font-size: 13px; color: var(--danger-red); margin: 20px 0; font-weight: 600;
+        }
+
+        /* 💖 Footer */
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #9E9E9E; font-style: italic; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.history.back()">«</button>
+        <div class="header-title" id="pageTitle">Legal Documents</div>
+    </div>
+
+    <div class="container">
+        
+        <div id="privacy" class="legal-section">
+            <div class="legal-card">
+                <h2 class="legal-title">Privacy Policy</h2>
+                <p class="legal-text"><b>Last Updated: May 2026</b><br>Welcome to Tagown, operated by Meherwebstudio ("we", "our", or "us"). We are committed to protecting your personal information and your right to privacy. This extensive Privacy Policy governs the data collection, usage, and protection protocols for the Tagown Mobile Application (Android/iOS) and the Tagown Web Dashboard.</p>
+                
+                <h3 class="legal-h3">1. Information We Collect</h3>
+                <p class="legal-text">To provide you with our vehicle security and alert ecosystem, we must collect certain information:</p>
+                <ul class="legal-list">
+                    <li><b>Personal Identification Information:</b> Your Full Name, Mobile Number, and secure Password. We verify mobile numbers using OTP via Firebase Authentication to ensure authenticity.</li>
+                    <li><b>Vehicle Information:</b> Registration Number (IND), Vehicle Type, Brand, Model, and optional vehicle photographs.</li>
+                    <li><b>Emergency Profile (Optional):</b> Age, Gender, Blood Group, and Trusted Emergency Contact details (Name and Phone numbers).</li>
+                </ul>
+
+                <h3 class="legal-h3">2. Explicit Use of Camera and Permissions</h3>
+                <p class="legal-text">App Store and Play Store policies require strict transparency regarding hardware permissions:</p>
+                <div class="highlight-box">
+                    <b>Camera Usage:</b> The Tagown platform requires camera access strictly for the purpose of scanning Tagown QR code stickers. We process the QR code locally on your device. <b>We do NOT record videos, take background photos, or upload your live camera feed to our servers.</b>
+                </div>
+
+                <h3 class="legal-h3">3. How We Use Your Information</h3>
+                <p class="legal-text">We process your information for purposes based on legitimate business interests, including:</p>
+                <ul class="legal-list">
+                    <li><b>Facilitating Communication:</b> To allow third parties to contact you regarding your parked vehicle without exposing your actual mobile number directly on the vehicle.</li>
+                    <li><b>Emergency Response:</b> To display your emergency contacts to authorized personnel or first responders if your vehicle is involved in an incident.</li>
+                    <li><b>Account Management:</b> To secure your Document Vault and manage your linked Tagown QR tags.</li>
+                </ul>
+
+                <h3 class="legal-h3">4. Information Sharing and Disclosure</h3>
+                <p class="legal-text">We DO NOT sell, rent, or trade your personal or medical data to advertisers. We may share information only in the following situations:</p>
+                <ul class="legal-list">
+                    <li><b>Consent:</b> When you explicitly allow us to share details (e.g., displaying emergency numbers when QR is scanned).</li>
+                    <li><b>Legal Obligations:</b> If required by law, court order, or police investigation to protect the rights, property, or safety of our users.</li>
+                </ul>
+
+                <h3 class="legal-h3">5. Data Security & Storage</h3>
+                <p class="legal-text">We implement military-grade security measures. All data is securely encrypted and stored on Google Firebase servers. The "Document Vault" feature within our Mobile App utilizes local device encryption methodologies to protect your sensitive documents (RC, License).</p>
+
+                <h3 class="legal-h3">6. User Rights & Account Deletion (Crucial)</h3>
+                <p class="legal-text">You maintain full control over your data. You may review, change, or terminate your account at any time.</p>
+                <div class="highlight-box">
+                    <b>Data Deletion:</b> You can instantly delete all your data by navigating to <i>Settings & Profile > Delete Account Permanently</i>. Executing this action will instantly wipe your Personal Info, Vehicle Data, and Emergency Contacts from our Firebase databases.
+                </div>
+
+                <h3 class="legal-h3">7. Contact Us</h3>
+                <p class="legal-text">If you have questions or comments about this notice, you may email our Grievance Officer at <b>support@tagown.online</b> or contact us via WhatsApp at +91-6372980014.</p>
+            </div>
+        </div>
+
+        <div id="terms" class="legal-section">
+            <div class="legal-card">
+                <h2 class="legal-title">Terms & Conditions</h2>
+                <p class="legal-text"><b>Last Updated: May 2026</b><br>By accessing the Tagown platform (Mobile App and Web Dashboard), you agree to be bound by these Terms and Conditions. Please read them carefully.</p>
+                
+                <h3 class="legal-h3">1. Agreement to Terms</h3>
+                <p class="legal-text">These Terms constitute a legally binding agreement made between you, whether personally or on behalf of an entity, and Meherwebstudio ("Tagown"), concerning your access to and use of our services.</p>
+
+                <h3 class="legal-h3">2. Description of Services</h3>
+                <p class="legal-text">Tagown provides a "Phygital" (Physical + Digital) vehicle ecosystem. We supply physical QR code stickers that users apply to their vehicles. When scanned by a third party using a mobile camera, the scanner can alert the vehicle owner without needing to know the owner's private mobile number.</p>
+                
+                <div class="highlight-box">
+                    <b>App vs. Web Dashboard:</b> Basic vehicle linking and alerts are available on the Web Dashboard. However, high-security features like the Digital Document Vault are restricted exclusively to the Tagown Mobile App to maintain local device encryption standards.
+                </div>
+
+                <h3 class="legal-h3">3. User Representations & Responsibilities</h3>
+                <p class="legal-text">By using Tagown, you represent and warrant that:</p>
+                <ul class="legal-list">
+                    <li>All registration information you submit is true, accurate, and current.</li>
+                    <li>You will only link Tagown QR tags to vehicles that you legally own or are legally authorized to operate.</li>
+                    <li>You will not use the platform for any illegal or unauthorized purpose.</li>
+                </ul>
+
+                <h3 class="legal-h3">4. Prohibited Activities</h3>
+                <p class="legal-text">As a user, you agree NOT to:</p>
+                <ul class="legal-list">
+                    <li>Scan Tagown QR codes to send false alerts, spam, or harass vehicle owners.</li>
+                    <li>Tamper with, duplicate, or counterfeit physical Tagown QR stickers.</li>
+                    <li>Attempt to bypass our security protocols or hack our Firebase infrastructure.</li>
+                    <li>Upload malicious files or scripts through the Document Vault.</li>
+                </ul>
+
+                <h3 class="legal-h3">5. Termination & Suspension</h3>
+                <p class="legal-text">We reserve the right to suspend or permanently terminate your account and deactivate your physical QR tags, without notice or liability, if you breach any of these Terms or engage in prohibited conduct.</p>
+
+                <h3 class="legal-h3">6. Governing Law</h3>
+                <p class="legal-text">These terms and conditions are governed by and construed in accordance with the laws of India. Any disputes arising out of this agreement shall be subject to the exclusive jurisdiction of the courts in Odisha, India.</p>
+            </div>
+        </div>
+
+        <div id="disclaimer" class="legal-section">
+            <div class="legal-card">
+                <h2 class="legal-title">Disclaimer of Liability</h2>
+                
+                <p class="legal-text">The information and services provided by the Tagown App and Web Dashboard are on an "as is" and "as available" basis. Meherwebstudio and Badal Meher (Chairman) make no warranties regarding the absolute reliability or uninterrupted nature of the service.</p>
+
+                <h3 class="legal-h3">Not a Replacement for Emergency Authorities</h3>
+                <div class="danger-box">
+                    Tagown is a supplementary communication tool designed to help citizens alert vehicle owners. <b>Tagown is NOT a replacement for National Emergency Services (112), Police (100), Fire (101), or Ambulances (108).</b>
+                    <br><br>
+                    In case of a severe accident, physical threat, or medical emergency, users MUST dial national emergency helplines directly. Tagown does not guarantee immediate physical rescue or medical aid.
+                </div>
+
+                <h3 class="legal-h3">Limitation of Liability</h3>
+                <p class="legal-text">Under no circumstances shall Tagown, its developers, or its founders be held liable for:</p>
+                <ul class="legal-list">
+                    <li>Physical damage, theft, or vandalism of your vehicle.</li>
+                    <li>Delayed or missed notifications due to network issues, server downtime, or a third-party failing to scan the QR code.</li>
+                    <li>Any bodily injury or medical complications resulting from an accident, regardless of whether the emergency profile was accessed.</li>
+                </ul>
+                <p class="legal-text">The system relies heavily on internet connectivity, third-party scanner devices, and the goodwill of the general public. By using Tagown, you accept these inherent technological limitations.</p>
+            </div>
+        </div>
+
+        <div id="copyright" class="legal-section">
+            <div class="legal-card">
+                <h2 class="legal-title">Copyright & IP Rights</h2>
+                
+                <p class="legal-text"><b>© 2026 Tagown Platform. All rights reserved.</b></p>
+                <p class="legal-text">The Tagown ecosystem, including but not limited to:</p>
+                <ul class="legal-list">
+                    <li>The name "Tagown" and its associated brand logos.</li>
+                    <li>The "Phygital" (Physical-Digital) QR integration methodologies.</li>
+                    <li>The source code, UI/UX designs, and database structures of the Mobile Applications and Web Dashboard.</li>
+                    <li>The physical design and artwork of the Tagown vehicle stickers.</li>
+                </ul>
+                <p class="legal-text">...are the exclusive intellectual properties of <b>Meherwebstudio</b> and its Chairman, <b>Badal Meher</b>.</p>
+
+                <div class="highlight-box">
+                    Unauthorized reproduction, distribution, duplication of our physical QR stickers, or copying of our digital platform codebase is strictly prohibited and is punishable under the Intellectual Property Laws and Copyright Acts of India. Legal action will be pursued against any counterfeiters or copycats.
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            Tagown Legal Dept. | App Version 1.0<br>
+            Made securely in India with ❤️
+        </div>
+
+    </div>
+
+    <script>
+        function loadProperLegalPage() {
+            // Read what comes after the '#' in the URL (e.g., legal.html#privacy)
+            let hash = window.location.hash.substring(1);
+            
+            // If no hash is provided, default to privacy
+            if (!hash || !['privacy', 'terms', 'disclaimer', 'copyright'].includes(hash)) {
+                hash = 'privacy';
+            }
+
+            // Hide all legal sections
+            document.querySelectorAll('.legal-section').forEach(section => {
+                section.style.display = 'none';
+            });
+
+            // Show only the requested section
+            const targetSection = document.getElementById(hash);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                
+                // Update the Top Header Title dynamically
+                const titles = {
+                    'privacy': 'Privacy Policy',
+                    'terms': 'Terms & Conditions',
+                    'disclaimer': 'Disclaimer',
+                    'copyright': 'Copyright Info'
+                };
+                document.getElementById('pageTitle').innerText = titles[hash];
+            }
+        }
+
+        // Run when page loads
+        window.onload = loadProperLegalPage;
+
+        // Run if the user clicks a different link while already on this page
+        window.addEventListener('hashchange', loadProperLegalPage);
+    </script>
+</body>
+</html>

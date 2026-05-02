@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | My Vehicles</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        /* 🍏 iOS Premium Theme Variables */
+        :root { 
+            --primary-blue: #0D47A1; 
+            --primary-green: #2E7D32;
+            --light-green: #E8F5E9;
+            --title-color: #1B5E20;
+            --text-main: #1C1C1E;
+            --text-sub: #8E8E93;
+            --bg-color: #F5F7FA;
+            --card-bg: #FFFFFF;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 100px;
+        }
+
+        /* 📱 Top Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            background: var(--bg-color); padding: 15px 20px;
+            position: sticky; top: 0; z-index: 50;
+        }
+        .back-btn { 
+            background: transparent; border: none; font-size: 24px; color: #03A9F4; 
+            font-weight: bold; cursor: pointer; display: flex; align-items: center;
+        }
+        .header-title { color: var(--title-color); font-size: 22px; font-weight: bold; font-style: italic; }
+        .info-btn { color: var(--title-color); font-size: 24px; cursor: pointer; }
+
+        /* 📦 Main Container */
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 🚗 Vehicle List View (Garage) */
+        .garage-title { font-size: 18px; font-weight: bold; font-style: italic; color: #333; margin-bottom: 15px; }
+        
+        .vehicle-card {
+            background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #F0F0F0;
+        }
+        .vc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
+        
+        .vc-icon-box {
+            width: 70px; height: 70px; background: #E1F5FE; border-radius: 16px;
+            display: flex; justify-content: center; align-items: center; font-size: 40px; margin-right: 15px;
+        }
+        
+        /* 🇮🇳 IND Number Plate Styling */
+        .ind-plate {
+            display: flex; border: 1.5px solid #222; border-radius: 6px; overflow: hidden; background: white; margin-bottom: 8px; width: fit-content;
+        }
+        .ind-blue {
+            background: #0D47A1; color: white; width: 20px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 7px; font-weight: bold; padding-bottom: 2px;
+        }
+        .ind-number { padding: 4px 10px; font-size: 14px; font-weight: bold; letter-spacing: 1px; font-style: italic;}
+        
+        .vc-details { flex-grow: 1; }
+        .vc-type-badge { background: var(--light-green); color: var(--primary-green); font-size: 11px; padding: 3px 8px; border-radius: 4px; font-style: italic; font-weight: bold; display: inline-block; margin-bottom: 5px; }
+        .vc-model { font-size: 13px; color: #555; font-style: italic;}
+        
+        .vc-qr-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .vc-qr-box img { width: 35px; height: 35px; }
+        .vc-qr-box span { font-size: 10px; color: var(--primary-green); font-weight: bold; margin-top: 5px; font-style: italic;}
+
+        .vc-actions { display: flex; justify-content: space-around; border-top: 1px dashed #E0E0E0; padding-top: 15px; }
+        .btn-edit { color: #1976D2; font-weight: bold; font-size: 13px; background: none; border: none; cursor: pointer; font-style: italic; letter-spacing: 1px;}
+        .btn-delete { color: #D32F2F; font-weight: bold; font-size: 13px; background: none; border: none; cursor: pointer; font-style: italic; letter-spacing: 1px;}
+
+        /* Floating Add Button */
+        .btn-float-add {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: #388E3C; color: white; padding: 15px 30px; border-radius: 30px;
+            font-weight: bold; font-size: 15px; border: none; box-shadow: 0 5px 15px rgba(56, 142, 60, 0.4);
+            cursor: pointer; z-index: 90; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
+        }
+
+        /* ========================================= */
+        /* 📝 ADD VEHICLE FORM VIEW */
+        /* ========================================= */
+        #addView { display: none; }
+        
+        .photo-box { background: var(--light-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 15px; border: 1px solid #C8E6C9; cursor: pointer;}
+        .photo-icon { background: white; border-radius: 50%; width: 50px; height: 50px; display: inline-flex; justify-content: center; align-items: center; font-size: 24px; color: var(--primary-green); border: 2px solid var(--primary-green); margin-bottom: 10px; }
+        .photo-text { color: var(--primary-green); font-size: 13px; font-weight: bold; font-style: italic; }
+
+        .qr-link-box { background: white; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #E0E0E0;}
+        .qr-title { color: var(--title-color); font-weight: bold; font-size: 15px; font-style: italic; margin-bottom: 15px; }
+        .btn-scan-qr { background: #388E3C; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; font-style: italic; cursor: pointer; letter-spacing: 1px;}
+        .btn-scan-qr.success { background: #0D47A1; }
+
+        .form-section-title { color: var(--title-color); font-weight: bold; font-size: 16px; font-style: italic; margin-bottom: 10px; }
+        
+        /* IND Input Form */
+        .ind-input-wrapper { display: flex; border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden; background: white; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
+        .ind-input-blue { background: #0D47A1; color: white; width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 10px; font-weight: bold; padding-bottom: 4px; }
+        .ind-input-field { flex-grow: 1; padding: 15px; font-size: 18px; font-weight: bold; border: none; outline: none; font-style: italic; text-transform: uppercase; color: #333; letter-spacing: 2px;}
+
+        /* Form Inputs */
+        .row-2 { display: flex; gap: 10px; margin-bottom: 15px; }
+        .form-input { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white;}
+        .form-input:focus { outline: 1px solid var(--primary-green); }
+        
+        /* Accordion */
+        .accordion-header { display: flex; justify-content: space-between; align-items: center; color: #E65100; font-weight: bold; font-size: 14px; font-style: italic; cursor: pointer; margin-top: 20px; margin-bottom: 10px;}
+        .accordion-content { display: none; }
+        
+        .btn-save-full { background: #388E3C; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(56, 142, 60, 0.3);}
+
+        /* 📷 Scanner Overlay */
+        .scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; flex-direction: column; }
+        #qrReader { width: 100%; flex-grow: 1; }
+        .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 101; cursor: pointer;}
+    </style>
+</head>
+<body>
+
+    <div id="garageView">
+        <div class="header">
+            <button class="back-btn" onclick="window.location.href='index.html'">«</button>
+            <div class="header-title">My Vehicles</div>
+            <div class="info-btn" onclick="alert('Manage all your Tagown secured vehicles here.')">ⓘ</div>
+        </div>
+
+        <div class="container">
+            <div class="garage-title">Secured Garage</div>
+            
+            <div id="vehicleList">
+                <p style="text-align:center; color:#888; font-style:italic;">Loading your secure vault...</p>
+                </div>
+            
+        </div>
+
+        <button class="btn-float-add" onclick="toggleView('addView')">
+            ➕ ADD NEW VEHICLE
+        </button>
+    </div>
+
+    <div id="addView">
+        <div class="header">
+            <button class="back-btn" onclick="toggleView('garageView')">«</button>
+            <div class="header-title">Add Your Vehicle</div>
+            <div style="width: 24px;"></div> </div>
+
+        <div class="container" style="padding-bottom: 40px;">
+            
+            <div class="photo-box" onclick="alert('Camera integration for web coming soon! Using default icon for now.')">
+                <div class="photo-icon">📷</div><br>
+                <span class="photo-text">Tap to add vehicle photo</span>
+            </div>
+
+            <div class="qr-link-box">
+                <div class="qr-title">Link Tagown QR Tag (Required)</div>
+                <button class="btn-scan-qr" id="btnLinkQr" onclick="openScanner()">SCAN TAG QR</button>
+                <input type="hidden" id="hiddenQrId" value="">
+            </div>
+
+            <div class="form-section-title">Vehicle Details</div>
+
+            <div class="ind-input-wrapper">
+                <div class="ind-input-blue">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Wheel_of_Ashoka.svg" width="12" style="margin-bottom:2px; filter: invert(1);">
+                    IND
+                </div>
+                <input type="text" id="inpRegNo" class="ind-input-field" placeholder="OD 17 AB 1234 *" maxlength="13">
+            </div>
+
+            <div class="row-2">
+                <select id="inpType" class="form-input">
+                    <option value="">Vehicle Type *</option>
+                    <option value="Bike/Scooter">Bike/Scooter</option>
+                    <option value="Car/SUV">Car/SUV</option>
+                    <option value="Commercial">Commercial</option>
+                </select>
+                <select id="inpBrand" class="form-input">
+                    <option value="">Select Brand *</option>
+                    <option value="Royal Enfield">Royal Enfield</option>
+                    <option value="Honda">Honda</option>
+                    <option value="TVS">TVS</option>
+                    <option value="Maruti Suzuki">Maruti Suzuki</option>
+                    <option value="Hyundai">Hyundai</option>
+                    <option value="Tata">Tata</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <input type="text" id="inpModel" class="form-input" placeholder="Model (e.g., Classic 350) *">
+            <input type="tel" id="inpAltPhone" class="form-input" placeholder="Alternate Mobile Number (Optional)" maxlength="10">
+
+            <div class="accordion-header" onclick="toggleAccordion()">
+                Additional Details (Optional) <span id="accIcon">▼</span>
+            </div>
+            <div class="accordion-content" id="accContent">
+                <textarea id="inpAddress" class="form-input" placeholder="Your Address (For record or dispatch)" rows="3"></textarea>
+            </div>
+
+            <button class="btn-save-full" onclick="saveVehicleProfile()">SAVE VEHICLE PROFILE</button>
+
+        </div>
+    </div>
+
+    <div id="scannerOverlay" class="scanner-overlay">
+        <button class="scanner-close" onclick="closeScanner()">×</button>
+        <h3 style="color:white; text-align:center; margin-top:30px;">Scan to Link</h3>
+        <p style="color:#aaa; text-align:center; font-size:12px;">Scan the Tagown QR sticker you want to link to this vehicle.</p>
+        <div id="qrReader"></div>
+    </div>
+
+    <script>
+        // 🚀 BHAIG LOGIC: FIREBASE CONFIGURATION
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Security Check: Get Logged In User
+        const currentUserPhone = localStorage.getItem("tagownUserPhone");
+        if(!currentUserPhone) {
+            alert("Security Alert: Please login to view your vehicles.");
+            window.location.href = 'auth.html';
+        }
+
+        // =====================================
+        // 🔄 UI LOGIC
+        // =====================================
+        function toggleView(viewId) {
+            document.getElementById('garageView').style.display = 'none';
+            document.getElementById('addView').style.display = 'none';
+            document.getElementById(viewId).style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function toggleAccordion() {
+            const content = document.getElementById('accContent');
+            const icon = document.getElementById('accIcon');
+            if(content.style.display === 'block') {
+                content.style.display = 'none';
+                icon.innerText = '▼';
+            } else {
+                content.style.display = 'block';
+                icon.innerText = '▲';
+            }
+        }
+
+        // =====================================
+        // 📲 FETCH VEHICLES (EXACT APP SYNC)
+        // =====================================
+        function loadVehicles() {
+            const listDiv = document.getElementById('vehicleList');
+            
+            // 🚀 BHAIG LOGIC: Exact match with Android App structure
+            // Path: Vehicles -> 9348960212 (Phone) -> RegNo
+            db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
+                listDiv.innerHTML = '';
+                
+                if (snapshot.exists()) {
+                    snapshot.forEach((child) => {
+                        const data = child.val();
+                        const regNo = child.key; // Reg number is the folder name
+                        
+                        // Decide Icon based on type
+                        const icon = data.vehicleType === "Car/SUV" ? "🚘" : "🏍️";
+
+                        listDiv.innerHTML += `
+                            <div class="vehicle-card">
+                                <div class="vc-top">
+                                    <div style="display:flex;">
+                                        <div class="vc-icon-box">${icon}</div>
+                                        <div class="vc-details">
+                                            <div class="ind-plate">
+                                                <div class="ind-blue">IND</div>
+                                                <div class="ind-number">${regNo}</div>
+                                            </div>
+                                            <div class="vc-type-badge">${data.vehicleType || 'Vehicle'}</div>
+                                            <div class="vc-model">${data.brand} ${data.model}</div>
+                                        </div>
+                                    </div>
+                                    <div class="vc-qr-box">
+                                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" style="opacity:0.6;">
+                                        <span>View QR</span>
+                                    </div>
+                                </div>
+                                <div class="vc-actions">
+                                    <button class="btn-edit" onclick="alert('Edit feature coming soon!')">EDIT DETAILS</button>
+                                    <button class="btn-delete" onclick="deleteVehicle('${regNo}')">DELETE</button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    listDiv.innerHTML = `
+                        <div style="text-align:center; padding: 40px 20px;">
+                            <div style="font-size:50px; margin-bottom:10px;">🪹</div>
+                            <h3 style="color:#555;">Garage is Empty</h3>
+                            <p style="color:#888; font-size:14px;">Click the button below to secure your first vehicle.</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+        
+        // Auto-load on page start
+        loadVehicles();
+
+        // =====================================
+        // 🗑️ DELETE VEHICLE
+        // =====================================
+        function deleteVehicle(regNo) {
+            if(confirm("Are you sure you want to delete " + regNo + " from your secure garage?")) {
+                db.ref('Vehicles/' + currentUserPhone + '/' + regNo).remove()
+                .then(() => alert("Vehicle removed successfully."))
+                .catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        // =====================================
+        // 📷 SCAN TO LINK QR
+        // =====================================
+        let html5QrCode;
+        function openScanner() {
+            document.getElementById('scannerOverlay').style.display = 'flex';
+            html5QrCode = new Html5Qrcode("qrReader");
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
+            .catch(err => { alert("Camera Access Denied!"); closeScanner(); });
+        }
+
+        function closeScanner() {
+            document.getElementById('scannerOverlay').style.display = 'none';
+            if(html5QrCode) html5QrCode.stop().catch(e=>{});
+        }
+
+        function onScanSuccess(decodedText) {
+            closeScanner();
+            if(decodedText.includes('TAGOWN') || decodedText.includes('tagown')) {
+                // Extract ID or just use raw text
+                const tagId = decodedText.split('id=')[1] || decodedText;
+                document.getElementById('hiddenQrId').value = tagId;
+                
+                const btn = document.getElementById('btnLinkQr');
+                btn.innerText = "TAG LINKED ✅";
+                btn.classList.add('success');
+                alert("QR Tag Scanned and Ready to Link!");
+            } else {
+                alert("Invalid QR! Please scan a genuine Tagown sticker.");
+            }
+        }
+
+        // =====================================
+        // 💾 SAVE VEHICLE PROFILE (SYNC TO APP)
+        // =====================================
+        function saveVehicleProfile() {
+            const regNo = document.getElementById('inpRegNo').value.toUpperCase().trim();
+            const type = document.getElementById('inpType').value;
+            const brand = document.getElementById('inpBrand').value;
+            const model = document.getElementById('inpModel').value.trim();
+            const altPhone = document.getElementById('inpAltPhone').value.trim();
+            const address = document.getElementById('inpAddress').value.trim();
+            const linkedQr = document.getElementById('hiddenQrId').value;
+
+            // Validations
+            if(!linkedQr) { alert("Please SCAN TAG QR first to link a sticker."); return; }
+            if(!regNo || !type || !brand || !model) { alert("Please fill all mandatory (*) fields."); return; }
+
+            // 🚀 BHAIG LOGIC: Structuring data EXACTLY like the Android app
+            const vehicleData = {
+                addressOptional: address || "",
+                alternateMobile: altPhone || "Not Provided",
+                brand: brand,
+                linkedQrId: linkedQr,
+                localPhotoPath: "Uploaded via Web",
+                model: model,
+                ownerPhone: currentUserPhone,
+                registrationNumber: regNo,
+                tagStatus: "Secured",
+                vehicleType: type
+            };
+
+            // Saving to exact path: Vehicles -> Phone -> RegNo
+            db.ref('Vehicles/' + currentUserPhone + '/' + regNo).set(vehicleData)
+            .then(() => {
+                alert("Vehicle Secured Successfully!");
+                // Clear form
+                document.getElementById('inpRegNo').value = '';
+                document.getElementById('inpModel').value = '';
+                document.getElementById('hiddenQrId').value = '';
+                document.getElementById('btnLinkQr').innerText = 'SCAN TAG QR';
+                document.getElementById('btnLinkQr').classList.remove('success');
+                
+                // Go back to garage view
+                toggleView('garageView');
+            })
+            .catch(err => {
+                alert("Database Error: " + err.message);
+            });
+        }
+    </script>
+</body>
+</html>
