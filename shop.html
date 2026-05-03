@@ -36,12 +36,28 @@
         }
         .header-title { font-size: 20px; font-weight: bold; color: white; font-style: italic; letter-spacing: 0.5px;}
         .back-btn { position: absolute; left: 20px; background: transparent; border: none; font-size: 24px; color: white; font-weight: bold; cursor: pointer; display: none; }
-        .cart-icon { position: absolute; right: 20px; font-size: 22px; }
+        .cart-icon { position: absolute; right: 20px; font-size: 22px; cursor: pointer;}
 
         /* 📦 Views Management */
         .view-section { display: none; animation: fadeIn 0.3s ease; }
         .active-view { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========================================= */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        /* ========================================= */
+        .skeleton {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            border-radius: 5px; background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+        @keyframes shine { to { background-position-x: -200%; } }
+        
+        .skel-card { background: white; border-radius: 16px; padding: 10px; border: 1px solid #E5E5EA; display: flex; flex-direction: column; gap: 10px; }
+        .skel-img { width: 100%; height: 120px; border-radius: 10px; }
+        .skel-text { height: 15px; border-radius: 4px; width: 80%; }
+        .skel-price { height: 20px; border-radius: 4px; width: 40%; }
 
         /* ========================================= */
         /* 🛒 1. SHOP LIST VIEW */
@@ -53,8 +69,9 @@
         .shop-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 15px; }
         .product-card {
             background: var(--card-bg); border-radius: 16px; overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #E5E5EA; position: relative; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04); border: 1px solid #E5E5EA; position: relative; cursor: pointer; transition: transform 0.2s;
         }
+        .product-card:active { transform: scale(0.97); }
         .product-badge { position: absolute; top: 10px; left: 10px; background: #E53935; color: white; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 4px; z-index: 10; font-style: italic;}
         .product-image-box { width: 100%; height: 140px; background: white; display: flex; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; }
         .product-image-box img { width: 100%; height: 100%; object-fit: contain; }
@@ -78,22 +95,16 @@
         
         .selection-box { background: white; padding: 15px; margin-top: 10px; border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
         .selection-label { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin-bottom: 8px;}
-        .selector-btn { 
-            width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 8px; 
-            display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; 
-            font-style: italic; background: white; cursor: pointer; color: #333;
-        }
+        .selector-btn { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 8px; display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; font-style: italic; background: white; cursor: pointer; color: #333; }
         .instruction-box { background: #E8F5E9; border: 1px solid #C8E6C9; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px;}
         .instruction-text { font-size: 13px; color: #2E7D32; font-style: italic; font-weight: bold; margin:0;}
 
         .desc-box { background: white; padding: 15px; margin-top: 10px; }
         .desc-text { font-size: 14px; color: #444; font-style: italic; margin-top: 10px;}
 
-        .fixed-bottom-btn {
-            position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px;
-            box-shadow: 0 -5px 15px rgba(0,0,0,0.05); box-sizing: border-box; z-index: 90;
-        }
-        .btn-buy-blue { background: var(--primary-blue); color: white; width: 100%; padding: 16px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer;}
+        .fixed-bottom-btn { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); box-sizing: border-box; z-index: 90; }
+        .btn-buy-blue { background: var(--primary-blue); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
+        .btn-buy-blue:active { transform: scale(0.98); }
         
         /* ========================================= */
         /* 📝 3. CHECKOUT FORM VIEW */
@@ -108,14 +119,34 @@
         .form-heading { font-size: 18px; font-weight: bold; font-style: italic; color: #222; margin-bottom: 15px;}
         .form-label { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;}
         .form-input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; font-style: italic; color: #555; margin-bottom: 15px; box-sizing: border-box;}
-        
         .row-2 { display: flex; gap: 10px; }
         .row-2 .form-group { width: 50%; }
 
-        .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer;}
+        .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
+        .btn-place-order:active { transform: scale(0.98); }
 
         /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV (FIXED DESIGN) */
+        /* 📋 4. MY ORDERS HISTORY VIEW */
+        /* ========================================= */
+        .order-history-container { padding: 15px; }
+        .order-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
+        .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
+        .order-date { font-size: 11px; color: #888; font-weight: bold; font-style: italic;}
+        .order-status-processing { background: #FFF8E1; color: #F57F17; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
+        .order-status-shipped { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
+        
+        .order-title { font-size: 15px; font-weight: bold; color: #222; margin: 0 0 4px 0; font-style: italic;}
+        .order-vehicle { font-size: 12px; color: #555; margin: 0 0 10px 0; font-style: italic;}
+        .order-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
+        .order-id { font-size: 11px; color: #888; font-weight: bold;}
+        .order-amt { font-size: 16px; font-weight: bold; color: var(--primary-blue);}
+
+        .tracking-box { background: #F5F7FA; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #E0E0E0;}
+        .tracking-text { font-size: 12px; color: #444; font-weight: bold;}
+        .btn-copy { background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; font-style: italic;}
+
+        /* ========================================= */
+        /* 🧭 FLOATING BOTTOM NAV */
         /* ========================================= */
         .bottom-nav {
             position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -125,7 +156,6 @@
             padding: 10px 0 15px 0; z-index: 90; border-top: 1px solid #F0F0F0;
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
-        /* Removed onerror hiding so layout never breaks */
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
@@ -133,38 +163,41 @@
         .nav-sos { transform: translateY(-15px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         .nav-sos img { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
         .nav-sos span { font-size: 11px; font-weight: bold; color: var(--sos-red); margin-top: 4px; }
-        
         .hide-nav { display: none !important; }
 
         /* ========================================= */
-        /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
+        /* 🚨 PREMIUM POPUP MODALS & ALERTS */
         /* ========================================= */
-        .overlay { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; 
-            backdrop-filter: blur(4px); 
-        }
-        .bottom-sheet { 
-            background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; 
-            padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; 
-            max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
-        }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
-        .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
+        .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
+        .sheet-header { font-size: 22px; font-weight: 900; color: var(--primary-blue); font-style: italic; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
         
-        .sheet-header { font-size: 20px; font-weight: bold; color: var(--primary-blue); font-style: italic; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
-        
-        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 2px 5px rgba(0,0,0,0.02); border: 1px solid #F0F0F0; cursor: pointer;}
-        .list-item:active { transform: scale(0.98); }
-        .list-icon { width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
+        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; transition: transform 0.2s;}
+        .list-item:active { transform: scale(0.96); }
+        .list-icon { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
         .list-text { flex-grow:1; text-align: left;}
-        .list-text h4 { margin:0; color:#333; font-size: 15px; font-style: italic;}
-        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 12px;}
+        .list-text h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
+        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
+        
+        .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 16px; font-weight: bold; font-style: italic; color: #333; cursor: pointer; transition: background 0.2s;}
+        .type-item:active { background: #F0F0F0; }
 
-        .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 15px; font-weight: bold; font-style: italic; color: #333; cursor: pointer;}
-        .type-item:active { background: #F9F9F9; }
+        /* Generic Central Modal */
+        .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-header-red { background: #B71C1C; color: white; padding: 25px 20px; }
+        .modal-header-red h3 { margin: 0; font-size: 22px; font-style: italic; letter-spacing: 1px;}
+        .modal-header-red p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.9; font-style: italic;}
+        .modal-body { padding: 25px 20px; }
+        
+        .btn-modal-primary { background: var(--primary-blue); color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
+        .btn-modal-primary:active { transform: scale(0.98); }
+        .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
     </style>
 </head>
 <body>
@@ -172,7 +205,7 @@
     <div class="header">
         <button class="back-btn" id="btnBack" onclick="goBack()">«</button>
         <div class="header-title" id="pageTitle">Tagown Official Store</div>
-        <div class="cart-icon" id="cartIcon">🛒</div>
+        <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
     <div id="viewList" class="view-section active-view">
@@ -180,18 +213,17 @@
             🚚 Cash on Delivery Available! Pay only when you receive the product.
         </div>
         <div class="shop-grid" id="shopGrid">
-            <div style="text-align: center; grid-column: span 2; padding: 40px; font-style: italic; color: #888; font-weight: bold;">
-                Loading secure store...
-            </div>
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
         </div>
     </div>
 
     <div id="viewDetail" class="view-section">
-        
         <div class="slider-container">
             <div class="product-badge" id="detBadge" style="display:none; left: 15px; top: 15px;">50%</div>
-            <div class="slider-track" id="detSlider">
-                </div>
+            <div class="slider-track" id="detSlider"></div>
         </div>
         <div class="slider-hint">Auto-Sliding | Swipe to see &gt;&gt;</div>
 
@@ -209,7 +241,6 @@
                 <span id="selectedVehicleText" style="color: #888;">Select your vehicle...</span>
                 <span>▼</span>
             </button>
-            
             <div class="selection-label" style="margin-top: 20px;">Where to Paste (How to Use)</div>
             <div class="instruction-box">
                 <span style="color: #4CAF50; font-size: 16px;">✅</span>
@@ -222,7 +253,7 @@
             <div class="desc-text" id="detDesc">Description goes here...</div>
         </div>
 
-        <div style="height: 80px;"></div>
+        <div style="height: 90px;"></div>
 
         <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
             <button class="btn-buy-blue" onclick="proceedToCheckout()">BUY NOW (CASH ON DELIVERY)</button>
@@ -231,7 +262,6 @@
 
     <div id="viewCheckout" class="view-section">
         <div class="checkout-container">
-            
             <div class="order-summary">
                 <p class="summary-title">Order Summary</p>
                 <p class="summary-item" id="chkProductName">Product Name (For: Bike)</p>
@@ -242,58 +272,45 @@
             </div>
 
             <h3 class="form-heading">Add Delivery Address</h3>
-
             <label class="form-label">Country</label>
             <input type="text" class="form-input" value="India" readonly>
-
             <label class="form-label">Full Name (First and Last name)</label>
             <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
-
             <label class="form-label">Mobile Number</label>
             <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-
             <label class="form-label">Flat, House no., Building, Company</label>
             <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
-
             <label class="form-label">Area, Street, Sector, Village</label>
             <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Main Market Road">
-
             <label class="form-label">Landmark</label>
             <input type="text" id="chkLandmark" class="form-input" placeholder="E.g. Near Apollo Hospital">
-
             <div class="row-2">
-                <div class="form-group">
-                    <label class="form-label">Pincode</label>
-                    <input type="number" id="chkPincode" class="form-input" placeholder="6-digit Pincode">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Town/City</label>
-                    <input type="text" id="chkCity" class="form-input" placeholder="E.g. Bhubaneswar">
-                </div>
+                <div class="form-group"><label class="form-label">Pincode</label><input type="number" id="chkPincode" class="form-input" placeholder="6-digit Pincode"></div>
+                <div class="form-group"><label class="form-label">Town/City</label><input type="text" id="chkCity" class="form-input" placeholder="E.g. Bhubaneswar"></div>
             </div>
-
             <div class="row-2">
-                <div class="form-group">
-                    <label class="form-label">District</label>
-                    <input type="text" id="chkDistrict" class="form-input" placeholder="E.g. Bargarh">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">State</label>
-                    <input type="text" id="chkState" class="form-input" placeholder="E.g. Odisha">
-                </div>
+                <div class="form-group"><label class="form-label">District</label><input type="text" id="chkDistrict" class="form-input" placeholder="E.g. Bargarh"></div>
+                <div class="form-group"><label class="form-label">State</label><input type="text" id="chkState" class="form-input" placeholder="E.g. Odisha"></div>
             </div>
-
             <div style="height: 20px;"></div>
-            
             <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">PLACE ORDER (CASH ON DELIVERY)</button>
             <div style="height: 40px;"></div>
+        </div>
+    </div>
+
+    <div id="viewOrders" class="view-section">
+        <div class="order-history-container" id="ordersContainer">
+            <div style="text-align: center; padding: 40px;">
+                <div class="skeleton skel-img" style="height:100px; margin-bottom:15px;"></div>
+                <div class="skeleton skel-text" style="height:20px; width:60%; margin: 0 auto;"></div>
+            </div>
         </div>
     </div>
 
     <div id="vehicleSheet" class="overlay">
         <div class="bottom-sheet" style="padding: 20px 0;">
             <div class="drag-handle"></div>
-            <h3 class="sheet-header" style="padding: 0 20px 15px 20px; margin-bottom: 0;">Select Vehicle Type</h3>
+            <h3 class="sheet-header" style="padding: 0 20px 15px 20px; margin-bottom: 0; color: var(--primary-green);">Select Vehicle Type</h3>
             <div class="type-item" onclick="selectType('Bike')">Bike</div>
             <div class="type-item" onclick="selectType('Scooter / Activa')">Scooter / Activa</div>
             <div class="type-item" onclick="selectType('Car')">Car</div>
@@ -309,17 +326,9 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
             <h2 class="sheet-header" style="color:var(--sos-red);">🚨 Emergency Helplines</h2>
-            
             <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
-            
-            <a href="tel:112" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
-            </a>
-            <a href="tel:100" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
-            </a>
+            <a href="tel:112" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
+            <a href="tel:100" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
         </div>
     </div>
 
@@ -328,9 +337,8 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
             <h2 class="sheet-header">🎧 Help & Support</h2>
-            
             <a href="https://wa.me/916372980014" target="_blank" class="list-item" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
                 <div class="list-text"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
             </a>
             <a href="tel:180093486290" class="list-item" style="background:#E3F2FD; border-color:#BBDEFB;">
@@ -340,26 +348,42 @@
         </div>
     </div>
 
-    <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
-        </div>
-        <div class="nav-item active" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
-        </div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
-        </div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
+    <div id="loginRequiredModal" class="overlay" style="align-items: center;">
+        <div class="modal-box">
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
+                <h3>Not Logged In!</h3>
+                <p>Login now to place orders and track history.</p>
+            </div>
+            <div class="modal-body">
+                <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
+            </div>
         </div>
     </div>
 
+    <div id="alertModal" class="overlay" style="align-items: center; z-index: 3000;">
+        <div class="modal-box">
+            <div class="modal-header-red" id="alertHeader" style="background: #FF9800;">
+                <div style="font-size: 35px; margin-bottom: 5px;" id="alertIcon">⚠️</div>
+                <h3 id="alertTitle">Alert</h3>
+            </div>
+            <div class="modal-body">
+                <p id="alertMessage" style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 15px; line-height: 1.4;"></p>
+                <button class="btn-modal-primary" id="alertBtn" style="background: #FF9800; color: #000;" onclick="document.getElementById('alertModal').style.display='none'">OKAY</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item" onclick="window.location.href='index.html'"><img src="ic_nav_home.webp" alt="Home"><span>Home</span></div>
+        <div class="nav-item active" onclick="window.location.href='shop.html'"><img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span></div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'"><img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span></div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'"><img src="ic_nav_call_support.webp" alt="Support"><span>Support</span></div>
+        <div class="nav-item" onclick="window.location.href='settings.html'"><img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span></div>
+    </div>
+
     <script>
-        // 🚀 EXACT MATCH FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -383,125 +407,122 @@
         }
 
         // =====================================
-        // 🛒 1. LOAD PRODUCTS FROM ADMIN APP
+        // 🚨 PREMIUM ALERT FUNCTION
+        // =====================================
+        function showPremiumAlert(title, message, type) {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            
+            let header = document.getElementById('alertHeader');
+            let btn = document.getElementById('alertBtn');
+            let icon = document.getElementById('alertIcon');
+
+            if(type === 'error') {
+                header.style.background = '#D32F2F'; btn.style.background = '#D32F2F'; btn.style.color = 'white'; icon.innerText = '⚠️';
+            } else if(type === 'success') {
+                header.style.background = '#00C853'; btn.style.background = '#00C853'; btn.style.color = 'white'; icon.innerText = '✅';
+            } else {
+                header.style.background = '#FFB300'; btn.style.background = '#FFB300'; btn.style.color = '#000'; icon.innerText = 'ℹ️';
+            }
+            document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        // =====================================
+        // 🛒 1. LOAD PRODUCTS
         // =====================================
         db.ref('ShopProducts').on('value', (snapshot) => {
             const grid = document.getElementById('shopGrid');
-            grid.innerHTML = '';
-            
             if (snapshot.exists()) {
+                grid.innerHTML = ''; 
                 currentProducts = snapshot.val(); 
-                
                 snapshot.forEach((child) => {
-                    const id = child.key;
-                    const data = child.val();
-                    
+                    const id = child.key; const data = child.val();
                     let badgeHtml = data.badge ? `<div class="product-badge">${data.badge}</div>` : '';
                     
-                    // High-quality gray placeholder if image is missing
-                    let img = data.imgUrl1 || "https://placehold.co/400x400/eeeeee/999999?text=Tagown+Product";
+                    // FIXED: Fallback to local dashboard banner instead of app logo
+                    let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
-
+                    
                     grid.innerHTML += `
                         <div class="product-card" onclick="openProductDetail('${id}')">
                             ${badgeHtml}
-                            <div class="product-image-box">
-                                <img src="${img}" onerror="this.src='https://placehold.co/400x400/eeeeee/999999?text=Tagown+Product'">
-                            </div>
+                            <div class="product-image-box"><img src="${img}" onerror="this.src='banner_home_tag.webp'"></div>
                             <div class="product-info">
                                 <h3 class="product-title">${data.title}</h3>
-                                <div class="price-row">
-                                    <span class="price-current">₹${data.price}</span>
-                                    ${oldPriceHtml}
-                                </div>
+                                <div class="price-row"><span class="price-current">₹${data.price}</span>${oldPriceHtml}</div>
                             </div>
                         </div>
                     `;
                 });
-            } else {
-                grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #888; font-style: italic; font-weight: bold;">Store is empty right now.</div>';
+            } else { 
+                grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #888; font-style: italic; font-weight: bold; padding: 30px;">Store is empty right now.</div>'; 
             }
         });
 
         // =====================================
-        // 📦 2. OPEN PRODUCT DETAIL VIEW
+        // 📦 2. OPEN PRODUCT DETAIL
         // =====================================
         function openProductDetail(id) {
-            selectedProductId = id;
-            const data = currentProducts[id];
-            
+            selectedProductId = id; const data = currentProducts[id];
             document.getElementById('pageTitle').innerText = "Product Details";
             document.getElementById('detTitle').innerText = data.title;
             document.getElementById('detPrice').innerText = "₹" + data.price;
             document.getElementById('detOldPrice').innerText = data.oldPrice ? "₹" + data.oldPrice : "";
             document.getElementById('detDesc').innerText = data.description || "Premium Tagown Vehicle Security Accessory.";
-            
-            if(data.badge) {
-                document.getElementById('detBadge').style.display = "block";
-                document.getElementById('detBadge').innerText = data.badge;
-            } else {
-                document.getElementById('detBadge').style.display = "none";
-            }
+            if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
+            else { document.getElementById('detBadge').style.display = "none"; }
 
-            const slider = document.getElementById('detSlider');
+            // FIXED: Slider Fallbacks using Local Banners
+            const slider = document.getElementById('detSlider'); 
             let imgs = [];
             if(data.imgUrl1 && data.imgUrl1.trim() !== "") imgs.push(data.imgUrl1);
             if(data.imgUrl2 && data.imgUrl2.trim() !== "") imgs.push(data.imgUrl2);
             if(data.imgUrl3 && data.imgUrl3.trim() !== "") imgs.push(data.imgUrl3);
             
-            if(imgs.length === 0) imgs = ["https://placehold.co/800x400/eeeeee/999999?text=Tagown+Store"];
+            if(imgs.length === 0) imgs = ["banner_home_tag.webp", "banner_home_privacy.webp", "banner_home_vault.webp"];
             if(imgs.length === 1) imgs.push(imgs[0], imgs[0]);
             if(imgs.length === 2) imgs.push(imgs[0]);
 
             slider.innerHTML = `
-                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='https://placehold.co/800x400/eeeeee/999999?text=Tagown+Store'"></div>
-                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='https://placehold.co/800x400/eeeeee/999999?text=Tagown+Store'"></div>
-                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='https://placehold.co/800x400/eeeeee/999999?text=Tagown+Store'"></div>
+                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'"></div>
+                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'"></div>
+                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'"></div>
             `;
             
-            clearInterval(sliderInterval);
-            let slideIndex = 0;
-            sliderInterval = setInterval(() => {
-                slideIndex = (slideIndex + 1) % 3;
-                slider.style.transform = `translateX(-${slideIndex * 100}%)`;
-            }, 2500);
+            clearInterval(sliderInterval); let slideIndex = 0;
+            sliderInterval = setInterval(() => { slideIndex = (slideIndex + 1) % 3; slider.style.transform = `translateX(-${slideIndex * 100}%)`; }, 2500);
 
             selectedVehicleType = null;
             document.getElementById('selectedVehicleText').innerText = "Select your vehicle...";
             document.getElementById('selectedVehicleText').style.color = "#888";
-
             switchView('viewDetail');
         }
 
         // =====================================
-        // 🗂️ 3. VEHICLE TYPE SHEET
+        // 🗂️ 3. VEHICLE TYPE & CHECKOUT
         // =====================================
         function openVehicleSheet() { document.getElementById('vehicleSheet').style.display = 'flex'; }
         
         window.onclick = function(event) {
-            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet'];
-            modals.forEach(id => {
-                const modal = document.getElementById(id);
-                if (event.target == modal) modal.style.display = "none";
-            });
+            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal'];
+            modals.forEach(id => { const modal = document.getElementById(id); if (event.target == modal) modal.style.display = "none"; });
         }
-
+        
         function selectType(type) {
             selectedVehicleType = type;
-            const textEl = document.getElementById('selectedVehicleText');
-            textEl.innerText = type;
-            textEl.style.color = "#111";
+            document.getElementById('selectedVehicleText').innerText = type;
+            document.getElementById('selectedVehicleText').style.color = "#111";
             document.getElementById('vehicleSheet').style.display = 'none';
         }
-
+        
         function proceedToCheckout() {
-            if(!selectedVehicleType) { alert("Please select a Vehicle Type first!"); return; }
+            if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
             
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             document.getElementById('chkProductName').innerText = `${data.title} (For: ${selectedVehicleType})`;
             document.getElementById('chkPrice').innerText = "₹" + data.price;
-
             switchView('viewCheckout');
         }
 
@@ -509,19 +530,14 @@
         // 📝 4. PLACE ORDER
         // =====================================
         function placeOrder() {
-            const name = document.getElementById('chkName').value.trim();
-            const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim();
-            const pincode = document.getElementById('chkPincode').value.trim();
-            const city = document.getElementById('chkCity').value.trim();
-            const state = document.getElementById('chkState').value.trim();
+            const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincode').value.trim();
+            const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
 
-            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) {
-                alert("Please fill all the mandatory address details correctly."); return;
+            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+                showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
             }
-
-            const btn = document.getElementById('btnPlaceOrder');
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
+            const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             const product = currentProducts[selectedProductId];
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
@@ -529,28 +545,84 @@
             const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
 
             const orderData = {
-                orderId: orderId, productTitle: product.title, price: product.price,
-                vehicleType: selectedVehicleType, customerName: name, customerPhone: phone,
-                deliveryAddress: fullAddress, orderStatus: "New Order (COD)", timestamp: date
+                orderId: orderId, productTitle: product.title, price: product.price, vehicleType: selectedVehicleType,
+                customerName: name, customerPhone: phone, deliveryAddress: fullAddress, orderStatus: "New Order (COD)", timestamp: date, trackingId: ""
             };
 
             db.ref('Orders/' + orderId).set(orderData).then(() => {
                 const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}\n*Amount to Pay:* ₹${product.price}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
                 const waLink = `https://wa.me/916372980014?text=${encodeURIComponent(waMessage)}`;
                 
-                alert("Order Saved! Redirecting to WhatsApp to confirm...");
-                window.open(waLink, '_blank');
+                showPremiumAlert('Order Placed!', 'Your COD order is saved. Redirecting to WhatsApp to confirm...', 'success');
+                setTimeout(() => { window.open(waLink, '_blank'); }, 1500);
                 
-                goBackToHome();
-                btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                goBackToHome(); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
             }).catch(err => {
-                alert("Database Error: " + err.message);
-                btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
             });
         }
 
         // =====================================
-        // 🔄 5. VIEW SWITCHER
+        // 📋 5. LOAD ORDER HISTORY
+        // =====================================
+        function openOrderHistory() {
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
+            document.getElementById('pageTitle').innerText = "My Orders";
+            switchView('viewOrders');
+            loadOrders();
+        }
+
+        function loadOrders() {
+            const container = document.getElementById('ordersContainer');
+            db.ref('Orders').on('value', (snapshot) => {
+                let html = ''; let orders = [];
+                if(snapshot.exists()){
+                    snapshot.forEach(child => { if(child.val().customerPhone === currentUserPhone) orders.push(child.val()); });
+                }
+                orders.reverse(); 
+                
+                if(orders.length > 0) {
+                    orders.forEach(data => {
+                        let statusHtml = `<span class="order-status-processing">Processing ⏳</span>`;
+                        let trackingHtml = "";
+                        
+                        if(data.trackingId && data.trackingId.trim() !== "") {
+                            statusHtml = `<span class="order-status-shipped">Shipped 🚚</span>`;
+                            trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
+                        }
+
+                        html += `
+                            <div class="order-card">
+                                <div class="order-card-header"><span class="order-date">${data.timestamp}</span>${statusHtml}</div>
+                                <h3 class="order-title">${data.productTitle}</h3>
+                                <p class="order-vehicle">Vehicle: ${data.vehicleType}</p>
+                                <div class="order-price-row"><span class="order-id">ID: ${data.orderId}</span><span class="order-amt">₹${data.price}</span></div>
+                                ${trackingHtml}
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                } else {
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:50px 20px;">
+                            <div style="font-size:50px; margin-bottom:10px;">📦</div>
+                            <h3 style="color:#555; margin:0; font-style:italic;">No Orders Yet</h3>
+                            <p style="color:#888; font-size:13px; font-style:italic;">You haven't placed any orders.</p>
+                            <button onclick="goBackToHome()" style="margin-top:15px; background:var(--primary-blue); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:bold; font-style:italic; cursor:pointer;">Start Shopping</button>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function copyTracking(id) { 
+            navigator.clipboard.writeText(id).then(() => { 
+                showPremiumAlert('Copied!', 'Tracking ID: ' + id, 'success'); 
+            }); 
+        }
+
+        // =====================================
+        // 🔄 6. VIEW SWITCHER
         // =====================================
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -577,11 +649,10 @@
             if(document.getElementById('viewCheckout').classList.contains('active-view')) {
                 document.getElementById('pageTitle').innerText = "Product Details";
                 switchView('viewDetail');
-            } else if(document.getElementById('viewDetail').classList.contains('active-view')) {
+            } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view')) {
                 goBackToHome();
             }
         }
-
         function goBackToHome() { switchView('viewList'); }
 
     </script>

@@ -9,6 +9,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+
     <style>
         /* 🍏 iOS Premium Theme Variables */
         :root { 
@@ -19,7 +21,6 @@
             --text-sub: #8E8E93;
         }
         
-        /* Dark Transparent Background for Popup Effect */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: rgba(0, 0, 0, 0.6); 
@@ -28,7 +29,6 @@
             height: 100vh; overflow: hidden; backdrop-filter: blur(3px);
         }
 
-        /* 📦 Popup Bottom Sheet Container */
         .auth-view { 
             display: none; background: #FFFFFF; width: 100%; max-width: 500px; 
             border-radius: 24px 24px 0 0; padding: 25px 20px 30px 20px; 
@@ -37,22 +37,15 @@
             max-height: 90vh; overflow-y: auto;
         }
         .active-view { display: block; }
-        
-        @keyframes slideUp { 
-            from { transform: translateY(100%); } 
-            to { transform: translateY(0); } 
-        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* UI Elements */
         .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
         
-        /* Typography Matching App */
         .auth-title-red { color: var(--title-red); font-size: 20px; font-weight: bold; text-align: center; margin: 0 0 25px 0; font-style: italic;}
         .auth-title-black { color: #222; font-size: 20px; font-weight: bold; text-align: center; margin: 0 0 25px 0; font-style: italic;}
         .auth-label { font-size: 14px; font-weight: 700; color: #333; margin-left: 5px; margin-bottom: 8px; display: block; font-style: italic;}
 
-        /* Inputs & Buttons */
         .auth-input { width: 100%; padding: 16px; margin-bottom: 20px; border: none; border-radius: 8px; background: #F5F7FA; font-size: 15px; box-sizing: border-box; font-style: italic; color: #555;}
         .auth-input:focus { outline: 1px solid #ccc; background: white; }
         
@@ -128,7 +121,7 @@
     </div>
 
     <script>
-        // 🚀 BHAIG LOGIC: Aapka asli Firebase data add kar diya gaya hai!
+        // 🚀 FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -139,20 +132,24 @@
             appId: "1:93808024784:web:6987775b7714651c1252d5"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
         let confirmationResult;
 
-        // Internal UI Switcher
         function toggleView(viewId) {
             document.querySelectorAll('.auth-view').forEach(view => view.classList.remove('active-view'));
             document.getElementById(viewId).classList.add('active-view');
         }
 
+        // 🔐 THE FIX: HASHING FUNCTION (Matches App Encryption)
+        function hashPassword(password) {
+            // Using standard SHA-256 which is most common in Android App builders
+            return CryptoJS.SHA256(password).toString();
+        }
+
         // =====================================
-        // 🔒 1. LOGIN LOGIC
+        // 🔒 1. LOGIN LOGIC (With Decryption check)
         // =====================================
         function doLogin() {
             const phone = document.getElementById('loginPhone').value.trim();
@@ -160,20 +157,26 @@
             
             if(phone.length !== 10 || !pass) { alert("Please enter valid 10-digit number and password."); return; }
 
-            // Checking the exact 'Users' folder in your Realtime DB
+            const encryptedInputPass = hashPassword(pass); // Encrypt input before checking
+
             db.ref('Users/' + phone).once('value').then((snapshot) => {
                 if(snapshot.exists()) {
                     const userData = snapshot.val();
-                    if(userData.password === pass) {
+                    
+                    // Checking if encrypted Web input matches encrypted App database
+                    // (We also check normal pass just in case you manually created test users)
+                    if(userData.password === encryptedInputPass || userData.password === pass) {
                         localStorage.setItem("tagownUserPhone", phone);
-                        window.location.href = 'vehicles.html'; // Go to vehicles after login
-                    } else { alert("Incorrect Password!"); }
+                        window.location.href = 'vehicles.html'; 
+                    } else { 
+                        alert("Incorrect Details! Please check your password."); 
+                    }
                 } else { alert("Account not found! Please Create a New Account."); }
             }).catch((error) => { alert("Error: " + error.message); });
         }
 
         // =====================================
-        // 🔒 2. SIGN UP LOGIC (OTP & SAVE TO DB)
+        // 🔒 2. SIGN UP LOGIC (Save Encrypted)
         // =====================================
         function sendSignupOTP() {
             const phone = document.getElementById('regPhone').value.trim();
@@ -192,7 +195,7 @@
                     btnOtp.innerText = "SENT ✅"; btnOtp.style.background = "#8E8E93";
                     document.getElementById('regOtp').style.display = "block";
                 }).catch((error) => {
-                    alert("Failed to send OTP. Ensure phone auth is enabled in Firebase. Error: " + error.message);
+                    alert("Failed to send OTP. Error: " + error.message);
                     btnOtp.innerText = "SEND OTP"; btnOtp.disabled = false;
                     window.recaptchaVerifier.render().then((widgetId) => grecaptcha.reset(widgetId));
                 });
@@ -209,20 +212,21 @@
             if(pass !== passConf) { alert("Passwords do not match!"); return; }
             if(!confirmationResult) { alert("Please verify OTP first."); return; }
 
-            // Verify OTP
             confirmationResult.confirm(otp).then((result) => {
                 
-                // Saving exact structure to show up in Admin App
+                // 🔐 THE FIX: Encrypt the password before saving to Database
+                const encryptedSavePass = hashPassword(pass);
+
                 const userData = {
                     name: name,
                     phone: phone,
-                    password: pass,
-                    EmergencyContacts: "" // Empty array ready for app
+                    password: encryptedSavePass, // Now saves exact same code as App
+                    EmergencyContacts: "" 
                 };
 
                 db.ref('Users/' + phone).set(userData).then(() => {
                     localStorage.setItem("tagownUserPhone", phone);
-                    alert("Account Created Successfully! Welcome to Tagown.");
+                    alert("Account Created Successfully!");
                     window.location.href = 'vehicles.html'; 
                 }).catch((dbError) => {
                     alert("Database Error: Could not save profile.");

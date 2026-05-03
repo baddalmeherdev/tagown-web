@@ -12,12 +12,12 @@
         /* 🍏 iOS Premium Theme Variables */
         :root { 
             --primary-blue: #1565C0; 
+            --primary-green: #00C853;
             --bg-color: #F4F6F9; 
             --card-bg: #FFFFFF;
             --text-main: #1C1C1E;
             --text-sub: #666666;
-            --yt-red: #D32F2F; /* Matching app primary for better look */
-            --ig-pink: #E1306C;
+            --sos-red: #D32F2F;
         }
         
         body { 
@@ -27,16 +27,11 @@
             padding-bottom: 100px;
         }
 
-        /* 📱 Top Header (Blue) */
+        /* 📱 Top Header (Blue - Back Button Removed) */
         .header {
             display: flex; align-items: center; justify-content: center;
             background: var(--primary-blue); padding: 18px 20px;
             position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .back-btn { 
-            position: absolute; left: 20px;
-            background: transparent; border: none; font-size: 24px; color: white; 
-            font-weight: bold; cursor: pointer; display: flex; align-items: center;
         }
         .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
 
@@ -48,7 +43,28 @@
         .page-intro h2 { font-size: 20px; color: #222; font-style: italic; margin: 0; }
         .page-intro p { font-size: 13px; color: var(--text-sub); font-weight: 600; margin-top: 5px; font-style: italic; }
 
-        /* 📋 Compact Tutorial List (Redesigned) */
+        /* ========================================= */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        /* ========================================= */
+        .skeleton {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            border-radius: 5px; background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+        @keyframes shine { to { background-position-x: -200%; } }
+        
+        .skel-list-item { 
+            background: var(--card-bg); border-radius: 12px; padding: 18px 20px;
+            display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
+            border: 1px solid #E5E5EA; pointer-events: none;
+        }
+        .skel-circle { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
+        .skel-lines { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; }
+        .skel-line-1 { height: 16px; width: 80%; border-radius: 4px; }
+        .skel-line-2 { height: 12px; width: 50%; border-radius: 4px; }
+
+        /* 📋 Compact Tutorial List */
         .tutorial-list { display: flex; flex-direction: column; gap: 15px; }
         
         .tutorial-item {
@@ -59,9 +75,9 @@
         }
         .tutorial-item:active { background: #F5F7FA; transform: scale(0.98); }
 
-        .item-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; max-width: 80%;}
+        .item-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; max-width: 85%;}
         
-        /* Dynamic Platform Icon Placeholder */
+        /* Dynamic Platform Icon */
         .platform-icon {
             width: 40px; height: 40px; border-radius: 50%; display: flex; 
             justify-content: center; align-items: center; font-size: 20px;
@@ -72,16 +88,11 @@
         .other-icon { background: #E3F2FD; color: #1976D2; }
 
         .item-title { font-size: 15px; font-weight: bold; color: #111; margin: 0; line-height: 1.4; font-style: italic;}
-        
-        /* Action Icon (Trailing Play) */
-        .item-action {
-            color: #8E8E93; font-size: 16px; font-weight: bold;
-        }
+        .item-action { color: #8E8E93; font-size: 16px; font-weight: bold; }
 
-        /* Loader */
-        .loader { text-align: center; padding: 50px; color: #888; font-style: italic; font-weight: bold; }
-
-        /* 🧭 Floating Bottom Nav */
+        /* ========================================= */
+        /* 🧭 FLOATING BOTTOM NAV (DASHBOARD STYLE) */
+        /* ========================================= */
         .bottom-nav {
             position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
             width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
@@ -90,16 +101,43 @@
             display: flex; justify-content: space-around; align-items: center;
             padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
         }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px;
+        }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain; }
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
+        
+        .nav-sos {
+            width: 60px; height: 60px; transform: translateY(-20px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
+        .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
+
+        /* ========================================= */
+        /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
+        /* ========================================= */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
+        .sheet-header { font-size: 22px; font-weight: 900; color: var(--primary-blue); font-style: italic; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
+        
+        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; transition: transform 0.2s;}
+        .list-item:active { transform: scale(0.96); }
+        .list-icon { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
+        .list-text { flex-grow:1; text-align: left;}
+        .list-text h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
+        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
     </style>
 </head>
 <body>
 
     <div class="header">
-        <button class="back-btn" onclick="window.location.href='index.html'">«</button>
         <div class="header-title">How to Use Tagown</div>
     </div>
 
@@ -110,24 +148,86 @@
         </div>
 
         <div id="tutorialList" class="tutorial-list">
-            <div class="loader">Fetching latest guides...</div>
+            
+            <div class="skel-list-item">
+                <div class="skeleton skel-circle"></div>
+                <div class="skel-lines">
+                    <div class="skeleton skel-line-1"></div>
+                    <div class="skeleton skel-line-2"></div>
+                </div>
+            </div>
+            <div class="skel-list-item">
+                <div class="skeleton skel-circle"></div>
+                <div class="skel-lines">
+                    <div class="skeleton skel-line-1"></div>
+                    <div class="skeleton skel-line-2"></div>
+                </div>
+            </div>
+            <div class="skel-list-item">
+                <div class="skeleton skel-circle"></div>
+                <div class="skel-lines">
+                    <div class="skeleton skel-line-1"></div>
+                    <div class="skeleton skel-line-2"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="sosSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #F8F9FA;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="color:var(--sos-red);">🚨 Emergency Helplines</h2>
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
+            
+            <a href="tel:112" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+            </a>
+            <a href="tel:100" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+            </a>
+        </div>
+    </div>
+
+    <div id="supportSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #FFFFFF;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
+            <h2 class="sheet-header">🎧 Help & Support</h2>
+            <a href="https://wa.me/916372980014" target="_blank" class="list-item" style="background:#E8F5E9; border-color:#C8E6C9;">
+                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.src='app_logo.webp'"></div>
+                <div class="list-text"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
+            </a>
+            <a href="tel:180093486290" class="list-item" style="background:#E3F2FD; border-color:#BBDEFB;">
+                <div class="list-icon" style="background:#1976D2; color:white;">📞</div>
+                <div class="list-text"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+            </a>
         </div>
     </div>
 
     <div class="bottom-nav">
         <div class="nav-item" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp"><span>Home</span>
+            <img src="ic_nav_home.webp" alt="Home" onerror="this.src='app_logo.webp'"><span>Home</span>
         </div>
         <div class="nav-item" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp"><span>Shop</span>
+            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src='app_logo.webp'"><span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src='app_logo.webp'"><span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src='app_logo.webp'"><span>Support</span>
         </div>
         <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp"><span>Settings</span>
+            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src='app_logo.webp'"><span>Settings</span>
         </div>
     </div>
 
     <script>
-        // 🚀 FIREBASE CONFIGURATION (Meherdevlopstudio Project)
+        // 🚀 FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -137,35 +237,38 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        // Overlay Close Logic
+        window.onclick = function(event) {
+            const modals = ['sosSheet', 'supportSheet'];
+            modals.forEach(id => {
+                const modal = document.getElementById(id);
+                if (event.target == modal) modal.style.display = "none";
+            });
+        }
+
         // 📺 FETCH & RENDER COMPACT LIST
         function loadTutorials() {
             const listDiv = document.getElementById('tutorialList');
             
-            // Listening to 'Tutorials' node exactly like the Admin App
             db.ref('Tutorials').on('value', (snapshot) => {
-                listDiv.innerHTML = ''; // Clear loader
+                listDiv.innerHTML = ''; // Clear Shimmer Skeleton
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
                         
-                        // Smart Platform Icon Logic
                         let iconClass = 'other-icon';
                         let platformText = '📹'; // default
 
                         const platform = (data.platform || '').toLowerCase();
                         if (platform.includes('youtube')) {
-                            iconClass = 'yt-icon';
-                            platformText = '▶️'; // Red play
+                            iconClass = 'yt-icon'; platformText = '▶️';
                         } else if (platform.includes('instagram')) {
-                            iconClass = 'ig-icon';
-                            platformText = '📸'; // Camera/Pink
+                            iconClass = 'ig-icon'; platformText = '📸';
                         } else if (platform.includes('shorts')) {
-                            iconClass = 'yt-icon';
-                            platformText = '🩳'; // YouTube Shorts
+                            iconClass = 'yt-icon'; platformText = '🩳';
                         }
 
-                        // THE FIX: Title and Play Icon only compact design
                         listDiv.innerHTML += `
                             <div class="tutorial-item" onclick="window.open('${data.videoUrl}', '_blank')">
                                 <div class="item-left">
@@ -179,7 +282,7 @@
                         `;
                     });
                 } else {
-                    listDiv.innerHTML = '<div style="text-align:center; color:#888; padding:30px; font-style:italic;">No tutorials found. Add them from Admin App!</div>';
+                    listDiv.innerHTML = '<div style="text-align:center; color:#888; padding:40px 20px; font-style:italic; font-weight:bold;">No tutorials found. Add them from Admin App!</div>';
                 }
             });
         }

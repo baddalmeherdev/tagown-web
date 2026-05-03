@@ -6,7 +6,6 @@
     <title>Tagown | My Vehicles</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
@@ -14,14 +13,15 @@
     <style>
         /* 🍏 iOS Premium Theme Variables */
         :root { 
-            --primary-blue: #0D47A1; 
+            --primary-blue: #1565C0; 
             --primary-green: #2E7D32;
             --light-green: #E8F5E9;
             --title-color: #1B5E20;
             --text-main: #1C1C1E;
             --text-sub: #8E8E93;
-            --bg-color: #F5F7FA;
+            --bg-color: #F4F6F9;
             --card-bg: #FFFFFF;
+            --sos-red: #D32F2F;
         }
         
         body { 
@@ -37,16 +37,24 @@
             background: var(--bg-color); padding: 15px 20px;
             position: sticky; top: 0; z-index: 50;
         }
-        .back-btn { 
-            background: transparent; border: none; font-size: 24px; color: #03A9F4; 
-            font-weight: bold; cursor: pointer; display: flex; align-items: center;
-        }
+        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; }
         .header-title { color: var(--title-color); font-size: 22px; font-weight: bold; font-style: italic; }
-        .info-btn { color: var(--title-color); font-size: 24px; cursor: pointer; }
+        .info-btn { color: var(--title-color); font-size: 20px; cursor: pointer; border: 2px solid var(--title-color); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-style: italic;}
 
         /* 📦 Main Container */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========================================= */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        /* ========================================= */
+        .skeleton {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            border-radius: 5px; background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+        @keyframes shine { to { background-position-x: -200%; } }
 
         /* 🚗 Vehicle List View (Garage) */
         .garage-title { font-size: 18px; font-weight: bold; font-style: italic; color: #333; margin-bottom: 15px; }
@@ -58,17 +66,16 @@
         .vc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         
         .vc-icon-box {
-            width: 70px; height: 70px; background: #E1F5FE; border-radius: 16px;
-            display: flex; justify-content: center; align-items: center; font-size: 40px; margin-right: 15px;
+            width: 75px; height: 75px; background: #E1F5FE; border-radius: 16px;
+            display: flex; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; margin-right: 15px;
         }
+        .vc-icon-box img { width: 100%; height: 100%; object-fit: contain; }
         
         /* 🇮🇳 IND Number Plate Styling */
         .ind-plate {
             display: flex; border: 1.5px solid #222; border-radius: 6px; overflow: hidden; background: white; margin-bottom: 8px; width: fit-content;
         }
-        .ind-blue {
-            background: #0D47A1; color: white; width: 20px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 7px; font-weight: bold; padding-bottom: 2px;
-        }
+        .ind-blue { background: #0D47A1; color: white; width: 18px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 7px; font-weight: bold; padding-bottom: 2px; }
         .ind-number { padding: 4px 10px; font-size: 14px; font-weight: bold; letter-spacing: 1px; font-style: italic;}
         
         .vc-details { flex-grow: 1; }
@@ -83,12 +90,18 @@
         .btn-edit { color: #1976D2; font-weight: bold; font-size: 13px; background: none; border: none; cursor: pointer; font-style: italic; letter-spacing: 1px;}
         .btn-delete { color: #D32F2F; font-weight: bold; font-size: 13px; background: none; border: none; cursor: pointer; font-style: italic; letter-spacing: 1px;}
 
+        /* Empty State */
+        .empty-state { text-align: center; padding: 40px 20px; }
+        .empty-icon { width: 60px; height: 60px; opacity: 0.2; margin-bottom: 15px; }
+        .empty-title { font-size: 16px; color: #666; font-style: italic; font-weight: bold; margin: 0; }
+        .empty-sub { font-size: 13px; color: #999; font-style: italic; margin-top: 5px; }
+
         /* Floating Add Button */
         .btn-float-add {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: #388E3C; color: white; padding: 15px 30px; border-radius: 30px;
-            font-weight: bold; font-size: 15px; border: none; box-shadow: 0 5px 15px rgba(56, 142, 60, 0.4);
-            cursor: pointer; z-index: 90; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+            background: #2E7D32; color: white; padding: 15px 25px; border-radius: 30px;
+            font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+            cursor: pointer; z-index: 80; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
         }
 
         /* ========================================= */
@@ -102,49 +115,135 @@
 
         .qr-link-box { background: white; border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #E0E0E0;}
         .qr-title { color: var(--title-color); font-weight: bold; font-size: 15px; font-style: italic; margin-bottom: 15px; }
-        .btn-scan-qr { background: #388E3C; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; font-style: italic; cursor: pointer; letter-spacing: 1px;}
+        .btn-scan-qr { background: #2E7D32; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-weight: bold; font-style: italic; cursor: pointer; letter-spacing: 1px;}
         .btn-scan-qr.success { background: #0D47A1; }
 
         .form-section-title { color: var(--title-color); font-weight: bold; font-size: 16px; font-style: italic; margin-bottom: 10px; }
         
         /* IND Input Form */
         .ind-input-wrapper { display: flex; border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden; background: white; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
-        .ind-input-blue { background: #0D47A1; color: white; width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 10px; font-weight: bold; padding-bottom: 4px; }
-        .ind-input-field { flex-grow: 1; padding: 15px; font-size: 18px; font-weight: bold; border: none; outline: none; font-style: italic; text-transform: uppercase; color: #333; letter-spacing: 2px;}
+        .ind-input-blue { background: #1565C0; color: white; width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 10px; font-weight: bold; padding-bottom: 4px; }
+        .ind-input-field { flex-grow: 1; padding: 15px; font-size: 18px; font-weight: bold; border: none; outline: none; font-style: italic; text-transform: uppercase; color: #333; letter-spacing: 1px;}
 
         /* Form Inputs */
         .row-2 { display: flex; gap: 10px; margin-bottom: 15px; }
-        .form-input { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white;}
-        .form-input:focus { outline: 1px solid var(--primary-green); }
+        .form-input, .form-select { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white; appearance: none;}
+        .form-input:focus, .form-select:focus { outline: 1px solid var(--primary-green); }
         
-        /* Accordion */
+        .custom-selector { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; font-style: italic; color: #555; background: white; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        
         .accordion-header { display: flex; justify-content: space-between; align-items: center; color: #E65100; font-weight: bold; font-size: 14px; font-style: italic; cursor: pointer; margin-top: 20px; margin-bottom: 10px;}
         .accordion-content { display: none; }
         
-        .btn-save-full { background: #388E3C; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(56, 142, 60, 0.3);}
+        .btn-save-full { background: #2E7D32; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
-        /* 📷 Scanner Overlay */
-        .scanner-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 1000; flex-direction: column; }
+        /* ========================================= */
+        /* 🧭 FLOATING BOTTOM NAV (DASHBOARD STYLE) */
+        /* ========================================= */
+        .bottom-nav {
+            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+            border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex; justify-content: space-around; align-items: center;
+            padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
+        }
+        .nav-item {
+            display: flex; flex-direction: column; align-items: center;
+            color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px;
+        }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain; }
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
+        
+        .nav-sos {
+            width: 60px; height: 60px; transform: translateY(-20px);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
+        }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
+        .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
+
+        .hide-nav { display: none !important; }
+
+        /* ========================================= */
+        /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
+        /* ========================================= */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-header-green { background: #2E7D32; color: white; padding: 25px 20px; }
+        .modal-header-blue { background: #1565C0; color: white; padding: 25px 20px; }
+        .modal-header-red { background: #D32F2F; color: white; padding: 25px 20px; }
+        
+        .modal-header-green h3, .modal-header-blue h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
+        .modal-body { padding: 25px 20px; text-align: left; }
+        
+        .btn-modal-primary { background: #2E7D32; color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
+        .btn-modal-primary:active { transform: scale(0.98); }
+        .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; text-align: center;}
+
+        /* Bottom Sheets */
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 20px 0; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto;}
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .sheet-header { font-size: 18px; font-weight: bold; color: var(--primary-green); font-style: italic; padding: 0 20px 15px 20px; border-bottom: 1px solid #eee; margin: 0;}
+        .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 15px; font-weight: bold; font-style: italic; color: #333; cursor: pointer;}
+        .type-item:active { background: #F9F9F9; }
+
+        .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
+        
+        .list-item-pop { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; margin: 0 20px;}
+        .list-item-pop:active { transform: scale(0.96); }
+        .list-icon-pop { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
+        .list-text-pop { flex-grow:1; text-align: left;}
+        .list-text-pop h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
+        .list-text-pop p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
+
+        /* Scanner */
+        .scanner-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
         #qrReader { width: 100%; flex-grow: 1; }
-        .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 101; cursor: pointer;}
+        .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 3001; cursor: pointer;}
+
     </style>
 </head>
 <body>
 
     <div id="garageView">
         <div class="header">
-            <button class="back-btn" onclick="window.location.href='index.html'">«</button>
-            <div class="header-title">My Vehicles</div>
-            <div class="info-btn" onclick="alert('Manage all your Tagown secured vehicles here.')">ⓘ</div>
+            <div style="width: 26px;"></div> <div class="header-title">My Vehicles</div>
+            <div class="info-btn" onclick="alert('Manage all your Tagown secured vehicles here.')">i</div>
         </div>
 
         <div class="container">
             <div class="garage-title">Secured Garage</div>
             
             <div id="vehicleList">
-                <p style="text-align:center; color:#888; font-style:italic;">Loading your secure vault...</p>
+                <div class="vehicle-card" style="pointer-events:none;">
+                    <div class="vc-top">
+                        <div style="display:flex; width: 100%;">
+                            <div class="skeleton" style="width: 75px; height: 75px; border-radius: 16px; margin-right: 15px;"></div>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center;">
+                                <div class="skeleton" style="height: 20px; width: 70%; border-radius: 4px;"></div>
+                                <div class="skeleton" style="height: 14px; width: 40%; border-radius: 4px;"></div>
+                                <div class="skeleton" style="height: 14px; width: 80%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            
+                <div class="vehicle-card" style="pointer-events:none;">
+                    <div class="vc-top">
+                        <div style="display:flex; width: 100%;">
+                            <div class="skeleton" style="width: 75px; height: 75px; border-radius: 16px; margin-right: 15px;"></div>
+                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center;">
+                                <div class="skeleton" style="height: 20px; width: 70%; border-radius: 4px;"></div>
+                                <div class="skeleton" style="height: 14px; width: 40%; border-radius: 4px;"></div>
+                                <div class="skeleton" style="height: 14px; width: 80%; border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <button class="btn-float-add" onclick="toggleView('addView')">
@@ -156,18 +255,19 @@
         <div class="header">
             <button class="back-btn" onclick="toggleView('garageView')">«</button>
             <div class="header-title">Add Your Vehicle</div>
-            <div style="width: 24px;"></div> </div>
+            <div style="width: 26px;"></div>
+        </div>
 
         <div class="container" style="padding-bottom: 40px;">
             
-            <div class="photo-box" onclick="alert('Camera integration for web coming soon! Using default icon for now.')">
+            <div class="photo-box" onclick="document.getElementById('appOnlyModal').style.display='flex'">
                 <div class="photo-icon">📷</div><br>
                 <span class="photo-text">Tap to add vehicle photo</span>
             </div>
 
             <div class="qr-link-box">
                 <div class="qr-title">Link Tagown QR Tag (Required)</div>
-                <button class="btn-scan-qr" id="btnLinkQr" onclick="openScanner()">SCAN TAG QR</button>
+                <button class="btn-scan-qr" id="btnLinkQr" onclick="document.getElementById('qrInfoModal').style.display='flex'">SCAN TAG QR</button>
                 <input type="hidden" id="hiddenQrId" value="">
             </div>
 
@@ -178,25 +278,17 @@
                     <img src="https://upload.wikimedia.org/wikipedia/commons/b/bc/Wheel_of_Ashoka.svg" width="12" style="margin-bottom:2px; filter: invert(1);">
                     IND
                 </div>
-                <input type="text" id="inpRegNo" class="ind-input-field" placeholder="OD 17 AB 1234 *" maxlength="13">
+                <input type="text" id="inpRegNo" class="ind-input-field" placeholder="OD 17 AB 1234 *" maxlength="13" onkeyup="formatIND(this)">
             </div>
 
             <div class="row-2">
-                <select id="inpType" class="form-input">
-                    <option value="">Vehicle Type *</option>
-                    <option value="Bike/Scooter">Bike/Scooter</option>
-                    <option value="Car/SUV">Car/SUV</option>
-                    <option value="Commercial">Commercial</option>
-                </select>
-                <select id="inpBrand" class="form-input">
+                <div class="custom-selector" style="width: 50%;" onclick="openVehicleSheet()">
+                    <span id="selectedTypeTxt">Vehicle Type *</span>
+                    <span style="color:#aaa;">▼</span>
+                </div>
+                
+                <select id="inpBrand" class="form-select" style="width: 50%;">
                     <option value="">Select Brand *</option>
-                    <option value="Royal Enfield">Royal Enfield</option>
-                    <option value="Honda">Honda</option>
-                    <option value="TVS">TVS</option>
-                    <option value="Maruti Suzuki">Maruti Suzuki</option>
-                    <option value="Hyundai">Hyundai</option>
-                    <option value="Tata">Tata</option>
-                    <option value="Other">Other</option>
                 </select>
             </div>
 
@@ -211,19 +303,138 @@
             </div>
 
             <button class="btn-save-full" onclick="saveVehicleProfile()">SAVE VEHICLE PROFILE</button>
-
         </div>
     </div>
 
-    <div id="scannerOverlay" class="scanner-overlay">
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp" alt="Home" onerror="this.src='app_logo.webp'"><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src='app_logo.webp'"><span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src='app_logo.webp'"><span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src='app_logo.webp'"><span>Support</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src='app_logo.webp'"><span>Settings</span>
+        </div>
+    </div>
+
+    <div id="appOnlyModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-blue">
+                <div style="font-size: 35px; margin-bottom: 5px;">📱</div>
+                <h3>App Exclusive</h3>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 14px; color: #555; font-weight: 500; font-style: italic;">
+                    Uploading a vehicle photo is securely restricted to the official Tagown App to prevent fake uploads.
+                </p>
+                <button class="btn-modal-primary" style="background:#1565C0;" onclick="document.getElementById('appOnlyModal').style.display='none'">Okay, I Understand</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qrInfoModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-green" style="background: #FFFFFF; color: var(--primary-green); padding-bottom: 10px;">
+                <h3>How Tagown QR Works</h3>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold; font-style: italic; line-height: 1.5;">
+                    1. The Tagown QR is a unique, military-grade encrypted ID for your vehicle.<br><br>
+                    2. Once scanned, this Tag will be securely locked to this specific vehicle profile.<br><br>
+                    3. Our security system only accepts official Tagown QR tags. Fake or external QRs will be rejected automatically.
+                </p>
+                <button class="btn-modal-primary" onclick="startScanner()">OKAY, SCAN NOW</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('qrInfoModal').style.display='none'">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="congratsModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-green">
+                <div style="font-size: 35px; margin-bottom: 5px;">🎉</div>
+                <h3>Congratulations!</h3>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 14px; color: #333; font-weight: bold; font-style: italic;">
+                    Tagown Official QR successfully scanned and ready to link with this vehicle.
+                </p>
+                <button class="btn-modal-primary" onclick="document.getElementById('congratsModal').style.display='none'">AWESOME</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="errorModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">⚠️</div>
+                <h3 id="errorTitle">Invalid QR</h3>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p id="errorDesc" style="font-size: 14px; color: #333; font-weight: bold; font-style: italic;">
+                    This QR code is already linked to another vehicle.
+                </p>
+                <button class="btn-modal-primary" style="background:#D32F2F;" onclick="document.getElementById('errorModal').style.display='none'">TRY AGAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="vehicleSheet" class="modal-overlay" style="align-items: flex-end;">
+        <div class="bottom-sheet">
+            <h3 class="sheet-header">Select Vehicle Type</h3>
+            <div class="type-item" onclick="selectType('Bike/Scooter')">Bike/Scooter</div>
+            <div class="type-item" onclick="selectType('Electric Bike/Scooter')">Electric Bike/Scooter</div>
+            <div class="type-item" onclick="selectType('Car/Jeep')">Car/Jeep</div>
+            <div class="type-item" onclick="selectType('Electric Car (EV)')">Electric Car (EV)</div>
+            <div class="type-item" onclick="selectType('Auto')">Auto</div>
+            <div class="type-item" onclick="selectType('E-rickshaw')">E-rickshaw</div>
+            <div class="type-item" onclick="selectType('Truck')">Truck</div>
+            <div class="type-item" onclick="selectType('Van/Bus')">Van/Bus</div>
+            <div class="type-item" onclick="selectType('Other')">Other</div>
+        </div>
+    </div>
+
+    <div id="sosSheet" class="modal-overlay" style="align-items: flex-end;">
+        <div class="bottom-sheet" style="background: #F8F9FA; padding: 25px 0;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="color:var(--sos-red); margin-left: 20px;">🚨 Emergency Helplines</h2>
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin: 0 20px 15px 20px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
+            <a href="tel:112" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
+            <a href="tel:100" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
+        </div>
+    </div>
+
+    <div id="supportSheet" class="modal-overlay" style="align-items: flex-end;">
+        <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="margin-left: 20px;">🎧 Help & Support</h2>
+            <a href="https://wa.me/916372980014" target="_blank" class="list-item-pop" style="background:#E8F5E9; border-color:#C8E6C9;">
+                <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
+            </a>
+            <a href="tel:180093486290" class="list-item-pop" style="background:#E3F2FD; border-color:#BBDEFB;">
+                <div class="list-icon-pop" style="background:#1976D2; color:white;">📞</div>
+                <div class="list-text-pop"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+            </a>
+        </div>
+    </div>
+
+    <div id="scannerOverlay" class="scanner-view">
         <button class="scanner-close" onclick="closeScanner()">×</button>
-        <h3 style="color:white; text-align:center; margin-top:30px;">Scan to Link</h3>
-        <p style="color:#aaa; text-align:center; font-size:12px;">Scan the Tagown QR sticker you want to link to this vehicle.</p>
+        <h3 style="color:white; text-align:center; margin-top:30px;">Scan Official Tagown QR</h3>
         <div id="qrReader"></div>
     </div>
 
     <script>
-        // 🚀 BHAIG LOGIC: FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -233,7 +444,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Security Check: Get Logged In User
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(!currentUserPhone) {
             alert("Security Alert: Please login to view your vehicles.");
@@ -241,51 +451,134 @@
         }
 
         // =====================================
-        // 🔄 UI LOGIC
+        // 🚀 SMART LOGIC: 6-DIGIT PIN GENERATOR
+        // =====================================
+        function generateUniqueCallingPIN() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // =====================================
+        // 🔄 1. DYNAMIC BRANDS MAPPING
+        // =====================================
+        const brandsData = {
+            "Bike/Scooter": ["Royal Enfield", "Honda", "TVS", "Bajaj", "Hero", "Yamaha", "Suzuki", "KTM", "Other"],
+            "Electric Bike/Scooter": ["Ather", "Ola", "TVS iQube", "Bajaj Chetak", "Revolt", "Hero Electric", "Other"],
+            "Car/Jeep": ["Maruti Suzuki", "Hyundai", "Tata", "Mahindra", "Toyota", "Kia", "Honda", "Ford", "Other"],
+            "Electric Car (EV)": ["Tata EV", "MG EV", "Hyundai EV", "BYD", "Mahindra EV", "Other"],
+            "Auto": ["Bajaj", "TVS", "Piaggio", "Mahindra", "Other"],
+            "E-rickshaw": ["Mahindra Treo", "Kinetic Green", "Udaan", "Other"],
+            "Truck": ["Tata Motors", "Ashok Leyland", "Mahindra", "Eicher", "BharatBenz", "Other"],
+            "Van/Bus": ["Tata", "Force Motors", "Swaraj Mazda", "Other"],
+            "Other": ["Custom/Other"]
+        };
+
+        // =====================================
+        // 🧠 2. SMART IND NUMBER FORMATTER
+        // =====================================
+        function formatIND(input) {
+            let val = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+            let parts = [];
+            
+            if(val.length > 0) parts.push(val.substring(0,2)); // State (OD)
+            if(val.length > 2) parts.push(val.substring(2,4)); // RTO (17)
+            
+            if(val.length > 4) {
+                let rest = val.substring(4);
+                let chars = rest.match(/^[A-Z]{1,3}/);
+                if(chars) {
+                    parts.push(chars[0]);
+                    let nums = rest.substring(chars[0].length, chars[0].length + 4);
+                    if(nums) parts.push(nums);
+                } else {
+                    let nums = rest.substring(0,4);
+                    if(nums) parts.push(nums);
+                }
+            }
+            input.value = parts.join(' ');
+        }
+
+        // =====================================
+        // 🔄 3. UI LOGIC (Views & Nav)
         // =====================================
         function toggleView(viewId) {
             document.getElementById('garageView').style.display = 'none';
             document.getElementById('addView').style.display = 'none';
             document.getElementById(viewId).style.display = 'block';
             window.scrollTo(0, 0);
+
+            // Hide/Show Nav based on View
+            if(viewId === 'garageView') {
+                document.getElementById('bottomNav').classList.remove('hide-nav');
+            } else {
+                document.getElementById('bottomNav').classList.add('hide-nav');
+            }
         }
 
         function toggleAccordion() {
             const content = document.getElementById('accContent');
             const icon = document.getElementById('accIcon');
             if(content.style.display === 'block') {
-                content.style.display = 'none';
-                icon.innerText = '▼';
+                content.style.display = 'none'; icon.innerText = '▼';
             } else {
-                content.style.display = 'block';
-                icon.innerText = '▲';
+                content.style.display = 'block'; icon.innerText = '▲';
             }
         }
 
+        function openVehicleSheet() {
+            document.getElementById('vehicleSheet').style.display = 'flex';
+        }
+
+        function selectType(type) {
+            document.getElementById('selectedTypeTxt').innerText = type;
+            document.getElementById('selectedTypeTxt').style.color = "#111";
+            document.getElementById('vehicleSheet').style.display = 'none';
+
+            const brandSelect = document.getElementById('inpBrand');
+            brandSelect.innerHTML = '<option value="">Select Brand *</option>';
+            
+            const availableBrands = brandsData[type] || ["Other"];
+            availableBrands.forEach(brand => {
+                brandSelect.innerHTML += `<option value="${brand}">${brand}</option>`;
+            });
+        }
+
+        window.onclick = function(e) {
+            const modals = ['vehicleSheet', 'appOnlyModal', 'qrInfoModal', 'congratsModal', 'errorModal', 'sosSheet', 'supportSheet'];
+            modals.forEach(id => {
+                let m = document.getElementById(id);
+                if (m && e.target == m) m.style.display = "none";
+            });
+        }
+
         // =====================================
-        // 📲 FETCH VEHICLES (EXACT APP SYNC)
+        // 📲 4. FETCH VEHICLES (With Icons)
         // =====================================
         function loadVehicles() {
             const listDiv = document.getElementById('vehicleList');
             
-            // 🚀 BHAIG LOGIC: Exact match with Android App structure
-            // Path: Vehicles -> 9348960212 (Phone) -> RegNo
             db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
-                listDiv.innerHTML = '';
+                listDiv.innerHTML = ''; // Clear Shimmer
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
-                        const regNo = child.key; // Reg number is the folder name
+                        const regNo = child.key; 
                         
-                        // Decide Icon based on type
-                        const icon = data.vehicleType === "Car/SUV" ? "🚘" : "🏍️";
+                        let iconFile = "ic_bike.webp"; 
+                        const t = data.vehicleType || "";
+                        if(t.includes("Electric Bike") || t.includes("Electric Scooter")) iconFile = "ic_ev_bike.webp";
+                        else if(t.includes("Car/Jeep")) iconFile = "ic_car.webp";
+                        else if(t.includes("Electric Car")) iconFile = "ic_ev_car.webp";
+                        else if(t.includes("Auto") && !t.includes("E-")) iconFile = "ic_auto.webp";
+                        else if(t.includes("E-rickshaw")) iconFile = "ic_erickshaw.webp";
+                        else if(t.includes("Truck")) iconFile = "ic_truck.webp";
+                        else if(t.includes("Van") || t.includes("Bus")) iconFile = "ic_van.webp";
 
                         listDiv.innerHTML += `
                             <div class="vehicle-card">
                                 <div class="vc-top">
                                     <div style="display:flex;">
-                                        <div class="vc-icon-box">${icon}</div>
+                                        <div class="vc-icon-box"><img src="${iconFile}" onerror="this.src='app_logo.webp'"></div>
                                         <div class="vc-details">
                                             <div class="ind-plate">
                                                 <div class="ind-blue">IND</div>
@@ -301,7 +594,7 @@
                                     </div>
                                 </div>
                                 <div class="vc-actions">
-                                    <button class="btn-edit" onclick="alert('Edit feature coming soon!')">EDIT DETAILS</button>
+                                    <button class="btn-edit" onclick="alert('Use Tagown App for advanced editing.')">EDIT DETAILS</button>
                                     <button class="btn-delete" onclick="deleteVehicle('${regNo}')">DELETE</button>
                                 </div>
                             </div>
@@ -309,22 +602,18 @@
                     });
                 } else {
                     listDiv.innerHTML = `
-                        <div style="text-align:center; padding: 40px 20px;">
-                            <div style="font-size:50px; margin-bottom:10px;">🪹</div>
-                            <h3 style="color:#555;">Garage is Empty</h3>
-                            <p style="color:#888; font-size:14px;">Click the button below to secure your first vehicle.</p>
+                        <div class="empty-state">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Icon-round-Question_mark.svg/1200px-Icon-round-Question_mark.svg.png" class="empty-icon">
+                            <h3 class="empty-title">Your Garage is Empty</h3>
+                            <p class="empty-sub">Tap below to secure a vehicle!</p>
                         </div>
                     `;
                 }
             });
         }
         
-        // Auto-load on page start
         loadVehicles();
 
-        // =====================================
-        // 🗑️ DELETE VEHICLE
-        // =====================================
         function deleteVehicle(regNo) {
             if(confirm("Are you sure you want to delete " + regNo + " from your secure garage?")) {
                 db.ref('Vehicles/' + currentUserPhone + '/' + regNo).remove()
@@ -334,10 +623,12 @@
         }
 
         // =====================================
-        // 📷 SCAN TO LINK QR
+        // 📷 5. HIGH SECURITY QR SCANNER
         // =====================================
         let html5QrCode;
-        function openScanner() {
+        
+        function startScanner() {
+            document.getElementById('qrInfoModal').style.display = 'none';
             document.getElementById('scannerOverlay').style.display = 'flex';
             html5QrCode = new Html5Qrcode("qrReader");
             html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
@@ -351,67 +642,96 @@
 
         function onScanSuccess(decodedText) {
             closeScanner();
-            if(decodedText.includes('TAGOWN') || decodedText.includes('tagown')) {
-                // Extract ID or just use raw text
-                const tagId = decodedText.split('id=')[1] || decodedText;
-                document.getElementById('hiddenQrId').value = tagId;
-                
-                const btn = document.getElementById('btnLinkQr');
-                btn.innerText = "TAG LINKED ✅";
-                btn.classList.add('success');
-                alert("QR Tag Scanned and Ready to Link!");
-            } else {
-                alert("Invalid QR! Please scan a genuine Tagown sticker.");
+            
+            if(!decodedText.includes('TAGOWN') && !decodedText.includes('tagown')) {
+                document.getElementById('errorTitle').innerText = "Invalid QR";
+                document.getElementById('errorDesc').innerText = "This is not an official Tagown security QR. Fake tags are rejected.";
+                document.getElementById('errorModal').style.display = 'flex';
+                return;
             }
+
+            const tagId = decodedText.split('id=')[1] || decodedText;
+            
+            db.ref('LinkedTags/' + tagId).once('value').then(snapshot => {
+                if(snapshot.exists()) {
+                    document.getElementById('errorTitle').innerText = "QR Already Linked";
+                    document.getElementById('errorDesc').innerText = "This QR code is already linked to another vehicle. You cannot reuse it.";
+                    document.getElementById('errorModal').style.display = 'flex';
+                } else {
+                    document.getElementById('hiddenQrId').value = tagId;
+                    const btn = document.getElementById('btnLinkQr');
+                    btn.innerText = "TAG LINKED ✅";
+                    btn.classList.add('success');
+                    document.getElementById('congratsModal').style.display = 'flex';
+                }
+            }).catch(err => { alert("Server error verifying tag."); });
         }
 
         // =====================================
-        // 💾 SAVE VEHICLE PROFILE (SYNC TO APP)
+        // 💾 6. SAVE VEHICLE PROFILE (Updated with Exotel Routing)
         // =====================================
         function saveVehicleProfile() {
-            const regNo = document.getElementById('inpRegNo').value.toUpperCase().trim();
-            const type = document.getElementById('inpType').value;
+            const regNoInput = document.getElementById('inpRegNo').value.trim();
+            const regNoID = regNoInput.replace(/\s+/g, ''); 
+            const regNoDisplay = regNoInput; 
+            
+            const typeText = document.getElementById('selectedTypeTxt').innerText;
+            const type = typeText === "Vehicle Type *" ? "" : typeText;
             const brand = document.getElementById('inpBrand').value;
             const model = document.getElementById('inpModel').value.trim();
             const altPhone = document.getElementById('inpAltPhone').value.trim();
             const address = document.getElementById('inpAddress').value.trim();
             const linkedQr = document.getElementById('hiddenQrId').value;
 
-            // Validations
             if(!linkedQr) { alert("Please SCAN TAG QR first to link a sticker."); return; }
-            if(!regNo || !type || !brand || !model) { alert("Please fill all mandatory (*) fields."); return; }
+            if(!regNoID || !type || !brand || !model) { alert("Please fill all mandatory (*) fields."); return; }
 
-            // 🚀 BHAIG LOGIC: Structuring data EXACTLY like the Android app
+            // 🚀 VIP LOGIC: Generating the 6-Digit PIN
+            const callingPIN = generateUniqueCallingPIN();
+
             const vehicleData = {
                 addressOptional: address || "",
                 alternateMobile: altPhone || "Not Provided",
                 brand: brand,
                 linkedQrId: linkedQr,
-                localPhotoPath: "Uploaded via Web",
+                localPhotoPath: "No photo", 
                 model: model,
                 ownerPhone: currentUserPhone,
-                registrationNumber: regNo,
+                registrationNumber: regNoDisplay, 
                 tagStatus: "Secured",
-                vehicleType: type
+                vehicleType: type,
+                callingPIN: callingPIN // 🔥 Saved inside Vehicle profile too
             };
 
-            // Saving to exact path: Vehicles -> Phone -> RegNo
-            db.ref('Vehicles/' + currentUserPhone + '/' + regNo).set(vehicleData)
-            .then(() => {
-                alert("Vehicle Secured Successfully!");
-                // Clear form
-                document.getElementById('inpRegNo').value = '';
-                document.getElementById('inpModel').value = '';
-                document.getElementById('hiddenQrId').value = '';
-                document.getElementById('btnLinkQr').innerText = 'SCAN TAG QR';
-                document.getElementById('btnLinkQr').classList.remove('success');
-                
-                // Go back to garage view
-                toggleView('garageView');
-            })
-            .catch(err => {
-                alert("Database Error: " + err.message);
-            });
+            // Saving to Vehicles folder
+            db.ref('Vehicles/' + currentUserPhone + '/' + regNoDisplay).set(vehicleData).then(() => {
+                // Saving to LinkedTags folder
+                db.ref('LinkedTags/' + linkedQr).set(regNoDisplay).then(() => {
+                    
+                    // 🚀 EXOTEL MAGIC: Saving exactly mapping to CallRouting folder
+                    const routingData = {
+                        phone: currentUserPhone,
+                        regNo: regNoDisplay,
+                        qrId: linkedQr
+                    };
+                    
+                    db.ref('CallRouting/' + callingPIN).set(routingData).then(() => {
+                        alert("Vehicle Secured & Tag Locked Successfully!");
+                        
+                        // Reset forms
+                        document.getElementById('inpRegNo').value = '';
+                        document.getElementById('selectedTypeTxt').innerText = 'Vehicle Type *';
+                        document.getElementById('selectedTypeTxt').style.color = '#555';
+                        document.getElementById('inpBrand').innerHTML = '<option value="">Select Brand *</option>';
+                        document.getElementById('inpModel').value = '';
+                        document.getElementById('hiddenQrId').value = '';
+                        document.getElementById('btnLinkQr').innerText = 'SCAN TAG QR';
+                        document.getElementById('btnLinkQr').classList.remove('success');
+                        
+                        toggleView('garageView');
+                    });
+                });
+            }).catch(err => { alert("Database Error: " + err.message); });
         }
     </script>
 </body>
