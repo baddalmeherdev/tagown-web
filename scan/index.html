@@ -347,6 +347,19 @@
                 </a>
             </div>
 
+            <div id="call-warning-modal" class="center-modal">
+                <div class="sheet-header" style="justify-content: center; margin-bottom: 10px;">
+                    <h3 style="color: #1565C0;">Important Instruction 📞</h3>
+                </div>
+                <p style="font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+                    Your phone dialer will now open with a special secure number.<br><br>
+                    <strong>⚠️ PLEASE DO NOT EDIT OR DELETE ANY NUMBERS OR COMMAS (,).</strong><br><br>
+                    Just press the Call button directly to connect with the owner.
+                </p>
+                <button onclick="executeCall()" class="app-primary-btn" style="background: #16a34a; margin-bottom: 10px;">I UNDERSTAND, CALL NOW</button>
+                <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
+            </div>
+
             <div id="call-lock-modal" class="center-modal">
                 <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-shield-halved" style="font-size: 40px; color: #f59e0b;"></i></div>
                 <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Safety Check 🛡️</h3>
@@ -383,6 +396,9 @@
         let regNoFromDb = "";
         let isMessageSent = false;
         let isInvalidTag = false;
+        
+        // 🔥 VIP FIX: Added variable for Exotel PIN
+        let callingPinFromDb = ""; 
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -391,10 +407,6 @@
             if (qrIdFromUrl) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
-                
-                // 🚀 VIP UPDATE: Smart Dialer Link added here dynamically
-                document.getElementById('em-family-btn').href = "tel:08040265615,," + qrIdFromUrl;
-                
                 fetchVehicleOwner(qrIdFromUrl);
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
@@ -428,14 +440,30 @@
         function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
         function openEmergencySheet() { openModal('emergency-sheet'); }
 
-        // 🚀 VIP UPDATE: Exotel Smart Dialer Function
+        // 🔥 VIP FIX: Opens the warning modal first, then executes call
         function handleCallClick() {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
-            if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
-            if(!isMessageSent) { openModal('call-lock-modal'); } 
-            else { 
-                // Exotel auto-dial magic trick 
-                window.location.href = "tel:08040265615,," + qrIdFromUrl; 
+            if(!ownerPhone || !callingPinFromDb) { showToast("Loading owner securely...", "normal"); return; }
+            
+            if(!isMessageSent) { 
+                openModal('call-lock-modal'); 
+            } else { 
+                openModal('call-warning-modal'); 
+            }
+        }
+
+        // Action to dial Exotel using the 6-Digit PIN
+        function executeCall() {
+            window.location.href = "tel:08040265615,," + callingPinFromDb; 
+        }
+
+        // 🔥 VIP FIX: Updates the Emergency Tagown Support Call Link dynamically
+        function updateEmergencyLinks() {
+            if(callingPinFromDb) {
+                document.getElementById('em-family-btn').onclick = function(e) {
+                    e.preventDefault();
+                    executeCall();
+                };
             }
         }
 
@@ -461,11 +489,27 @@
                     const phone = phoneNode.key;
                     if (phoneNode.hasChild("registrationNumber") || phoneNode.hasChild("regNo")) {
                         const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
-                        if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = phoneNode.child('ownerPhone').val() || phone; found = true; }
+                        if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
+                            ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
+                            
+                            // 🔥 VIP FIX: Getting the 6-Digit PIN
+                            callingPinFromDb = phoneNode.child('callingPIN').val();
+                            updateEmergencyLinks();
+                            
+                            found = true; 
+                        }
                     } else {
                         phoneNode.forEach((vNode) => {
                             const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
-                            if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = vNode.child('ownerPhone').val() || phone; found = true; }
+                            if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
+                                ownerPhone = vNode.child('ownerPhone').val() || phone; 
+                                
+                                // 🔥 VIP FIX: Getting the 6-Digit PIN
+                                callingPinFromDb = vNode.child('callingPIN').val();
+                                updateEmergencyLinks();
+
+                                found = true; 
+                            }
                         });
                     }
                 });
@@ -476,11 +520,27 @@
                             const phone = phoneNode.key;
                             if (phoneNode.hasChild("registrationNumber") || phoneNode.hasChild("regNo")) {
                                 const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
-                                if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = phoneNode.child('ownerPhone').val() || phone; found = true; }
+                                if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
+                                    ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
+                                    
+                                    // 🔥 VIP FIX: Getting the 6-Digit PIN
+                                    callingPinFromDb = phoneNode.child('callingPIN').val();
+                                    updateEmergencyLinks();
+
+                                    found = true; 
+                                }
                             } else {
                                 phoneNode.forEach((vNode) => {
                                     const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
-                                    if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { ownerPhone = vNode.child('ownerPhone').val() || phone; found = true; }
+                                    if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
+                                        ownerPhone = vNode.child('ownerPhone').val() || phone; 
+                                        
+                                        // 🔥 VIP FIX: Getting the 6-Digit PIN
+                                        callingPinFromDb = vNode.child('callingPIN').val();
+                                        updateEmergencyLinks();
+
+                                        found = true; 
+                                    }
                                 });
                             }
                         });
@@ -541,6 +601,13 @@
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
+                    
+                    // Call Button Unlocked UI Update
+                    const callBtnText = document.querySelector('.call-btn span');
+                    if(callBtnText) {
+                        callBtnText.innerText = "Call Owner\n(Unlocked)";
+                    }
+                    
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent Securely!", "success"); }, 1500);
                 } else {
                     const errText = await response.text();
