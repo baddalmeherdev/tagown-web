@@ -321,7 +321,7 @@
                     <h3 style="color: #dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Action Plan</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <a href="tel:18001234567" class="em-item" style="background: #f59e0b;">
+                <a href="#" id="em-family-btn" class="em-item" style="background: #f59e0b;">
                     <div class="em-icon"><i class="fa-solid fa-users"></i></div>
                     <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly in emergencies</span></div>
                 </a>
@@ -391,6 +391,10 @@
             if (qrIdFromUrl) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
+                
+                // 🚀 VIP UPDATE: Smart Dialer Link added here dynamically
+                document.getElementById('em-family-btn').href = "tel:08040265615,," + qrIdFromUrl;
+                
                 fetchVehicleOwner(qrIdFromUrl);
             } else {
                 document.getElementById('scanner-page').style.display = 'none';
@@ -424,11 +428,15 @@
         function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
         function openEmergencySheet() { openModal('emergency-sheet'); }
 
+        // 🚀 VIP UPDATE: Exotel Smart Dialer Function
         function handleCallClick() {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
             if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
             if(!isMessageSent) { openModal('call-lock-modal'); } 
-            else { window.location.href = "tel:18001234567"; }
+            else { 
+                // Exotel auto-dial magic trick 
+                window.location.href = "tel:08040265615,," + qrIdFromUrl; 
+            }
         }
 
         function fetchVehicleOwner(qrId) {
