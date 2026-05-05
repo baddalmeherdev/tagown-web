@@ -62,9 +62,10 @@
         /* Inputs */
         .form-input, .form-select {
             width: 100%; padding: 14px; margin-bottom: 15px; border: 1px solid #E0E0E0; border-radius: 8px; 
-            font-size: 15px; box-sizing: border-box; font-style: italic; color: #333; background: #FFFFFF;
+            font-size: 15px; box-sizing: border-box; font-style: italic; color: #333; background: #FFFFFF; transition: 0.3s;
         }
         .form-input:focus, .form-select:focus { outline: 1px solid var(--primary-blue); }
+        .form-input:disabled { background: #F5F7FA; color: #999; }
         
         /* Contact Block */
         .contact-block { margin-bottom: 20px; }
@@ -74,9 +75,10 @@
             background: var(--primary-blue); color: white; padding: 16px; width: 100%;
             border: none; border-radius: 8px; font-weight: bold; font-size: 14px; font-style: italic;
             cursor: pointer; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2);
-            margin-top: 10px; transition: transform 0.2s;
+            margin-top: 10px; transition: transform 0.2s, background 0.3s;
         }
         .btn-save:active { transform: scale(0.98); }
+        .btn-save:disabled { background: #90CAF9; cursor: not-allowed; }
 
         /* ⚖️ Legal Info Modal */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px);}
@@ -101,10 +103,10 @@
             
             <div class="section-title">Your Medical Details</div>
             
-            <input type="number" id="inpAge" class="form-input" placeholder="Age (e.g., 25)">
+            <input type="number" id="inpAge" class="form-input" placeholder="Fetching data..." disabled>
             
             <div class="sub-label">Gender</div>
-            <select id="inpGender" class="form-select">
+            <select id="inpGender" class="form-select" disabled>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -112,7 +114,7 @@
             </select>
 
             <div class="sub-label">Blood Group</div>
-            <select id="inpBlood" class="form-select">
+            <select id="inpBlood" class="form-select" disabled>
                 <option value="">Select Blood Group</option>
                 <option value="A+">A+</option><option value="A-">A-</option>
                 <option value="B+">B+</option><option value="B-">B-</option>
@@ -124,23 +126,23 @@
             
             <div class="contact-block">
                 <div class="sub-label">Contact 1 (Primary)</div>
-                <input type="text" id="c1Name" class="form-input" placeholder="Name (e.g. Brother)">
-                <input type="tel" id="c1Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+                <input type="text" id="c1Name" class="form-input" placeholder="Fetching..." disabled>
+                <input type="tel" id="c1Phone" class="form-input" placeholder="Fetching..." maxlength="10" disabled>
             </div>
 
             <div class="contact-block">
                 <div class="sub-label">Contact 2</div>
-                <input type="text" id="c2Name" class="form-input" placeholder="Name">
-                <input type="tel" id="c2Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+                <input type="text" id="c2Name" class="form-input" placeholder="Name" disabled>
+                <input type="tel" id="c2Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10" disabled>
             </div>
 
             <div class="contact-block">
                 <div class="sub-label">Contact 3</div>
-                <input type="text" id="c3Name" class="form-input" placeholder="Name">
-                <input type="tel" id="c3Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
+                <input type="text" id="c3Name" class="form-input" placeholder="Name" disabled>
+                <input type="tel" id="c3Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10" disabled>
             </div>
 
-            <button class="btn-save" id="btnSaveData" onclick="saveEmergencyProfile()">SECURE & SAVE DETAILS</button>
+            <button class="btn-save" id="btnSaveData" onclick="saveEmergencyProfile()" disabled>Loading data ⏳...</button>
         </div>
 
     </div>
@@ -163,7 +165,7 @@
     </div>
 
     <script>
-        // 🚀 BHAIG LOGIC: FIREBASE CONFIGURATION
+        // 🚀 FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -187,22 +189,36 @@
         function closeLegalInfo() { document.getElementById('legalModal').style.display = 'none'; }
 
         // =====================================
-        // ⚡ FAST REAL-TIME FETCH (APP SYNC)
+        // ⚡ FAST REAL-TIME FETCH (APP SYNC FIXED)
         // =====================================
         function startRealTimeSync() {
-            // Using .on() instead of .once() ensures lightning-fast live updates from App to Web
             db.ref('Users/' + currentUserPhone).on('value', (snapshot) => {
+                
+                // Enable inputs and change placeholders once data starts coming
+                const inputs = ['inpAge', 'inpGender', 'inpBlood', 'c1Name', 'c1Phone', 'c2Name', 'c2Phone', 'c3Name', 'c3Phone'];
+                inputs.forEach(id => document.getElementById(id).disabled = false);
+                
+                document.getElementById('inpAge').placeholder = "Age (e.g., 25)";
+                document.getElementById('c1Name').placeholder = "Name (e.g. Brother)";
+                document.getElementById('c1Phone').placeholder = "10-Digit Mobile Number";
+                
+                const btn = document.getElementById('btnSaveData');
+                btn.innerText = "SAVE DETAILS";
+                btn.disabled = false;
+
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     
-                    // 🚀 FIXED: Load Medical from correct App Path ('medicalInfo')
-                    if(data.medicalInfo) {
-                        if(data.medicalInfo.age) document.getElementById('inpAge').value = data.medicalInfo.age;
-                        if(data.medicalInfo.gender) document.getElementById('inpGender').value = data.medicalInfo.gender;
-                        if(data.medicalInfo.bloodGroup) document.getElementById('inpBlood').value = data.medicalInfo.bloodGroup;
-                    }
+                    // 🚀 THE ULTIMATE FIX: Check both Root (App) and Folder (Web) to ensure 100% sync
+                    const finalAge = data.age || (data.medicalInfo ? data.medicalInfo.age : '') || '';
+                    const finalGender = data.gender || (data.medicalInfo ? data.medicalInfo.gender : '') || '';
+                    const finalBlood = data.bloodGroup || (data.medicalInfo ? data.medicalInfo.bloodGroup : '') || '';
 
-                    // 🚀 FIXED: Load Contacts using small 'c' (contact1, contact2) like App
+                    document.getElementById('inpAge').value = finalAge;
+                    document.getElementById('inpGender').value = finalGender;
+                    document.getElementById('inpBlood').value = finalBlood;
+
+                    // Load Contacts (App format)
                     if(data.EmergencyContacts) {
                         const ec = data.EmergencyContacts;
                         if(ec.contact1) {
@@ -222,10 +238,11 @@
             });
         }
         
+        // Start live sync immediately
         startRealTimeSync();
 
         // =====================================
-        // 💾 SAVE EMERGENCY PROFILE (SYNC TO APP)
+        // 💾 SAVE DETAILS (NO POPUP, INSTANT REDIRECT)
         // =====================================
         function saveEmergencyProfile() {
             // Medical
@@ -247,32 +264,38 @@
             }
             
             const btn = document.getElementById('btnSaveData');
-            btn.innerText = "SECURING DATA..."; btn.disabled = true;
+            btn.innerText = "SAVING..."; btn.disabled = true;
 
-            // 🚀 FIXED: Structure data exactly as App expects
+            // 🚀 THE ULTIMATE FIX: Save to BOTH Root (for App) and Folder (for safety)
             const updateData = {
+                // Save to Root (App Format)
+                age: age || "",
+                gender: gender || "",
+                bloodGroup: bloodGroup || "",
+                
+                // Save to Folder (Web Format)
                 medicalInfo: {
-                    age: age || "Not Provided",
-                    gender: gender || "Not Provided",
-                    bloodGroup: bloodGroup || "Not Provided"
+                    age: age || "",
+                    gender: gender || "",
+                    bloodGroup: bloodGroup || ""
                 },
+                
                 EmergencyContacts: {
                     contact1: { name: c1Name, phone: c1Phone }
                 }
             };
 
-            // Add optional contacts if filled correctly (1, 2, or 3 dynamically)
+            // Add optional contacts if filled correctly
             if(c2Name && c2Phone.length === 10) { updateData.EmergencyContacts.contact2 = { name: c2Name, phone: c2Phone }; }
             if(c3Name && c3Phone.length === 10) { updateData.EmergencyContacts.contact3 = { name: c3Name, phone: c3Phone }; }
 
-            // Save to exact same folder in Firebase (Users -> Phone)
+            // Save and redirect silently without annoying alert popup
             db.ref('Users/' + currentUserPhone).update(updateData)
             .then(() => {
-                btn.innerText = "SECURE & SAVE DETAILS"; btn.disabled = false;
-                alert("Emergency Profile Secured! Data synced with Tagown App.");
+                window.location.href = 'settings.html';
             })
             .catch((error) => {
-                btn.innerText = "SECURE & SAVE DETAILS"; btn.disabled = false;
+                btn.innerText = "SAVE DETAILS"; btn.disabled = false;
                 alert("Database Error: " + error.message);
             });
         }
