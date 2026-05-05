@@ -17,7 +17,7 @@
             --card-bg: #FFFFFF;
             --text-main: #1C1C1E;
             --text-sub: #8E8E93;
-            --sos-red: #D32F2F;
+            --sos-red: #FF0000; /* Pure Red for SOS */
             --btn-yellow: #FFB300;
         }
         
@@ -25,7 +25,7 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            padding-bottom: 100px;
+            padding-bottom: 120px; /* Space for floating nav */
         }
 
         /* 📱 Top Header */
@@ -146,23 +146,46 @@
         .btn-copy { background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; font-style: italic;}
 
         /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV */
+        /* 🧭 PREMIUM FLOATING BOTTOM NAV (SLIM & Seamless SOS) */
         /* ========================================= */
         .bottom-nav {
-            position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
-            width: 100%; max-width: 500px; background: #FFFFFF;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 10px 0 15px 0; z-index: 90; border-top: 1px solid #F0F0F0;
+            position: fixed; 
+            bottom: 20px; /* Distance from bottom screen */
+            left: 50%; 
+            transform: translateX(-50%);
+            width: 92%; /* Dynamic width with margins */
+            max-width: 400px;
+            background: #FFFFFF; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 6px 0 10px 0; /* 🚀 FIXED: Slim padding (not thick) */
+            z-index: 90; 
+            border-radius: 35px; /* Fully Rounded corners */
         }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
-        .nav-item.active { color: var(--primary-blue); }
-        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
         
-        .nav-sos { transform: translateY(-15px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
-        .nav-sos img { width: 50px; height: 50px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
-        .nav-sos span { font-size: 11px; font-weight: bold; color: var(--sos-red); margin-top: 4px; }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
+        
+        /* Active State (Blue text, bright icon) */
+        .nav-item.active { color: var(--primary-blue); }
+        .nav-item.active img { opacity: 1; }
+        
+        /* Floating Pure Red SOS Button EXACT Match */
+        .nav-sos {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            cursor: pointer; transform: translateY(-20px); /* Lift up to overlap border */
+        }
+        .sos-circle {
+            background: #FF0000; /* 🚀 FIXED: Seamless Pure Red solid circle (No white ring) */
+            width: 52px; height: 52px; /* Proportional size for slim bar */
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); /* Glowing shadow */
+            border: none; /* 🚀 FIXED: Removed the previous white cutout border */
+        }
+        .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); } /* Pure white siren */
+        .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
+        
         .hide-nav { display: none !important; }
 
         /* ========================================= */
@@ -376,11 +399,28 @@
     </div>
 
     <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item" onclick="window.location.href='index.html'"><img src="ic_nav_home.webp" alt="Home"><span>Home</span></div>
-        <div class="nav-item active" onclick="window.location.href='shop.html'"><img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span></div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'"><img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span></div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'"><img src="ic_nav_call_support.webp" alt="Support"><span>Support</span></div>
-        <div class="nav-item" onclick="window.location.href='settings.html'"><img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span></div>
+        <div class="nav-item" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp" alt="Home" onerror="this.src=''; this.alt='🏠'; this.style.fontSize='20px'">
+            <span>Home</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src=''; this.alt='🛍️'; this.style.fontSize='20px'">
+            <span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <div class="sos-circle">
+                <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src=''; this.alt='🚨'; this.style.fontSize='22px'">
+            </div>
+            <span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src=''; this.alt='📞'; this.style.fontSize='20px'">
+            <span>Support</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src=''; this.alt='⚙️'; this.style.fontSize='20px'">
+            <span>Settings</span>
+        </div>
     </div>
 
     <script>
@@ -439,7 +479,6 @@
                     const id = child.key; const data = child.val();
                     let badgeHtml = data.badge ? `<div class="product-badge">${data.badge}</div>` : '';
                     
-                    // FIXED: Fallback to local dashboard banner instead of app logo
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
@@ -472,7 +511,6 @@
             if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
             else { document.getElementById('detBadge').style.display = "none"; }
 
-            // FIXED: Slider Fallbacks using Local Banners
             const slider = document.getElementById('detSlider'); 
             let imgs = [];
             if(data.imgUrl1 && data.imgUrl1.trim() !== "") imgs.push(data.imgUrl1);
@@ -527,7 +565,7 @@
         }
 
         // =====================================
-        // 📝 4. PLACE ORDER
+        // 📝 4. PLACE ORDER (DUAL SYNC LOGIC)
         // =====================================
         function placeOrder() {
             const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
@@ -549,7 +587,11 @@
                 customerName: name, customerPhone: phone, deliveryAddress: fullAddress, orderStatus: "New Order (COD)", timestamp: date, trackingId: ""
             };
 
-            db.ref('Orders/' + orderId).set(orderData).then(() => {
+            // 🚀 THE MASTER SYNC: Save to both User's folder AND Global Orders folder
+            db.ref('UserOrders/' + currentUserPhone + '/' + orderId).set(orderData).then(() => {
+                
+                db.ref('Orders/' + orderId).set(orderData);
+
                 const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}\n*Amount to Pay:* ₹${product.price}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
                 const waLink = `https://wa.me/916372980014?text=${encodeURIComponent(waMessage)}`;
                 
@@ -563,7 +605,7 @@
         }
 
         // =====================================
-        // 📋 5. LOAD ORDER HISTORY
+        // 📋 5. LOAD ORDER HISTORY (SYNCED)
         // =====================================
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
@@ -574,10 +616,12 @@
 
         function loadOrders() {
             const container = document.getElementById('ordersContainer');
-            db.ref('Orders').on('value', (snapshot) => {
+            
+            // Fetch perfectly from UserOrders -> Phone Number (Matches App logic)
+            db.ref('UserOrders/' + currentUserPhone).on('value', (snapshot) => {
                 let html = ''; let orders = [];
                 if(snapshot.exists()){
-                    snapshot.forEach(child => { if(child.val().customerPhone === currentUserPhone) orders.push(child.val()); });
+                    snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 orders.reverse(); 
                 

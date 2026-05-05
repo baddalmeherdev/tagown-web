@@ -187,32 +187,34 @@
         function closeLegalInfo() { document.getElementById('legalModal').style.display = 'none'; }
 
         // =====================================
-        // 📥 FETCH EXISTING DATA (If User Already Filled)
+        // 📥 FETCH EXISTING DATA (If User Already Filled in App or Web)
         // =====================================
         function loadExistingData() {
             db.ref('Users/' + currentUserPhone).once('value').then((snapshot) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     
-                    // Load Medical
-                    if(data.age) document.getElementById('inpAge').value = data.age;
-                    if(data.gender) document.getElementById('inpGender').value = data.gender;
-                    if(data.bloodGroup) document.getElementById('inpBlood').value = data.bloodGroup;
+                    // 🚀 FIXED: Load Medical from correct App Path ('medicalInfo')
+                    if(data.medicalInfo) {
+                        if(data.medicalInfo.age) document.getElementById('inpAge').value = data.medicalInfo.age;
+                        if(data.medicalInfo.gender) document.getElementById('inpGender').value = data.medicalInfo.gender;
+                        if(data.medicalInfo.bloodGroup) document.getElementById('inpBlood').value = data.medicalInfo.bloodGroup;
+                    }
 
-                    // Load Contacts
+                    // 🚀 FIXED: Load Contacts using small 'c' (contact1, contact2) like App
                     if(data.EmergencyContacts) {
                         const ec = data.EmergencyContacts;
-                        if(ec.Contact1) {
-                            document.getElementById('c1Name').value = ec.Contact1.name || '';
-                            document.getElementById('c1Phone').value = ec.Contact1.phone || '';
+                        if(ec.contact1) {
+                            document.getElementById('c1Name').value = ec.contact1.name || '';
+                            document.getElementById('c1Phone').value = ec.contact1.phone || '';
                         }
-                        if(ec.Contact2) {
-                            document.getElementById('c2Name').value = ec.Contact2.name || '';
-                            document.getElementById('c2Phone').value = ec.Contact2.phone || '';
+                        if(ec.contact2) {
+                            document.getElementById('c2Name').value = ec.contact2.name || '';
+                            document.getElementById('c2Phone').value = ec.contact2.phone || '';
                         }
-                        if(ec.Contact3) {
-                            document.getElementById('c3Name').value = ec.Contact3.name || '';
-                            document.getElementById('c3Phone').value = ec.Contact3.phone || '';
+                        if(ec.contact3) {
+                            document.getElementById('c3Name').value = ec.contact3.name || '';
+                            document.getElementById('c3Phone').value = ec.contact3.phone || '';
                         }
                     }
                 }
@@ -243,19 +245,21 @@
                 return;
             }
 
-            // Structure data exactly as App expects
+            // 🚀 FIXED: Structure data exactly as App expects
             const updateData = {
-                age: age || "Not Provided",
-                gender: gender || "Not Provided",
-                bloodGroup: bloodGroup || "Not Provided",
+                medicalInfo: {
+                    age: age || "Not Provided",
+                    gender: gender || "Not Provided",
+                    bloodGroup: bloodGroup || "Not Provided"
+                },
                 EmergencyContacts: {
-                    Contact1: { name: c1Name, phone: c1Phone }
+                    contact1: { name: c1Name, phone: c1Phone }
                 }
             };
 
-            // Add optional contacts if filled
-            if(c2Name && c2Phone.length === 10) { updateData.EmergencyContacts.Contact2 = { name: c2Name, phone: c2Phone }; }
-            if(c3Name && c3Phone.length === 10) { updateData.EmergencyContacts.Contact3 = { name: c3Name, phone: c3Phone }; }
+            // Add optional contacts if filled correctly (1, 2, or 3 dynamically)
+            if(c2Name && c2Phone.length === 10) { updateData.EmergencyContacts.contact2 = { name: c2Name, phone: c2Phone }; }
+            if(c3Name && c3Phone.length === 10) { updateData.EmergencyContacts.contact3 = { name: c3Name, phone: c3Phone }; }
 
             // Save to exact same folder in Firebase (Users -> Phone)
             db.ref('Users/' + currentUserPhone).update(updateData)

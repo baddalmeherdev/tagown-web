@@ -64,7 +64,7 @@
         }
         .profile-info h2 { margin: 0; font-size: 22px; font-style: italic; color: #222; }
         .profile-info p { margin: 5px 0 0 0; font-size: 14px; color: var(--text-sub); font-style: italic; font-weight: 600;}
-        .edit-icon { color: #64B5F6; font-size: 20px; cursor: pointer; }
+        .edit-icon { color: #64B5F6; font-size: 20px; cursor: pointer; padding: 5px;}
 
         /* 🗂️ Section Headers */
         .section-header {
@@ -147,6 +147,14 @@
         .modal-body { padding: 25px 20px; }
         .btn-modal-primary { background: var(--primary-blue); color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
+
+        /* Edit Profile Bottom Sheet Inputs */
+        .edit-input-group { text-align: left; margin-bottom: 20px; }
+        .edit-label { font-size: 13px; font-weight: bold; color: var(--primary-blue); margin-bottom: 5px; display: block; font-style: italic;}
+        .edit-input { width: 100%; padding: 15px; border: 1px solid #ccc; border-radius: 10px; font-size: 16px; font-style: italic; color: #333; box-sizing: border-box; background: #fff;}
+        .edit-input:focus { outline: 1px solid var(--primary-blue); }
+        .edit-input:disabled { background: #F5F7FA; color: #888; cursor: not-allowed; border: 1px dashed #ccc;}
+        .helper-text { font-size: 11px; color: #888; margin-top: 5px; display: block; font-style: italic;}
     </style>
 </head>
 <body>
@@ -162,7 +170,7 @@
                 <div class="skeleton skel-name"></div>
                 <div class="skeleton skel-phone"></div>
             </div>
-            <div class="edit-icon" onclick="alert('Profile editing via app only.')">✏️</div>
+            <div class="edit-icon" onclick="openEditProfile()">✏️</div>
         </div>
 
         <div class="section-header">SECURITY & EMERGENCY</div>
@@ -195,6 +203,27 @@
             Made in India with ❤️
         </div>
 
+    </div>
+
+    <div id="editProfileSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #F8F9FA;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('editProfileSheet').style.display='none'">×</button>
+            <h2 class="sheet-header">✏️ Edit Profile</h2>
+            
+            <div class="edit-input-group">
+                <label class="edit-label">Full Name</label>
+                <input type="text" id="editNameInput" class="edit-input" placeholder="Enter your name">
+            </div>
+
+            <div class="edit-input-group">
+                <label class="edit-label">Registered Number</label>
+                <input type="text" id="editPhoneInput" class="edit-input" disabled>
+                <span class="helper-text">Phone number cannot be changed for security reasons.</span>
+            </div>
+
+            <button class="btn-modal-primary" id="btnSaveProfile" onclick="saveProfileChanges()" style="margin-top: 10px;">SAVE CHANGES</button>
+        </div>
     </div>
 
     <div id="sosSheet" class="overlay">
@@ -238,6 +267,30 @@
         </div>
     </div>
 
+    <div id="deleteWarningModal" class="overlay" style="align-items: center; z-index: 3000;">
+        <div class="modal-box">
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">💔</div>
+                <h3>We'll miss you!</h3>
+                <p>Are you sure you want to leave?</p>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: #555; line-height: 1.5; font-weight: 500; margin-top:0; text-align:left;">
+                    Deleting your account will <b>permanently erase</b> your:<br><br>
+                    • Profile & Emergency Contacts<br>
+                    • Secured Vehicles & QR Links<br>
+                    • Call Routing PINs<br>
+                    • Order History<br><br>
+                    <span style="color: #D32F2F; font-weight: bold; font-style:italic;">This action cannot be undone.</span>
+                </p>
+                <input type="text" id="deleteConfirmText" class="edit-input" style="width:100%; padding:12px; margin: 15px 0; border:1px solid #ccc; border-radius:8px; text-align:center; font-weight:bold; font-style:normal;" placeholder="Type 'DELETE' to confirm">
+                
+                <button class="btn-modal-primary" id="btnFinalDelete" style="background: #D32F2F; margin-bottom: 10px;" onclick="executeFinalDelete()">PERMANENTLY DELETE</button>
+                <button class="btn-modal-cancel" style="background: #E8F5E9; color: #2E7D32; font-weight: bold;" onclick="document.getElementById('deleteWarningModal').style.display='none'">CANCEL & STAY SECURE</button>
+            </div>
+        </div>
+    </div>
+
     <div class="bottom-nav">
         <div class="nav-item" onclick="window.location.href='index.html'">
             <img src="ic_nav_home.webp" alt="Home" onerror="this.src='app_logo.webp'"><span>Home</span>
@@ -269,10 +322,11 @@
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         const profileDiv = document.getElementById('profileInfo');
+        let globalUserName = "Tagown User";
 
         // Close Overlay logic
         window.onclick = function(event) {
-            const modals = ['sosSheet', 'supportSheet', 'loginRequiredModal'];
+            const modals = ['sosSheet', 'supportSheet', 'loginRequiredModal', 'editProfileSheet', 'deleteWarningModal'];
             modals.forEach(id => {
                 const modal = document.getElementById(id);
                 if (event.target == modal) modal.style.display = "none";
@@ -282,24 +336,56 @@
         // =====================================
         // ✨ LOAD PROFILE WITH SHIMMER
         // =====================================
-        if (!currentUserPhone) {
-            profileDiv.innerHTML = `<h2>Guest User</h2><p>Not Logged In</p>`;
-        } else {
-            // Wait 1s for premium shimmer feel, then fetch
-            setTimeout(() => {
+        function loadProfileData() {
+            if (!currentUserPhone) {
+                profileDiv.innerHTML = `<h2>Guest User</h2><p>Not Logged In</p>`;
+            } else {
                 db.ref('Users/' + currentUserPhone).once('value').then((snapshot) => {
                     if (snapshot.exists()) {
                         const userData = snapshot.val();
-                        profileDiv.innerHTML = `<h2>${userData.name || "Tagown User"}</h2><p>+91 ${currentUserPhone}</p>`;
+                        globalUserName = userData.name || "Tagown User";
+                        profileDiv.innerHTML = `<h2>${globalUserName}</h2><p>+91 ${currentUserPhone}</p>`;
                     } else {
                         profileDiv.innerHTML = `<h2>Unknown User</h2><p>+91 ${currentUserPhone}</p>`;
                     }
                 }).catch(err => {
                     profileDiv.innerHTML = `<h2>Error Loading</h2><p>Internet Issue</p>`;
                 });
-            }, 800);
+            }
+        }
+        setTimeout(loadProfileData, 800);
+
+        function openEditProfile() {
+            if (!currentUserPhone) {
+                document.getElementById('loginRequiredModal').style.display = 'flex';
+                return;
+            }
+            document.getElementById('editNameInput').value = globalUserName !== "Tagown User" ? globalUserName : "";
+            document.getElementById('editPhoneInput').value = "+91 " + currentUserPhone;
+            document.getElementById('editProfileSheet').style.display = 'flex';
         }
 
+        function saveProfileChanges() {
+            const newName = document.getElementById('editNameInput').value.trim();
+            if (!newName) { alert("Please enter a valid name."); return; }
+            
+            const btn = document.getElementById('btnSaveProfile');
+            btn.innerText = "SAVING..."; btn.disabled = true;
+
+            db.ref('Users/' + currentUserPhone).update({ name: newName }).then(() => {
+                globalUserName = newName;
+                profileDiv.innerHTML = `<h2>${globalUserName}</h2><p>+91 ${currentUserPhone}</p>`;
+                document.getElementById('editProfileSheet').style.display = 'none';
+                btn.innerText = "SAVE CHANGES"; btn.disabled = false;
+            }).catch(error => {
+                alert("Error updating profile: " + error.message);
+                btn.innerText = "SAVE CHANGES"; btn.disabled = false;
+            });
+        }
+
+        // =====================================
+        // 🔒 SECURE ACTIONS & MASTER DELETE
+        // =====================================
         function handleSecureAction(action) {
             if (!currentUserPhone) {
                 document.getElementById('loginRequiredModal').style.display = 'flex';
@@ -307,7 +393,10 @@
             }
             if (action === 'emergency') window.location.href = 'emergency.html';
             else if (action === 'logout') logout();
-            else if (action === 'delete') deleteAccount();
+            else if (action === 'delete') {
+                document.getElementById('deleteConfirmText').value = '';
+                document.getElementById('deleteWarningModal').style.display = 'flex';
+            }
         }
 
         function logout() {
@@ -317,19 +406,57 @@
             }
         }
 
-        function deleteAccount() {
-            const confirm1 = confirm("⚠️ WARNING: This will permanently delete your account and data. Proceed?");
-            if(confirm1) {
-                const confirm2 = prompt("Type 'DELETE' to confirm:");
-                if(confirm2 === "DELETE") {
-                    db.ref('Users/' + currentUserPhone).remove();
-                    db.ref('Vehicles/' + currentUserPhone).remove().then(() => {
-                        alert("Account permanently deleted.");
-                        localStorage.removeItem("tagownUserPhone");
-                        window.location.href = 'index.html';
+        // 🚀 NEW: Master Delete Engine (Safely deletes data from all 5 locations)
+        function executeFinalDelete() {
+            const confirmText = document.getElementById('deleteConfirmText').value;
+            if (confirmText !== "DELETE") {
+                alert("Please type 'DELETE' exactly as shown to confirm.");
+                return;
+            }
+
+            const btn = document.getElementById('btnFinalDelete');
+            btn.innerText = "DELETING DATA..."; btn.disabled = true;
+
+            const phone = currentUserPhone;
+
+            // Step 1: Find user's vehicles to delete Linked Tags and Call Routes
+            db.ref('Vehicles/' + phone).once('value').then(snapshot => {
+                if (snapshot.exists()) {
+                    const vehicles = snapshot.val();
+                    Object.keys(vehicles).forEach(regNo => {
+                        const vData = vehicles[regNo];
+                        // 1. Delete CallRouting PIN
+                        if (vData.callingPIN) {
+                            db.ref('CallRouting/' + vData.callingPIN).remove();
+                        }
+                        // 2. Unassign LinkedTag QR
+                        if (vData.linkedQrId) {
+                            db.ref('LinkedTags/' + vData.linkedQrId).remove();
+                        }
                     });
                 }
-            }
+                
+                // Step 2: Delete all core user profile folders simultaneously
+                const multiDelete = {};
+                multiDelete['Vehicles/' + phone] = null;   // Delete Vehicles
+                multiDelete['UserOrders/' + phone] = null; // Delete Orders
+                multiDelete['Users/' + phone] = null;      // Delete Profile & Emergency Data
+                
+                db.ref().update(multiDelete).then(() => {
+                    // Step 3: Clear local storage and log out
+                    alert("Your account and all associated data have been permanently deleted.");
+                    localStorage.removeItem("tagownUserPhone");
+                    auth.signOut().then(() => {
+                        window.location.href = 'index.html';
+                    });
+                }).catch(err => {
+                    alert("Error deleting account: " + err.message);
+                    btn.innerText = "PERMANENTLY DELETE"; btn.disabled = false;
+                });
+            }).catch(err => {
+                alert("Error accessing vehicle data: " + err.message);
+                btn.innerText = "PERMANENTLY DELETE"; btn.disabled = false;
+            });
         }
     </script>
 </body>

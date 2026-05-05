@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tagown | Dashboard</title>
     
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         /* 🍏 iOS Premium Theme Variables */
         :root { 
@@ -23,10 +26,10 @@
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
             -webkit-font-smoothing: antialiased;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
         }
 
-        /* 📱 Top Header (Bell Removed) */
+        /* 📱 Top Header */
         .header {
             display: flex; justify-content: center; align-items: center;
             background: var(--card-bg); padding: 12px 20px;
@@ -39,13 +42,52 @@
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 🖼️ Auto Slider Banner */
+        /* 🖼️ Auto & Swipeable Slider Banner */
         .slider-container {
             width: 100%; height: 180px; border-radius: 20px; overflow: hidden;
             position: relative; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            touch-action: pan-y; /* Allows vertical scroll while swiping horizontal */
         }
-        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out; }
-        .slider-track img { width: 25%; height: 100%; object-fit: cover; }
+        .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out; cursor: grab;}
+        .slider-track:active { cursor: grabbing; }
+        .slider-track img { width: 25%; height: 100%; object-fit: cover; pointer-events: none;}
+
+        /* 🚀 App Download & Dynamic Scrolling Announcement */
+        .app-promo-container {
+            background: #FFFFFF; border-radius: 16px; margin-bottom: 20px;
+            border: 1px solid #E3F2FD; box-shadow: 0 4px 15px rgba(13, 71, 161, 0.05);
+            overflow: hidden; display: flex; align-items: center;
+        }
+        .app-promo-icon {
+            background: #1565C0; color: white; padding: 15px;
+            display: flex; align-items: center; justify-content: center; font-size: 20px; z-index: 2;
+        }
+        .app-promo-scroll {
+            flex-grow: 1; overflow-x: auto; white-space: nowrap; padding: 12px 15px;
+            scroll-behavior: smooth; -webkit-overflow-scrolling: touch;
+            -ms-overflow-style: none; scrollbar-width: none;
+        }
+        .app-promo-scroll::-webkit-scrollbar { display: none; }
+        
+        .promo-content {
+            display: inline-flex; align-items: center; gap: 20px;
+            animation: autoScroll 12s linear infinite;
+        }
+        .app-promo-scroll:active .promo-content, .app-promo-scroll:hover .promo-content { animation-play-state: paused; }
+        
+        @keyframes autoScroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .promo-ios { display: inline-flex; align-items: center; gap: 8px;}
+        .promo-ios-text { color: #555; font-size: 13px; font-weight: 700; font-style: italic;}
+        .ios-badge { background: #F5F5F5; color: #888; font-size: 10px; padding: 3px 8px; border-radius: 12px; font-weight: bold; border: 1px solid #E0E0E0;}
+
+        .promo-android { display: inline-flex; align-items: center; gap: 10px; border-left: 2px solid #E0E0E0; padding-left: 20px;}
+        .promo-android-text { color: #1565C0; font-size: 13px; font-weight: 800; font-style: italic;}
+        .btn-download-app {
+            background: #00C853; color: white; border: none; padding: 6px 12px; border-radius: 20px;
+            font-size: 11px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 5px;
+            text-decoration: none; font-style: italic; box-shadow: 0 2px 8px rgba(0,200,83,0.3);
+        }
 
         /* 🟢 Green How to Use Banner */
         .how-to-use {
@@ -70,6 +112,17 @@
         .service-card:active { transform: scale(0.95); }
         .service-card img { width: 45px; height: 45px; margin-bottom: 12px; object-fit: contain; }
         .service-name { font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+
+        /* 🛡️ NEW: Why Tagown Section (Empty Space Filler) */
+        .trust-card {
+            background: var(--card-bg); border-radius: 20px; padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; margin-bottom: 30px;
+        }
+        .trust-item { display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px dashed #eee;}
+        .trust-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+        .trust-icon { font-size: 24px; background: var(--bg-color); width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; border-radius: 12px;}
+        .trust-text h4 { margin: 0 0 4px 0; font-size: 15px; color: #222; font-style: italic;}
+        .trust-text p { margin: 0; font-size: 12px; color: #777; font-weight: 500;}
 
         /* 🧭 Floating Bottom Nav */
         .bottom-nav {
@@ -102,7 +155,6 @@
         .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none;}
         
-        /* List Items for Bottom Sheets */
         .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 2px 5px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;}
         .list-icon { width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
         .list-text { flex-grow:1; text-align: left;}
@@ -115,7 +167,7 @@
         .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
         .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
 
-        /* 🔒 NEW PREMIUM MODALS (Glassmorphism + iOS Style) */
+        /* 🔒 NEW PREMIUM MODALS */
         .modal-overlay { 
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; 
@@ -154,7 +206,7 @@
         <div class="header-logo">
             <img src="app_logo.webp" alt="Logo"> TAGOWN
         </div>
-        </div>
+    </div>
 
     <div class="container">
         
@@ -164,6 +216,24 @@
                 <img src="banner_home_privacy.webp" alt="Banner">
                 <img src="banner_home_vault.webp" alt="Banner">
                 <img src="banner_home_sos.webp" alt="Banner">
+            </div>
+        </div>
+
+        <div class="app-promo-container">
+            <div class="app-promo-icon">📢</div>
+            <div class="app-promo-scroll">
+                <div class="promo-content" id="promoContent">
+                    <div class="promo-ios">
+                        <span class="promo-ios-text">Apple / iOS App</span>
+                        <span class="ios-badge">Coming Soon ⏳</span>
+                    </div>
+                    <div class="promo-android">
+                        <span class="promo-android-text">Android User? Get full access!</span>
+                        <a href="https://play.google.com/store/apps" target="_blank" class="btn-download-app">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" width="12" alt="Play"> Download App
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -177,7 +247,6 @@
 
         <h2 class="section-title">Core Services</h2>
         <div class="grid-3">
-            
             <div class="service-card" onclick="window.location.href='scanner.html'">
                 <img src="ic_scan_qr.webp" alt="Scan QR">
                 <div class="service-name">Scan QR</div>
@@ -191,6 +260,31 @@
             <div class="service-card" onclick="document.getElementById('vaultModal').style.display='flex'">
                 <img src="ic_license.webp" alt="Document Vault">
                 <div class="service-name">Document /<br>License</div>
+            </div>
+        </div>
+
+        <h2 class="section-title" style="margin-top: 30px;">Why Choose Tagown?</h2>
+        <div class="trust-card">
+            <div class="trust-item">
+                <div class="trust-icon">🛡️</div>
+                <div class="trust-text">
+                    <h4>Tagown provides anonymous communication via QR codes</h4>
+                    <p>Your data is saved securely.</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🚨</div>
+                <div class="trust-text">
+                    <h4>Instant Call and Notification Alerts</h4>
+                    <p>Smart auto-dialer contacts in 1 tap and Notify.</p>
+                </div>
+            </div>
+            <div class="trust-item">
+                <div class="trust-icon">🇮🇳</div>
+                <div class="trust-text">
+                    <h4>Made in India</h4>
+                    <p>Proudly built for Indian vehicle owners.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -325,7 +419,7 @@
                 </p>
                 <div style="background:#E3F2FD; padding:12px; border-radius:10px; font-size:12px; margin-bottom:15px; color:var(--primary); text-align: left;">
                     <b>📱 Android:</b> Download App<br><br>
-                    <b>🍏 iPhone:</b> Coming Soon
+                    <b> iPhone:</b> Coming Soon
                 </div>
                 <button class="btn-modal-primary" onclick="window.open('https://play.google.com/store/apps', '_blank')">GET THE APP</button>
                 <button class="btn-modal-cancel" onclick="document.getElementById('vaultModal').style.display='none'">Close</button>
@@ -335,48 +429,113 @@
 
 
     <script>
-        // 1. Auto Slider Logic
-        const track = document.getElementById('sliderTrack');
-        let slideIndex = 0;
-        setInterval(() => {
-            slideIndex = (slideIndex + 1) % 4; // 4 images
-            track.style.transform = `translateX(-${slideIndex * 25}%)`;
-        }, 3000);
-
-        // Current Logged In User
+        // ==========================================
+        // 🚀 1. Firebase Configuration & Initialization
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
 
-        // 2. THE GLITCH FIX: Check Access Locally Before Redirecting
+        // ==========================================
+        // 🖼️ 2. Swipeable Auto Slider Logic
+        // ==========================================
+        const track = document.getElementById('sliderTrack');
+        let slideIndex = 0;
+        let startX = 0;
+        let isDragging = false;
+
+        function moveSlide() {
+            slideIndex = (slideIndex + 1) % 4; // 4 images
+            updateSlider();
+        }
+        function updateSlider() {
+            track.style.transition = 'transform 0.5s ease-in-out';
+            track.style.transform = `translateX(-${slideIndex * 25}%)`;
+        }
+        
+        let autoSlide = setInterval(moveSlide, 3000);
+
+        // Touch Events for Swiping
+        track.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isDragging = true;
+            clearInterval(autoSlide); // Pause auto slide when touched
+            track.style.transition = 'none';
+        });
+
+        track.addEventListener('touchend', (e) => {
+            if (!isDragging) return;
+            let endX = e.changedTouches[0].clientX;
+            let diff = startX - endX;
+
+            if (diff > 40) { // Swiped Left
+                slideIndex = (slideIndex + 1) % 4;
+            } else if (diff < -40) { // Swiped Right
+                slideIndex = (slideIndex - 1 + 4) % 4;
+            }
+            updateSlider();
+            isDragging = false;
+            autoSlide = setInterval(moveSlide, 3000); // Resume auto slide
+        });
+
+        // ==========================================
+        // 📢 3. Firebase Dynamic Announcement Banner
+        // ==========================================
+        db.ref('AdminAnnouncements/DashboardBanner').on('value', (snapshot) => {
+            const promoBox = document.getElementById('promoContent');
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                // If admin sets an active message, show it
+                if (data.active === true && data.message) {
+                    promoBox.innerHTML = `
+                        <span style="color:#1565C0; font-size:14px; font-weight:800; font-style:italic; padding-right: 20px;">
+                            🔥 ${data.message}
+                        </span>
+                    `;
+                    return;
+                }
+            }
+            // Default View if no active announcement
+            promoBox.innerHTML = `
+                <div class="promo-ios">
+                    <span class="promo-ios-text">Apple / iOS App</span>
+                    <span class="ios-badge">Coming Soon ⏳</span>
+                </div>
+                <div class="promo-android">
+                    <span class="promo-android-text">Android User? Get full access!</span>
+                    <a href="https://play.google.com/store/apps" target="_blank" class="btn-download-app">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" width="12" alt="Play"> Download App
+                    </a>
+                </div>
+            `;
+        });
+
+        // ==========================================
+        // 🔒 4. Access & Promos Logic
+        // ==========================================
         function checkVehiclesAccess() {
             if (currentUserPhone) {
-                // User is logged in, safe to go to vehicles
                 window.location.href = 'vehicles.html';
             } else {
-                // User is NOT logged in, show premium modal right here
                 document.getElementById('loginRequiredModal').style.display = 'flex';
             }
         }
 
-        // 3. THE SMART EMERGENCY PROMO (Only 2 times for logged-in users)
         window.onload = function() {
-            // Only show to users who are actually logged in
             if (currentUserPhone) {
-                // Check how many times they have seen this
                 let promoCount = localStorage.getItem("tagownEmergencyPromoCount");
-                
-                // If null (never seen), make it 0
-                if (!promoCount) {
-                    promoCount = 0;
-                } else {
-                    promoCount = parseInt(promoCount);
-                }
+                if (!promoCount) promoCount = 0;
+                else promoCount = parseInt(promoCount);
 
-                // If seen less than 2 times, show it
                 if (promoCount < 2) {
-                    // Give a tiny 0.5s delay so the page loads smoothly first
                     setTimeout(() => {
                         document.getElementById('emergencyPromoModal').style.display = 'flex';
-                        // Increase the count and save it
                         localStorage.setItem("tagownEmergencyPromoCount", promoCount + 1);
                     }, 500);
                 }

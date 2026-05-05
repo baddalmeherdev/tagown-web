@@ -21,14 +21,15 @@
             --text-sub: #8E8E93;
             --bg-color: #F4F6F9;
             --card-bg: #FFFFFF;
-            --sos-red: #D32F2F;
+            --sos-red: #FF0000;
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            padding-bottom: 100px;
+            /* 🚀 FIXED: Increased padding so content doesn't hide behind the raised Add button */
+            padding-bottom: 150px; 
         }
 
         /* 📱 Top Header */
@@ -82,7 +83,7 @@
         .vc-type-badge { background: var(--light-green); color: var(--primary-green); font-size: 11px; padding: 3px 8px; border-radius: 4px; font-style: italic; font-weight: bold; display: inline-block; margin-bottom: 5px; }
         .vc-model { font-size: 13px; color: #555; font-style: italic;}
         
-        .vc-qr-box { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .vc-qr-box { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         .vc-qr-box img { width: 35px; height: 35px; }
         .vc-qr-box span { font-size: 10px; color: var(--primary-green); font-weight: bold; margin-top: 5px; font-style: italic;}
 
@@ -96,11 +97,13 @@
         .empty-title { font-size: 16px; color: #666; font-style: italic; font-weight: bold; margin: 0; }
         .empty-sub { font-size: 13px; color: #999; font-style: italic; margin-top: 5px; }
 
-        /* Floating Add Button */
+        /* 🚀 FIXED: Raised the Add Vehicle button so it doesn't touch the floating navbar */
         .btn-float-add {
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
-            background: #2E7D32; color: white; padding: 15px 25px; border-radius: 30px;
-            font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(46, 125, 50, 0.4);
+            position: fixed; 
+            bottom: 130px; /* Lifted up from 100px */
+            right: 20px; 
+            background: #1B5E20; color: white; padding: 15px 25px; border-radius: 30px;
+            font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(27, 94, 32, 0.4);
             cursor: pointer; z-index: 80; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
         }
 
@@ -129,53 +132,47 @@
         .row-2 { display: flex; gap: 10px; margin-bottom: 15px; }
         .form-input, .form-select { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white; appearance: none;}
         .form-input:focus, .form-select:focus { outline: 1px solid var(--primary-green); }
+        .form-input:disabled { background: #F5F7FA; color: #888; border: 1px dashed #ccc; cursor: not-allowed; }
         
         .custom-selector { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; font-style: italic; color: #555; background: white; text-align: left; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
         
         .accordion-header { display: flex; justify-content: space-between; align-items: center; color: #E65100; font-weight: bold; font-size: 14px; font-style: italic; cursor: pointer; margin-top: 20px; margin-bottom: 10px;}
         .accordion-content { display: none; }
         
-        .btn-save-full { background: #2E7D32; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
+        .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
         /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV (DASHBOARD STYLE) */
+        /* 🧭 FLOATING BOTTOM NAV (Slim Rounded - NO CHANGES) */
         /* ========================================= */
         .bottom-nav {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 400px; background: #FFFFFF; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
+            display: flex; justify-content: space-around; align-items: center; 
+            padding: 6px 0 10px 0; z-index: 90; border-radius: 35px;
         }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px;
-        }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
-        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
+        .nav-item.active img { opacity: 1; }
         
-        .nav-sos {
-            width: 60px; height: 60px; transform: translateY(-20px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
-        .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
-
+        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); }
+        .sos-circle { background: #FF0000; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); border: none;}
+        .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
+        .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
         .hide-nav { display: none !important; }
 
         /* ========================================= */
-        /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
+        /* 🚨 PREMIUM POPUP MODALS & BOTTOM SHEETS */
         /* ========================================= */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
+        
+        .modal-box { background: white; border-radius: 24px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         .modal-header-green { background: #2E7D32; color: white; padding: 25px 20px; }
         .modal-header-blue { background: #1565C0; color: white; padding: 25px 20px; }
         .modal-header-red { background: #D32F2F; color: white; padding: 25px 20px; }
-        
         .modal-header-green h3, .modal-header-blue h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
         .modal-body { padding: 25px 20px; text-align: left; }
         
@@ -184,9 +181,9 @@
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; text-align: center;}
 
         /* Bottom Sheets */
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 20px 0; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto;}
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 20px 0; box-sizing: border-box; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto;}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .sheet-header { font-size: 18px; font-weight: bold; color: var(--primary-green); font-style: italic; padding: 0 20px 15px 20px; border-bottom: 1px solid #eee; margin: 0;}
+        .sheet-header { font-size: 18px; font-weight: bold; color: var(--title-color); font-style: italic; padding: 0 20px 15px 20px; border-bottom: 1px solid #eee; margin: 0;}
         .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 15px; font-weight: bold; font-style: italic; color: #333; cursor: pointer;}
         .type-item:active { background: #F9F9F9; }
 
@@ -205,6 +202,16 @@
         #qrReader { width: 100%; flex-grow: 1; }
         .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 3001; cursor: pointer;}
 
+        /* 🚀 Edit Vehicle Sheet Custom CSS */
+        .edit-label { font-size: 12px; color: var(--primary-green); font-weight: bold; margin-bottom: 5px; display: block; padding: 0 20px;}
+        .edit-input { width: calc(100% - 40px); margin: 0 20px 15px 20px; }
+
+        /* 🚀 QR Display Sheet CSS */
+        .qr-display-container { text-align: center; padding: 20px; }
+        .qr-title-green { color: var(--title-color); font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 20px;}
+        .qr-code-img { width: 200px; height: 200px; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px; background: #fff;}
+        .qr-vehicle-no { font-size: 16px; font-weight: bold; color: #333; margin-top: 15px; font-style: italic;}
+        .qr-subtitle { font-size: 13px; color: #777; font-style: italic;}
     </style>
 </head>
 <body>
@@ -212,25 +219,13 @@
     <div id="garageView">
         <div class="header">
             <div style="width: 26px;"></div> <div class="header-title">My Vehicles</div>
-            <div class="info-btn" onclick="alert('Manage all your Tagown secured vehicles here.')">i</div>
+            <div class="info-btn" onclick="document.getElementById('garageGuideModal').style.display='flex'">i</div>
         </div>
 
         <div class="container">
             <div class="garage-title">Secured Garage</div>
             
             <div id="vehicleList">
-                <div class="vehicle-card" style="pointer-events:none;">
-                    <div class="vc-top">
-                        <div style="display:flex; width: 100%;">
-                            <div class="skeleton" style="width: 75px; height: 75px; border-radius: 16px; margin-right: 15px;"></div>
-                            <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 8px; justify-content: center;">
-                                <div class="skeleton" style="height: 20px; width: 70%; border-radius: 4px;"></div>
-                                <div class="skeleton" style="height: 14px; width: 40%; border-radius: 4px;"></div>
-                                <div class="skeleton" style="height: 14px; width: 80%; border-radius: 4px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="vehicle-card" style="pointer-events:none;">
                     <div class="vc-top">
                         <div style="display:flex; width: 100%;">
@@ -282,7 +277,7 @@
             </div>
 
             <div class="row-2">
-                <div class="custom-selector" style="width: 50%;" onclick="openVehicleSheet()">
+                <div class="custom-selector" style="width: 50%;" onclick="document.getElementById('vehicleSheet').style.display='flex'">
                     <span id="selectedTypeTxt">Vehicle Type *</span>
                     <span style="color:#aaa;">▼</span>
                 </div>
@@ -308,19 +303,85 @@
 
     <div class="bottom-nav" id="bottomNav">
         <div class="nav-item active" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home" onerror="this.src='app_logo.webp'"><span>Home</span>
+            <img src="ic_nav_home.webp" alt="Home" onerror="this.src=''; this.alt='🏠'; this.style.fontSize='20px'">
+            <span>Home</span>
         </div>
         <div class="nav-item" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src='app_logo.webp'"><span>Shop</span>
+            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src=''; this.alt='🛍️'; this.style.fontSize='20px'">
+            <span>Shop</span>
         </div>
         <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src='app_logo.webp'"><span>SOS</span>
+            <div class="sos-circle">
+                <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src=''; this.alt='🚨'; this.style.fontSize='22px'">
+            </div>
+            <span>SOS</span>
         </div>
         <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src='app_logo.webp'"><span>Support</span>
+            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src=''; this.alt='📞'; this.style.fontSize='20px'">
+            <span>Support</span>
         </div>
         <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src='app_logo.webp'"><span>Settings</span>
+            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src=''; this.alt='⚙️'; this.style.fontSize='20px'">
+            <span>Settings</span>
+        </div>
+    </div>
+
+    <div id="garageGuideModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-green" style="background: #FFFFFF; color: var(--title-color); padding-bottom: 10px;">
+                <h3 style="font-size: 18px;">Garage Management Guide</h3>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold; font-style: italic; line-height: 1.5;">
+                    Welcome to your Premium Garage! 🛡️<br><br>
+                    1. <b>Digital QR:</b> Tap 'View QR' on any vehicle card to show your unique scannable tag to anyone.<br><br>
+                    2. <b>Smart Profiles:</b> You can Edit or Delete vehicle profiles anytime. Deleting a vehicle instantly frees up its connected QR Tag for reuse.<br><br>
+                    3. <b>Local Privacy:</b> Your vehicle photos are kept safe on your device only.<br><br>
+                    Tagown: Protecting you and your vehicle.
+                </p>
+                <button class="btn-modal-primary" onclick="document.getElementById('garageGuideModal').style.display='none'">GOT IT</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editVehicleSheet" class="modal-overlay" style="align-items: flex-end;">
+        <div class="bottom-sheet" style="padding-bottom: 0;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('editVehicleSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="border:none; margin-bottom: 10px;">✏️ Edit Details</h2>
+            
+            <label class="edit-label">Locked Details (For Security)</label>
+            <div style="display:flex; gap:10px; margin: 0 20px 15px 20px;">
+                <input type="text" id="editRegNo" class="form-input" style="margin:0; width:50%;" disabled>
+                <input type="text" id="editQrId" class="form-input" style="margin:0; width:50%; font-size:10px;" disabled>
+            </div>
+
+            <label class="edit-label">Update Brand & Model</label>
+            <div style="display:flex; gap:10px; margin: 0 20px 15px 20px;">
+                <select id="editBrand" class="form-select" style="margin:0; width:50%;"></select>
+                <input type="text" id="editModel" class="form-input" style="margin:0; width:50%;" placeholder="Model">
+            </div>
+
+            <label class="edit-label">Alternate Details</label>
+            <input type="tel" id="editAltPhone" class="form-input edit-input" placeholder="Alternate Mobile Number" maxlength="10">
+            <textarea id="editAddress" class="form-input edit-input" placeholder="Your Address" rows="2"></textarea>
+
+            <input type="hidden" id="editHiddenType" value="">
+
+            <button class="btn-save-full" id="btnUpdateVehicle" onclick="updateVehicleData()" style="border-radius: 0; margin-top:0;">SAVE CHANGES</button>
+        </div>
+    </div>
+
+    <div id="showQrSheet" class="modal-overlay" style="align-items: flex-end;">
+        <div class="bottom-sheet">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('showQrSheet').style.display='none'">×</button>
+            <div class="qr-display-container">
+                <h2 class="qr-title-green">Your Digital Tag</h2>
+                <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
+                <div class="qr-vehicle-no" id="displayQrRegNo">Vehicle: OD 17 AB 1234</div>
+                <p class="qr-subtitle">Anyone can scan this to contact you in emergency.</p>
+            </div>
         </div>
     </div>
 
@@ -388,7 +449,8 @@
 
     <div id="vehicleSheet" class="modal-overlay" style="align-items: flex-end;">
         <div class="bottom-sheet">
-            <h3 class="sheet-header">Select Vehicle Type</h3>
+            <div class="drag-handle"></div>
+            <h3 class="sheet-header" style="border:none; margin-bottom:0;">Select Vehicle Type</h3>
             <div class="type-item" onclick="selectType('Bike/Scooter')">Bike/Scooter</div>
             <div class="type-item" onclick="selectType('Electric Bike/Scooter')">Electric Bike/Scooter</div>
             <div class="type-item" onclick="selectType('Car/Jeep')">Car/Jeep</div>
@@ -419,7 +481,7 @@
             <h2 class="sheet-header" style="margin-left: 20px;">🎧 Help & Support</h2>
             <a href="https://wa.me/916372980014" target="_blank" class="list-item-pop" style="background:#E8F5E9; border-color:#C8E6C9;">
                 <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
-                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
+                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply</p></div>
             </a>
             <a href="tel:180093486290" class="list-item-pop" style="background:#E3F2FD; border-color:#BBDEFB;">
                 <div class="list-icon-pop" style="background:#1976D2; color:white;">📞</div>
@@ -449,6 +511,9 @@
             alert("Security Alert: Please login to view your vehicles.");
             window.location.href = 'auth.html';
         }
+
+        // Keep track of loaded vehicles locally for editing
+        let userVehiclesData = {};
 
         // =====================================
         // 🚀 SMART LOGIC: 6-DIGIT PIN GENERATOR
@@ -524,10 +589,6 @@
             }
         }
 
-        function openVehicleSheet() {
-            document.getElementById('vehicleSheet').style.display = 'flex';
-        }
-
         function selectType(type) {
             document.getElementById('selectedTypeTxt').innerText = type;
             document.getElementById('selectedTypeTxt').style.color = "#111";
@@ -543,7 +604,7 @@
         }
 
         window.onclick = function(e) {
-            const modals = ['vehicleSheet', 'appOnlyModal', 'qrInfoModal', 'congratsModal', 'errorModal', 'sosSheet', 'supportSheet'];
+            const modals = ['vehicleSheet', 'appOnlyModal', 'qrInfoModal', 'congratsModal', 'errorModal', 'sosSheet', 'supportSheet', 'garageGuideModal', 'editVehicleSheet', 'showQrSheet'];
             modals.forEach(id => {
                 let m = document.getElementById(id);
                 if (m && e.target == m) m.style.display = "none";
@@ -557,12 +618,14 @@
             const listDiv = document.getElementById('vehicleList');
             
             db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
-                listDiv.innerHTML = ''; // Clear Shimmer
+                listDiv.innerHTML = ''; 
+                userVehiclesData = {}; // clear local store
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
                         const regNo = child.key; 
+                        userVehiclesData[regNo] = data; // store locally for edit sheet
                         
                         let iconFile = "ic_bike.webp"; 
                         const t = data.vehicleType || "";
@@ -588,13 +651,13 @@
                                             <div class="vc-model">${data.brand} ${data.model}</div>
                                         </div>
                                     </div>
-                                    <div class="vc-qr-box">
+                                    <div class="vc-qr-box" onclick="showVehicleQr('${data.linkedQrId}', '${regNo}')">
                                         <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" style="opacity:0.6;">
                                         <span>View QR</span>
                                     </div>
                                 </div>
                                 <div class="vc-actions">
-                                    <button class="btn-edit" onclick="alert('Use Tagown App for advanced editing.')">EDIT DETAILS</button>
+                                    <button class="btn-edit" onclick="openEditSheet('${regNo}')">EDIT DETAILS</button>
                                     <button class="btn-delete" onclick="deleteVehicle('${regNo}')">DELETE</button>
                                 </div>
                             </div>
@@ -613,6 +676,72 @@
         }
         
         loadVehicles();
+
+        // =====================================
+        // 🚀 NEW: EDIT VEHICLE LOGIC
+        // =====================================
+        function openEditSheet(regNo) {
+            const data = userVehiclesData[regNo];
+            if(!data) return;
+
+            document.getElementById('editRegNo').value = regNo;
+            document.getElementById('editQrId').value = "TAG: " + (data.linkedQrId || "N/A");
+            
+            const brandSelect = document.getElementById('editBrand');
+            brandSelect.innerHTML = '';
+            const availableBrands = brandsData[data.vehicleType] || ["Other"];
+            availableBrands.forEach(brand => {
+                const selected = (brand === data.brand) ? "selected" : "";
+                brandSelect.innerHTML += `<option value="${brand}" ${selected}>${brand}</option>`;
+            });
+
+            document.getElementById('editModel').value = data.model || "";
+            document.getElementById('editAltPhone').value = (data.alternateMobile && data.alternateMobile !== "Not Provided") ? data.alternateMobile : "";
+            document.getElementById('editAddress').value = data.addressOptional || "";
+            
+            document.getElementById('editVehicleSheet').style.display = 'flex';
+        }
+
+        function updateVehicleData() {
+            const regNo = document.getElementById('editRegNo').value;
+            const newBrand = document.getElementById('editBrand').value;
+            const newModel = document.getElementById('editModel').value.trim();
+            const newAltPhone = document.getElementById('editAltPhone').value.trim();
+            const newAddress = document.getElementById('editAddress').value.trim();
+
+            if(!newModel) { alert("Model name cannot be empty."); return; }
+
+            const btn = document.getElementById('btnUpdateVehicle');
+            btn.innerText = "SAVING..."; btn.disabled = true;
+
+            db.ref('Vehicles/' + currentUserPhone + '/' + regNo).update({
+                brand: newBrand,
+                model: newModel,
+                alternateMobile: newAltPhone || "Not Provided",
+                addressOptional: newAddress || ""
+            }).then(() => {
+                document.getElementById('editVehicleSheet').style.display = 'none';
+                btn.innerText = "SAVE CHANGES"; btn.disabled = false;
+            }).catch(err => {
+                alert("Error updating: " + err.message);
+                btn.innerText = "SAVE CHANGES"; btn.disabled = false;
+            });
+        }
+
+        // =====================================
+        // 🚀 NEW: SHOW QR LOGIC
+        // =====================================
+        function showVehicleQr(qrId, regNo) {
+            if(!qrId || qrId === "undefined") { alert("No valid QR linked to this vehicle."); return; }
+            
+            // Generate live QR using quickchart API pointing to Tagown Scan link
+            const scanUrl = "https://tagown.online/scan.html?id=" + qrId;
+            const qrImgUrl = `https://quickchart.io/qr?text=${encodeURIComponent(scanUrl)}&size=200`;
+            
+            document.getElementById('displayQrImg').src = qrImgUrl;
+            document.getElementById('displayQrRegNo').innerText = "Vehicle: " + regNo;
+            document.getElementById('showQrSheet').style.display = 'flex';
+        }
 
         function deleteVehicle(regNo) {
             if(confirm("Are you sure you want to delete " + regNo + " from your secure garage?")) {
