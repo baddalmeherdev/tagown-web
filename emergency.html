@@ -47,7 +47,7 @@
         /* 🚨 Emergency Form Card */
         .form-card {
             background: var(--card-bg); border-radius: 20px; padding: 25px 20px; margin-top: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #E5E5EA;
         }
 
         .page-title { display: flex; align-items: center; color: var(--title-red); font-size: 20px; font-weight: bold; font-style: italic; margin: 0 0 10px 0; }
@@ -140,7 +140,7 @@
                 <input type="tel" id="c3Phone" class="form-input" placeholder="10-Digit Mobile Number" maxlength="10">
             </div>
 
-            <button class="btn-save" onclick="saveEmergencyProfile()">SECURE & SAVE DETAILS</button>
+            <button class="btn-save" id="btnSaveData" onclick="saveEmergencyProfile()">SECURE & SAVE DETAILS</button>
         </div>
 
     </div>
@@ -187,10 +187,11 @@
         function closeLegalInfo() { document.getElementById('legalModal').style.display = 'none'; }
 
         // =====================================
-        // 📥 FETCH EXISTING DATA (If User Already Filled in App or Web)
+        // ⚡ FAST REAL-TIME FETCH (APP SYNC)
         // =====================================
-        function loadExistingData() {
-            db.ref('Users/' + currentUserPhone).once('value').then((snapshot) => {
+        function startRealTimeSync() {
+            // Using .on() instead of .once() ensures lightning-fast live updates from App to Web
+            db.ref('Users/' + currentUserPhone).on('value', (snapshot) => {
                 if (snapshot.exists()) {
                     const data = snapshot.val();
                     
@@ -221,10 +222,10 @@
             });
         }
         
-        loadExistingData();
+        startRealTimeSync();
 
         // =====================================
-        // 💾 SAVE EMERGENCY PROFILE (SYNC WITH APP)
+        // 💾 SAVE EMERGENCY PROFILE (SYNC TO APP)
         // =====================================
         function saveEmergencyProfile() {
             // Medical
@@ -244,6 +245,9 @@
                 alert("Please provide at least Contact 1 (Primary) with a valid 10-digit number.");
                 return;
             }
+            
+            const btn = document.getElementById('btnSaveData');
+            btn.innerText = "SECURING DATA..."; btn.disabled = true;
 
             // 🚀 FIXED: Structure data exactly as App expects
             const updateData = {
@@ -264,10 +268,11 @@
             // Save to exact same folder in Firebase (Users -> Phone)
             db.ref('Users/' + currentUserPhone).update(updateData)
             .then(() => {
+                btn.innerText = "SECURE & SAVE DETAILS"; btn.disabled = false;
                 alert("Emergency Profile Secured! Data synced with Tagown App.");
-                window.location.href = 'settings.html';
             })
             .catch((error) => {
+                btn.innerText = "SECURE & SAVE DETAILS"; btn.disabled = false;
                 alert("Database Error: " + error.message);
             });
         }
