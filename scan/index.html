@@ -384,7 +384,6 @@
         let isMessageSent = false;
         let isInvalidTag = false;
         
-        // 🚀 NEW: Variable to hold smart routing state
         let isAppActive = false; 
 
         window.onload = function() {
@@ -394,6 +393,8 @@
             if (qrIdFromUrl) {
                 document.getElementById('landing-page').style.display = 'none';
                 document.getElementById('scanner-page').style.display = 'flex';
+                
+                // 🚀 VIP UPDATE: Smart Dialer Link added here dynamically
                 document.getElementById('em-family-btn').href = "tel:08040265615,," + qrIdFromUrl;
                 
                 fetchVehicleOwner(qrIdFromUrl);
@@ -434,6 +435,7 @@
             if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
             if(!isMessageSent) { openModal('call-lock-modal'); } 
             else { 
+                // Exotel auto-dial magic trick
                 window.location.href = "tel:08040265615,," + qrIdFromUrl; 
             }
         }
@@ -504,15 +506,15 @@
             });
         }
 
-        // 🚀 NEW: Check if the owner's app is currently active
+        // Fetch user's app status for Smart Routing
         function checkAppStatus(phone) {
             database.ref('Users').child(phone).once('value').then((snap) => {
                 if(snap.exists() && snap.hasChild('app_active')) {
                     isAppActive = snap.child('app_active').val() === true;
                 } else {
-                    isAppActive = false; // Default to false if data missing
+                    isAppActive = false;
                 }
-            }).catch(() => { isAppActive = false; }); // Assume offline on error
+            }).catch(() => { isAppActive = false; });
         }
 
         // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION & SMART ROUTING
@@ -540,23 +542,23 @@
                 }
                 const safeId = await getSecureId(cleanPhone);
 
-                // 3. 🚀 THE SMART ROUTING MAGIC 
+                // 3. CLOUDFLARE SECURE SERVER CALL (OneSignal Format kept exactly same!)
                 const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
                 
-                // Hum Cloudflare ko batayenge ki kiske paas app hai aur kiske paas nahi
-                const deliveryMethod = isAppActive ? "PUSH_ONLY" : "SMS_ONLY"; 
-
                 const response = await fetch(tagownServerUrl, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
-                        target_channel: deliveryMethod, // 🚀 This tells Cloudflare what to do!
+                        target_channel: "push",
                         include_aliases: {
                             external_id: [safeId] 
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
+                        // 🚀 Here we send the flag securely so your CF Worker can decide to trigger SMS
+                        data: { "app_active_status": isAppActive },
+                        // 🔥 YAHAN POPUP BHI AYEGA AUR CLICK SE APP BHI KHULEGA
                         app_url: "tagown://notifications",
                         existing_android_channel_id: "tagown_urgent_alerts", 
                         priority: 10,           
