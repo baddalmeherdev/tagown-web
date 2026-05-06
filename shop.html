@@ -158,7 +158,7 @@
             background: #FFFFFF; 
             box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
             display: flex; justify-content: space-around; align-items: center; 
-            padding: 6px 0 10px 0; /* 🚀 FIXED: Slim padding (not thick) */
+            padding: 6px 0 10px 0; /* Slim padding */
             z-index: 90; 
             border-radius: 35px; /* Fully Rounded corners */
         }
@@ -176,12 +176,12 @@
             cursor: pointer; transform: translateY(-20px); /* Lift up to overlap border */
         }
         .sos-circle {
-            background: #FF0000; /* 🚀 FIXED: Seamless Pure Red solid circle (No white ring) */
-            width: 52px; height: 52px; /* Proportional size for slim bar */
+            background: #FF0000; /* Seamless Pure Red solid circle */
+            width: 52px; height: 52px; 
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); /* Glowing shadow */
-            border: none; /* 🚀 FIXED: Removed the previous white cutout border */
+            border: none;
         }
         .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); } /* Pure white siren */
         .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
@@ -605,7 +605,7 @@
         }
 
         // =====================================
-        // 📋 5. LOAD ORDER HISTORY (SYNCED)
+        // 📋 5. LOAD ORDER HISTORY (SYNCED & FIXED)
         // =====================================
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
@@ -635,12 +635,18 @@
                             trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
                         }
 
+                        // 🚀 THE FIX: We are now explicitly passing correct variables (data.productTitle and data.price) instead of old app format logic!
+                        const itemTitle = data.productTitle || "Tagown Security Product";
+                        const itemPrice = data.price || "299";
+                        const itemVehicle = data.vehicleType || "Vehicle";
+                        const itemId = data.orderId || "N/A";
+
                         html += `
                             <div class="order-card">
-                                <div class="order-card-header"><span class="order-date">${data.timestamp}</span>${statusHtml}</div>
-                                <h3 class="order-title">${data.productTitle}</h3>
-                                <p class="order-vehicle">Vehicle: ${data.vehicleType}</p>
-                                <div class="order-price-row"><span class="order-id">ID: ${data.orderId}</span><span class="order-amt">₹${data.price}</span></div>
+                                <div class="order-card-header"><span class="order-date">${data.timestamp || 'Recent'}</span>${statusHtml}</div>
+                                <h3 class="order-title">${itemTitle}</h3>
+                                <p class="order-vehicle">Vehicle: ${itemVehicle}</p>
+                                <div class="order-price-row"><span class="order-id">ID: ${itemId}</span><span class="order-amt">₹${itemPrice}</span></div>
                                 ${trackingHtml}
                             </div>
                         `;
