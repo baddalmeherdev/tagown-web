@@ -396,9 +396,10 @@
         let regNoFromDb = "";
         let isMessageSent = false;
         let isInvalidTag = false;
-        
-        // 🔥 VIP FIX: Added variable for Exotel PIN
         let callingPinFromDb = ""; 
+
+        // 🚀 SMART ROUTING FLAG ADDED HERE
+        let isAppActive = false; 
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -440,7 +441,6 @@
         function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
         function openEmergencySheet() { openModal('emergency-sheet'); }
 
-        // 🔥 VIP FIX: Opens the warning modal first, then executes call
         function handleCallClick() {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
             if(!ownerPhone || !callingPinFromDb) { showToast("Loading owner securely...", "normal"); return; }
@@ -452,12 +452,10 @@
             }
         }
 
-        // Action to dial Exotel using the 6-Digit PIN
         function executeCall() {
             window.location.href = "tel:08040265615,," + callingPinFromDb; 
         }
 
-        // 🔥 VIP FIX: Updates the Emergency Tagown Support Call Link dynamically
         function updateEmergencyLinks() {
             if(callingPinFromDb) {
                 document.getElementById('em-family-btn').onclick = function(e) {
@@ -491,11 +489,12 @@
                         const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
                         if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                             ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
-                            
-                            // 🔥 VIP FIX: Getting the 6-Digit PIN
                             callingPinFromDb = phoneNode.child('callingPIN').val();
                             updateEmergencyLinks();
                             
+                            // 🚀 SMART ROUTING FUNCTION CALL
+                            checkAppStatus(ownerPhone);
+
                             found = true; 
                         }
                     } else {
@@ -503,10 +502,11 @@
                             const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
                             if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                 ownerPhone = vNode.child('ownerPhone').val() || phone; 
-                                
-                                // 🔥 VIP FIX: Getting the 6-Digit PIN
                                 callingPinFromDb = vNode.child('callingPIN').val();
                                 updateEmergencyLinks();
+
+                                // 🚀 SMART ROUTING FUNCTION CALL
+                                checkAppStatus(ownerPhone);
 
                                 found = true; 
                             }
@@ -522,10 +522,11 @@
                                 const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
                                 if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                     ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
-                                    
-                                    // 🔥 VIP FIX: Getting the 6-Digit PIN
                                     callingPinFromDb = phoneNode.child('callingPIN').val();
                                     updateEmergencyLinks();
+
+                                    // 🚀 SMART ROUTING FUNCTION CALL
+                                    checkAppStatus(ownerPhone);
 
                                     found = true; 
                                 }
@@ -534,10 +535,11 @@
                                     const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
                                     if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                         ownerPhone = vNode.child('ownerPhone').val() || phone; 
-                                        
-                                        // 🔥 VIP FIX: Getting the 6-Digit PIN
                                         callingPinFromDb = vNode.child('callingPIN').val();
                                         updateEmergencyLinks();
+
+                                        // 🚀 SMART ROUTING FUNCTION CALL
+                                        checkAppStatus(ownerPhone);
 
                                         found = true; 
                                     }
@@ -549,7 +551,17 @@
             });
         }
 
-        // 🚀 100% SECURE MILITARY-GRADE ENCRYPTION 
+        // 🚀 SMART ROUTING FUNCTION DEFINITION
+        function checkAppStatus(phone) {
+            database.ref('Users').child(phone).once('value').then((snap) => {
+                if(snap.exists() && snap.hasChild('app_active')) {
+                    isAppActive = snap.child('app_active').val() === true;
+                } else {
+                    isAppActive = false; 
+                }
+            }).catch(() => { isAppActive = false; });
+        }
+
         async function executeAlert() {
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
@@ -559,7 +571,6 @@
             btn.innerText = "SENDING..."; btn.disabled = true;
 
             try {
-                // 1. Firebase Local Save
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
@@ -567,14 +578,12 @@
                     console.warn("Firebase save skipped. Proceeding to notification...");
                 }
 
-                // 2. SECURITY: Number ko clean karke encrypt karenge
                 let cleanPhone = ownerPhone.replace(/\D/g, ''); 
                 if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
                     cleanPhone = cleanPhone.slice(-10);
                 }
                 const safeId = await getSecureId(cleanPhone);
 
-                // 3. CLOUDFLARE SECURE SERVER CALL
                 const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
 
                 const response = await fetch(tagownServerUrl, {
@@ -588,7 +597,11 @@
                         },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
                         contents: {"en": msg},
-                        // 🔥 YAHAN POPUP BHI AYEGA AUR CLICK SE APP BHI KHULEGA
+                        // 🚀 SMART ROUTING FLAG ADDED HERE FOR CLOUDFLARE TO READ
+                        data: { 
+                            "trigger_exotel_sms": !isAppActive,
+                            "vehicle_reg_no": regNoFromDb
+                        },
                         app_url: "tagown://notifications",
                         existing_android_channel_id: "tagown_urgent_alerts", 
                         priority: 10,           
@@ -602,7 +615,6 @@
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
                     
-                    // Call Button Unlocked UI Update
                     const callBtnText = document.querySelector('.call-btn span');
                     if(callBtnText) {
                         callBtnText.innerText = "Call Owner\n(Unlocked)";
@@ -621,7 +633,6 @@
             }
         }
 
-        // 🛡️ SECURITY FUNCTION
         async function getSecureId(phone) {
             const msgUint8 = new TextEncoder().encode(phone);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
@@ -629,29 +640,17 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        // 🔒 IMMEDIATE PRIVACY LOCK (INSTANT REDIRECT)
         function enforcePrivacyLock() {
             window.location.replace(window.location.pathname);
         }
 
         if (window.location.search.includes('id=')) {
-            // 1. Tab Switch / App Minimize / Screen Lock
             document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === 'hidden') {
-                    enforcePrivacyLock();
-                }
+                if (document.visibilityState === 'hidden') enforcePrivacyLock();
             });
-
-            // 2. Window Blur (Switching to another app or tab)
-            window.addEventListener("blur", function() {
-                enforcePrivacyLock();
-            });
-
-            // 3. Page Hide / Back Button
-            window.addEventListener("pagehide", function() {
-                enforcePrivacyLock();
-            });
+            window.addEventListener("blur", function() { enforcePrivacyLock(); });
+            window.addEventListener("pagehide", function() { enforcePrivacyLock(); });
         }
     </script>
 </body>
-    </html>
+</html>
