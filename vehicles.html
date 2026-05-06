@@ -28,7 +28,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            /* 🚀 FIXED: Increased padding so content doesn't hide behind the raised Add button */
             padding-bottom: 150px; 
         }
 
@@ -46,9 +45,7 @@
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================= */
         /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
-        /* ========================================= */
         .skeleton {
             background: #eee;
             background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
@@ -97,19 +94,16 @@
         .empty-title { font-size: 16px; color: #666; font-style: italic; font-weight: bold; margin: 0; }
         .empty-sub { font-size: 13px; color: #999; font-style: italic; margin-top: 5px; }
 
-        /* 🚀 FIXED: Raised the Add Vehicle button so it doesn't touch the floating navbar */
         .btn-float-add {
             position: fixed; 
-            bottom: 130px; /* Lifted up from 100px */
+            bottom: 130px; 
             right: 20px; 
             background: #1B5E20; color: white; padding: 15px 25px; border-radius: 30px;
             font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(27, 94, 32, 0.4);
             cursor: pointer; z-index: 80; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
         }
 
-        /* ========================================= */
         /* 📝 ADD VEHICLE FORM VIEW */
-        /* ========================================= */
         #addView { display: none; }
         
         .photo-box { background: var(--light-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 15px; border: 1px solid #C8E6C9; cursor: pointer;}
@@ -123,12 +117,10 @@
 
         .form-section-title { color: var(--title-color); font-weight: bold; font-size: 16px; font-style: italic; margin-bottom: 10px; }
         
-        /* IND Input Form */
         .ind-input-wrapper { display: flex; border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden; background: white; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
         .ind-input-blue { background: #1565C0; color: white; width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 10px; font-weight: bold; padding-bottom: 4px; }
         .ind-input-field { flex-grow: 1; padding: 15px; font-size: 18px; font-weight: bold; border: none; outline: none; font-style: italic; text-transform: uppercase; color: #333; letter-spacing: 1px;}
 
-        /* Form Inputs */
         .row-2 { display: flex; gap: 10px; margin-bottom: 15px; }
         .form-input, .form-select { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white; appearance: none;}
         .form-input:focus, .form-select:focus { outline: 1px solid var(--primary-green); }
@@ -141,9 +133,7 @@
         
         .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
-        /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV (Slim Rounded - NO CHANGES) */
-        /* ========================================= */
+        /* 🧭 FLOATING BOTTOM NAV */
         .bottom-nav {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             width: 92%; max-width: 400px; background: #FFFFFF; 
@@ -162,9 +152,7 @@
         .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
         .hide-nav { display: none !important; }
 
-        /* ========================================= */
-        /* 🚨 PREMIUM POPUP MODALS & BOTTOM SHEETS */
-        /* ========================================= */
+        /* 🚨 PREMIUM POPUP MODALS */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         
         .modal-box { background: white; border-radius: 24px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
@@ -202,16 +190,14 @@
         #qrReader { width: 100%; flex-grow: 1; }
         .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 3001; cursor: pointer;}
 
-        /* 🚀 Edit Vehicle Sheet Custom CSS */
         .edit-label { font-size: 12px; color: var(--primary-green); font-weight: bold; margin-bottom: 5px; display: block; padding: 0 20px;}
         .edit-input { width: calc(100% - 40px); margin: 0 20px 15px 20px; }
 
-        /* 🚀 QR Display Sheet CSS */
         .qr-display-container { text-align: center; padding: 20px; }
         .qr-title-green { color: var(--title-color); font-size: 20px; font-weight: bold; font-style: italic; margin-bottom: 20px;}
         .qr-code-img { width: 200px; height: 200px; border: 4px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 12px; padding: 10px; background: #fff;}
         .qr-vehicle-no { font-size: 16px; font-weight: bold; color: #333; margin-top: 15px; font-style: italic;}
-        .qr-subtitle { font-size: 13px; color: #777; font-style: italic;}
+        .qr-subtitle { font-size: 12px; color: #777; font-style: italic; margin-top: 5px; font-weight: bold; padding: 0 10px;}
     </style>
 </head>
 <body>
@@ -352,8 +338,8 @@
             
             <label class="edit-label">Locked Details (For Security)</label>
             <div style="display:flex; gap:10px; margin: 0 20px 15px 20px;">
-                <input type="text" id="editRegNo" class="form-input" style="margin:0; width:50%;" disabled>
-                <input type="text" id="editQrId" class="form-input" style="margin:0; width:50%; font-size:10px;" disabled>
+                <input type="text" id="editRegNo" class="form-input" style="margin:0; width:50%; font-weight: bold; color: #333;" disabled>
+                <input type="text" value="✅ QR Linked" class="form-input" style="margin:0; width:50%; font-size:13px; color:#2E7D32; font-weight:bold;" disabled>
             </div>
 
             <label class="edit-label">Update Brand & Model</label>
@@ -366,8 +352,6 @@
             <input type="tel" id="editAltPhone" class="form-input edit-input" placeholder="Alternate Mobile Number" maxlength="10">
             <textarea id="editAddress" class="form-input edit-input" placeholder="Your Address" rows="2"></textarea>
 
-            <input type="hidden" id="editHiddenType" value="">
-
             <button class="btn-save-full" id="btnUpdateVehicle" onclick="updateVehicleData()" style="border-radius: 0; margin-top:0;">SAVE CHANGES</button>
         </div>
     </div>
@@ -377,10 +361,27 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('showQrSheet').style.display='none'">×</button>
             <div class="qr-display-container">
-                <h2 class="qr-title-green">Your Digital Tag</h2>
+                <h2 class="qr-title-green">Your Tagown QR</h2>
                 <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
                 <div class="qr-vehicle-no" id="displayQrRegNo">Vehicle: OD 17 AB 1234</div>
-                <p class="qr-subtitle">Anyone can scan this to contact you in emergency.</p>
+                <p class="qr-subtitle">🔒 Privacy Guaranteed. Connect without sharing personal numbers.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteVehicleModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">⚠️</div>
+                <h3 style="font-size: 18px;">Remove Vehicle?</h3>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <p style="font-size: 14px; color: #424242; font-weight: 500; font-style: italic; margin-bottom: 20px;">
+                    Are you sure you want to delete <b id="delVehicleName" style="color:#D32F2F;"></b> from your secure garage?<br><br>
+                    This will unlink the QR tag permanently.
+                </p>
+                <button class="btn-modal-primary" style="background:#D32F2F; margin-bottom: 10px;" onclick="confirmDeleteVehicle()">YES, DELETE VEHICLE</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('deleteVehicleModal').style.display='none'">CANCEL & KEEP</button>
             </div>
         </div>
     </div>
@@ -512,19 +513,13 @@
             window.location.href = 'auth.html';
         }
 
-        // Keep track of loaded vehicles locally for editing
         let userVehiclesData = {};
+        let vehicleToDelete = null;
 
-        // =====================================
-        // 🚀 SMART LOGIC: 6-DIGIT PIN GENERATOR
-        // =====================================
         function generateUniqueCallingPIN() {
             return Math.floor(100000 + Math.random() * 900000).toString();
         }
 
-        // =====================================
-        // 🔄 1. DYNAMIC BRANDS MAPPING
-        // =====================================
         const brandsData = {
             "Bike/Scooter": ["Royal Enfield", "Honda", "TVS", "Bajaj", "Hero", "Yamaha", "Suzuki", "KTM", "Other"],
             "Electric Bike/Scooter": ["Ather", "Ola", "TVS iQube", "Bajaj Chetak", "Revolt", "Hero Electric", "Other"],
@@ -537,15 +532,12 @@
             "Other": ["Custom/Other"]
         };
 
-        // =====================================
-        // 🧠 2. SMART IND NUMBER FORMATTER
-        // =====================================
         function formatIND(input) {
             let val = input.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
             let parts = [];
             
-            if(val.length > 0) parts.push(val.substring(0,2)); // State (OD)
-            if(val.length > 2) parts.push(val.substring(2,4)); // RTO (17)
+            if(val.length > 0) parts.push(val.substring(0,2)); 
+            if(val.length > 2) parts.push(val.substring(2,4)); 
             
             if(val.length > 4) {
                 let rest = val.substring(4);
@@ -562,16 +554,12 @@
             input.value = parts.join(' ');
         }
 
-        // =====================================
-        // 🔄 3. UI LOGIC (Views & Nav)
-        // =====================================
         function toggleView(viewId) {
             document.getElementById('garageView').style.display = 'none';
             document.getElementById('addView').style.display = 'none';
             document.getElementById(viewId).style.display = 'block';
             window.scrollTo(0, 0);
 
-            // Hide/Show Nav based on View
             if(viewId === 'garageView') {
                 document.getElementById('bottomNav').classList.remove('hide-nav');
             } else {
@@ -604,28 +592,25 @@
         }
 
         window.onclick = function(e) {
-            const modals = ['vehicleSheet', 'appOnlyModal', 'qrInfoModal', 'congratsModal', 'errorModal', 'sosSheet', 'supportSheet', 'garageGuideModal', 'editVehicleSheet', 'showQrSheet'];
+            const modals = ['vehicleSheet', 'appOnlyModal', 'qrInfoModal', 'congratsModal', 'errorModal', 'sosSheet', 'supportSheet', 'garageGuideModal', 'editVehicleSheet', 'showQrSheet', 'deleteVehicleModal'];
             modals.forEach(id => {
                 let m = document.getElementById(id);
                 if (m && e.target == m) m.style.display = "none";
             });
         }
 
-        // =====================================
-        // 📲 4. FETCH VEHICLES (With Icons)
-        // =====================================
         function loadVehicles() {
             const listDiv = document.getElementById('vehicleList');
             
             db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
                 listDiv.innerHTML = ''; 
-                userVehiclesData = {}; // clear local store
+                userVehiclesData = {}; 
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
                         const regNo = child.key; 
-                        userVehiclesData[regNo] = data; // store locally for edit sheet
+                        userVehiclesData[regNo] = data; 
                         
                         let iconFile = "ic_bike.webp"; 
                         const t = data.vehicleType || "";
@@ -658,7 +643,7 @@
                                 </div>
                                 <div class="vc-actions">
                                     <button class="btn-edit" onclick="openEditSheet('${regNo}')">EDIT DETAILS</button>
-                                    <button class="btn-delete" onclick="deleteVehicle('${regNo}')">DELETE</button>
+                                    <button class="btn-delete" onclick="triggerDeleteVehicle('${regNo}')">DELETE</button>
                                 </div>
                             </div>
                         `;
@@ -677,15 +662,11 @@
         
         loadVehicles();
 
-        // =====================================
-        // 🚀 NEW: EDIT VEHICLE LOGIC
-        // =====================================
         function openEditSheet(regNo) {
             const data = userVehiclesData[regNo];
             if(!data) return;
 
             document.getElementById('editRegNo').value = regNo;
-            document.getElementById('editQrId').value = "TAG: " + (data.linkedQrId || "N/A");
             
             const brandSelect = document.getElementById('editBrand');
             brandSelect.innerHTML = '';
@@ -728,34 +709,36 @@
             });
         }
 
-        // =====================================
-        // 🚀 NEW: SHOW QR LOGIC
-        // =====================================
+        // 🚀 THE FIX: GENERATE EXACT ORIGINAL SCANNABLE TAGOWN QR (Website scan link encoding)
         function showVehicleQr(qrId, regNo) {
             if(!qrId || qrId === "undefined") { alert("No valid QR linked to this vehicle."); return; }
             
-            // Generate live QR using quickchart API pointing to Tagown Scan link
-            const scanUrl = "https://tagown.online/scan.html?id=" + qrId;
-            const qrImgUrl = `https://quickchart.io/qr?text=${encodeURIComponent(scanUrl)}&size=200`;
+            // Generate real Web Link for the QR (exactly like the physical sticker)
+            const scanUrl = "https://tagown.online/scan?id=" + qrId; 
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(scanUrl)}`;
             
             document.getElementById('displayQrImg').src = qrImgUrl;
             document.getElementById('displayQrRegNo').innerText = "Vehicle: " + regNo;
             document.getElementById('showQrSheet').style.display = 'flex';
         }
 
-        function deleteVehicle(regNo) {
-            if(confirm("Are you sure you want to delete " + regNo + " from your secure garage?")) {
-                db.ref('Vehicles/' + currentUserPhone + '/' + regNo).remove()
-                .then(() => alert("Vehicle removed successfully."))
-                .catch(err => alert("Error: " + err.message));
-            }
+        function triggerDeleteVehicle(regNo) {
+            vehicleToDelete = regNo;
+            document.getElementById('delVehicleName').innerText = regNo;
+            document.getElementById('deleteVehicleModal').style.display = 'flex';
         }
 
-        // =====================================
-        // 📷 5. HIGH SECURITY QR SCANNER
-        // =====================================
+        function confirmDeleteVehicle() {
+            if(!vehicleToDelete) return;
+            db.ref('Vehicles/' + currentUserPhone + '/' + vehicleToDelete).remove()
+            .then(() => {
+                document.getElementById('deleteVehicleModal').style.display = 'none';
+                vehicleToDelete = null;
+            })
+            .catch(err => alert("Error: " + err.message));
+        }
+
         let html5QrCode;
-        
         function startScanner() {
             document.getElementById('qrInfoModal').style.display = 'none';
             document.getElementById('scannerOverlay').style.display = 'flex';
@@ -779,7 +762,7 @@
                 return;
             }
 
-            const tagId = decodedText.split('id=')[1] || decodedText;
+            const tagId = decodedText.split('id=')[1] || decodedText.replace('TAGOWN-V1-', '');
             
             db.ref('LinkedTags/' + tagId).once('value').then(snapshot => {
                 if(snapshot.exists()) {
@@ -796,9 +779,6 @@
             }).catch(err => { alert("Server error verifying tag."); });
         }
 
-        // =====================================
-        // 💾 6. SAVE VEHICLE PROFILE (Updated with Exotel Routing)
-        // =====================================
         function saveVehicleProfile() {
             const regNoInput = document.getElementById('inpRegNo').value.trim();
             const regNoID = regNoInput.replace(/\s+/g, ''); 
@@ -815,7 +795,6 @@
             if(!linkedQr) { alert("Please SCAN TAG QR first to link a sticker."); return; }
             if(!regNoID || !type || !brand || !model) { alert("Please fill all mandatory (*) fields."); return; }
 
-            // 🚀 VIP LOGIC: Generating the 6-Digit PIN
             const callingPIN = generateUniqueCallingPIN();
 
             const vehicleData = {
@@ -829,15 +808,11 @@
                 registrationNumber: regNoDisplay, 
                 tagStatus: "Secured",
                 vehicleType: type,
-                callingPIN: callingPIN // 🔥 Saved inside Vehicle profile too
+                callingPIN: callingPIN 
             };
 
-            // Saving to Vehicles folder
             db.ref('Vehicles/' + currentUserPhone + '/' + regNoDisplay).set(vehicleData).then(() => {
-                // Saving to LinkedTags folder
                 db.ref('LinkedTags/' + linkedQr).set(regNoDisplay).then(() => {
-                    
-                    // 🚀 EXOTEL MAGIC: Saving exactly mapping to CallRouting folder
                     const routingData = {
                         phone: currentUserPhone,
                         regNo: regNoDisplay,
@@ -847,7 +822,6 @@
                     db.ref('CallRouting/' + callingPIN).set(routingData).then(() => {
                         alert("Vehicle Secured & Tag Locked Successfully!");
                         
-                        // Reset forms
                         document.getElementById('inpRegNo').value = '';
                         document.getElementById('selectedTypeTxt').innerText = 'Vehicle Type *';
                         document.getElementById('selectedTypeTxt').style.color = '#555';
