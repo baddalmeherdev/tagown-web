@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Tagown | Dashboard</title>
     
+    <link rel="icon" type="image/webp" href="app_logo.webp">
+    
+    <script>
+        if (sessionStorage.getItem("tagownSplashShown")) {
+            document.documentElement.classList.add("skip-splash");
+        }
+    </script>
+    
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
@@ -27,26 +35,97 @@
             margin: 0; padding: 0; color: var(--text-main); 
             -webkit-font-smoothing: antialiased;
             padding-bottom: 120px;
+            overflow-x: hidden;
         }
+
+        /* 🚀 APP-STYLE PREMIUM SPLASH SCREEN */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #FFFFFF;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out; 
+        }
+        
+        /* Video Container to hold Placeholder & Video together */
+        .video-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+        }
+        
+        #splash-placeholder {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: contain;
+            background-color: #FFFFFF;
+            z-index: 2; /* Over the video initially */
+        }
+
+        #splash-video {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            object-fit: contain;
+            z-index: 1; /* Below the placeholder */
+        }
+
+        /* Blue Loader Spinner */
+        .splash-loader {
+            border: 3px solid #E3F2FD;
+            border-top: 3px solid #1565C0;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+            margin-top: 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Splash Texts */
+        .splash-subtitle { color: #757575; font-size: 14px; letter-spacing: 0.1px; }
+        .splash-footer { color: #9E9E9E; font-size: 12px; font-weight: bold; margin-top: 5px; }
+
+        /* Main body content which will be hidden initially */
+        #main-content {
+            display: none;
+            opacity: 0;
+            animation: fadeInContent 0.5s ease-in forwards;
+        }
+        @keyframes fadeInContent { to { opacity: 1; } }
+
+        /* 🚀 SUPER FIX CSS: Agar user wapas aaya hai toh bina animation directly content dikhao */
+        html.skip-splash #splash-screen { display: none !important; }
+        html.skip-splash #main-content { display: block !important; opacity: 1 !important; animation: none !important; }
 
         /* 📱 Top Header */
         .header {
             display: flex; justify-content: center; align-items: center;
             background: var(--card-bg); padding: 12px 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 50;
+            height: 60px;
         }
-        .header-logo { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 800; color: var(--primary); letter-spacing: 0.5px;}
-        .header-logo img { width: 30px; height: 30px; border-radius: 6px; }
+        
+        .header-logo { display: flex; align-items: center; justify-content: center; width: 100%;}
+        .header-logo img { width: 140px; height: 35px; object-fit: contain; }
 
         /* 📦 Main Container */
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
         /* 🖼️ Auto & Swipeable Slider Banner */
         .slider-container {
             width: 100%; height: 180px; border-radius: 20px; overflow: hidden;
             position: relative; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            touch-action: pan-y; /* Allows vertical scroll while swiping horizontal */
+            touch-action: pan-y;
         }
         .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out; cursor: grab;}
         .slider-track:active { cursor: grabbing; }
@@ -113,7 +192,7 @@
         .service-card img { width: 45px; height: 45px; margin-bottom: 12px; object-fit: contain; }
         .service-name { font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
 
-        /* 🛡️ NEW: Why Tagown Section (Empty Space Filler) */
+        /* 🛡️ Why Tagown Section */
         .trust-card {
             background: var(--card-bg); border-radius: 20px; padding: 20px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; margin-bottom: 30px;
@@ -202,235 +281,283 @@
 </head>
 <body>
 
-    <div class="header">
-        <div class="header-logo">
-            <img src="app_logo.webp" alt="Logo"> TAGOWN
+    <div id="splash-screen">
+        <div class="video-container">
+            <img id="splash-placeholder" src="app_logo.webp" alt="Loading...">
+            <video id="splash-video" autoplay muted playsinline>
+                <source src="animatedlogo.mp4" type="video/mp4">
+            </video>
         </div>
-    </div>
-
-    <div class="container">
         
-        <div class="slider-container">
-            <div class="slider-track" id="sliderTrack">
-                <img src="banner_home_tag.webp" alt="Banner">
-                <img src="banner_home_privacy.webp" alt="Banner">
-                <img src="banner_home_vault.webp" alt="Banner">
-                <img src="banner_home_sos.webp" alt="Banner">
+        <div class="splash-loader"></div>
+        <div class="splash-subtitle">Your Digital Vehicle Partner</div>
+        <div class="splash-footer">©️ MeherDevlopStudio | Made In India 🇮🇳</div>
+    </div>
+
+    <div id="main-content">
+        
+        <div class="header">
+            <div class="header-logo">
+                <img src="toplogo.webp" alt="Tagown">
             </div>
         </div>
 
-        <div class="app-promo-container">
-            <div class="app-promo-icon">📢</div>
-            <div class="app-promo-scroll">
-                <div class="promo-content" id="promoContent">
-                    <div class="promo-ios">
-                        <span class="promo-ios-text">Apple / iOS App</span>
-                        <span class="ios-badge">Coming Soon ⏳</span>
+        <div class="container">
+            
+            <div class="slider-container">
+                <div class="slider-track" id="sliderTrack">
+                    <img src="banner_home_tag.webp" alt="Banner">
+                    <img src="banner_home_privacy.webp" alt="Banner">
+                    <img src="banner_home_vault.webp" alt="Banner">
+                    <img src="banner_home_sos.webp" alt="Banner">
+                </div>
+            </div>
+
+            <div class="app-promo-container">
+                <div class="app-promo-icon">📢</div>
+                <div class="app-promo-scroll">
+                    <div class="promo-content" id="promoContent">
+                        <div class="promo-ios">
+                            <span class="promo-ios-text">Apple / iOS App</span>
+                            <span class="ios-badge">Coming Soon ⏳</span>
+                        </div>
+                        <div class="promo-android">
+                            <span class="promo-android-text">Android User? Get full access!</span>
+                            <a href="https://play.google.com/store/apps" target="_blank" class="btn-download-app">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" width="12" alt="Play"> Download App
+                            </a>
+                        </div>
                     </div>
-                    <div class="promo-android">
-                        <span class="promo-android-text">Android User? Get full access!</span>
-                        <a href="https://play.google.com/store/apps" target="_blank" class="btn-download-app">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" width="12" alt="Play"> Download App
-                        </a>
+                </div>
+            </div>
+
+            <div class="how-to-use" onclick="window.location.href='tutorials.html'">
+                <div style="font-size: 28px;">▶️</div>
+                <div class="how-to-text">
+                    <h3 style="color: #2E7D32;">How to Use Tagown?</h3>
+                    <p style="color: #388E3C;">Watch quick video tutorials</p>
+                </div>
+            </div>
+
+            <h2 class="section-title">Core Services</h2>
+            <div class="grid-3">
+                <div class="service-card" onclick="window.location.href='scanner.html'">
+                    <img src="ic_scan_qr.webp" alt="Scan QR">
+                    <div class="service-name">Scan QR</div>
+                </div>
+                
+                <div class="service-card" onclick="checkVehiclesAccess()">
+                    <img src="ic_my_vehicles.webp" alt="My Vehicles">
+                    <div class="service-name">My Vehicles</div>
+                </div>
+                
+                <div class="service-card" onclick="document.getElementById('vaultModal').style.display='flex'">
+                    <img src="ic_license.webp" alt="Document Vault">
+                    <div class="service-name">Document /<br>License</div>
+                </div>
+            </div>
+
+            <h2 class="section-title" style="margin-top: 30px;">Why Choose Tagown?</h2>
+            <div class="trust-card">
+                <div class="trust-item">
+                    <div class="trust-icon">🛡️</div>
+                    <div class="trust-text">
+                        <h4>Tagown provides anonymous communication via QR codes</h4>
+                        <p>Your data is saved securely.</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">🚨</div>
+                    <div class="trust-text">
+                        <h4>Instant Call and Notification Alerts</h4>
+                        <p>Smart auto-dialer contacts in 1 tap and Notify.</p>
+                    </div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-icon">🇮🇳</div>
+                    <div class="trust-text">
+                        <h4>Made in India</h4>
+                        <p>Proudly built for Indian vehicle owners.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="how-to-use" onclick="window.location.href='tutorials.html'">
-            <div style="font-size: 28px;">▶️</div>
-            <div class="how-to-text">
-                <h3 style="color: #2E7D32;">How to Use Tagown?</h3>
-                <p style="color: #388E3C;">Watch quick video tutorials</p>
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="window.location.href='index.html'">
+                <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='shop.html'">
+                <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
+            </div>
+            <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+                <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
+            </div>
+            <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+                <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
+            </div>
+            <div class="nav-item" onclick="window.location.href='settings.html'">
+                <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
             </div>
         </div>
 
-        <h2 class="section-title">Core Services</h2>
-        <div class="grid-3">
-            <div class="service-card" onclick="window.location.href='scanner.html'">
-                <img src="ic_scan_qr.webp" alt="Scan QR">
-                <div class="service-name">Scan QR</div>
-            </div>
-            
-            <div class="service-card" onclick="checkVehiclesAccess()">
-                <img src="ic_my_vehicles.webp" alt="My Vehicles">
-                <div class="service-name">My Vehicles</div>
-            </div>
-            
-            <div class="service-card" onclick="document.getElementById('vaultModal').style.display='flex'">
-                <img src="ic_license.webp" alt="Document Vault">
-                <div class="service-name">Document /<br>License</div>
+        <div id="sosSheet" class="overlay">
+            <div class="bottom-sheet" style="background: #F8F9FA;">
+                <div class="drag-handle"></div>
+                <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
+                <h2 style="margin-top:0; color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+                <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
+                
+                <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                    ⚠️ You can also dial 112 for any emergency
+                </div>
+                
+                <a href="tel:112" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:1033" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:1073" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:100" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:108" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:101" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
+                <a href="tel:1091" class="list-item">
+                    <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                    <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                    <div style="color:#4CAF50; font-size:18px;">▼</div>
+                </a>
             </div>
         </div>
 
-        <h2 class="section-title" style="margin-top: 30px;">Why Choose Tagown?</h2>
-        <div class="trust-card">
-            <div class="trust-item">
-                <div class="trust-icon">🛡️</div>
-                <div class="trust-text">
-                    <h4>Tagown provides anonymous communication via QR codes</h4>
-                    <p>Your data is saved securely.</p>
+        <div id="supportSheet" class="overlay">
+            <div class="bottom-sheet" style="background: #FFFFFF;">
+                <div class="drag-handle"></div>
+                <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
+                <h2 style="margin-top:0; color:var(--primary); font-size: 22px;">Help & Support</h2>
+                <p style="color:#888; font-size:13px; margin-top:-10px; margin-bottom: 20px;">We are here to help you 24/7</p>
+                
+                <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
+                    <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                    <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
+                </a>
+
+                <a href="tel:180093486290" class="support-call">
+                    <div class="support-call-icon">📞</div>
+                    <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
+                </a>
+            </div>
+        </div>
+
+        <div id="loginRequiredModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header-red">
+                    <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
+                    <h3>Not Logged In!</h3>
+                    <p>Login now to secure your vehicle and access your garage.</p>
+                </div>
+                <div class="modal-body">
+                    <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
+                    <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
                 </div>
             </div>
-            <div class="trust-item">
-                <div class="trust-icon">🚨</div>
-                <div class="trust-text">
-                    <h4>Instant Call and Notification Alerts</h4>
-                    <p>Smart auto-dialer contacts in 1 tap and Notify.</p>
+        </div>
+
+        <div id="emergencyPromoModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header-blue" style="background: #E53935;">
+                    <div style="font-size: 35px; margin-bottom: 5px;">🚨</div>
+                    <h3>Emergency Profile</h3>
+                    <p>Crucial for your safety</p>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 13px; color: #555; margin-top: 0; margin-bottom: 20px; text-align: left; line-height: 1.5; font-weight: 500;">
+                        Help us help you faster! Add your trusted family contacts and critical medical details to your secure profile.
+                    </p>
+                    <button class="btn-modal-primary" style="background: #E53935;" onclick="window.location.href='emergency.html'">SETUP NOW</button>
+                    <button class="btn-modal-cancel" onclick="document.getElementById('emergencyPromoModal').style.display='none'">Maybe Later</button>
                 </div>
             </div>
-            <div class="trust-item">
-                <div class="trust-icon">🇮🇳</div>
-                <div class="trust-text">
-                    <h4>Made in India</h4>
-                    <p>Proudly built for Indian vehicle owners.</p>
+        </div>
+
+        <div id="vaultModal" class="modal-overlay">
+            <div class="modal-box">
+                <div class="modal-header-blue">
+                    <div style="font-size: 35px; margin-bottom: 5px;">🪪</div>
+                    <h3>Document Vault</h3>
+                    <p>Military-grade security</p>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 13px; color: #555; margin-top: 0; margin-bottom: 20px; text-align: left; line-height: 1.5; font-weight: 500;">
+                        To ensure maximum device-level encryption for your License and RC, this feature is exclusively available on our official App.
+                    </p>
+                    <div style="background:#E3F2FD; padding:12px; border-radius:10px; font-size:12px; margin-bottom:15px; color:var(--primary); text-align: left;">
+                        <b>📱 Android:</b> Download App<br><br>
+                        <b> iPhone:</b> Coming Soon
+                    </div>
+                    <button class="btn-modal-primary" onclick="window.open('https://play.google.com/store/apps', '_blank')">GET THE APP</button>
+                    <button class="btn-modal-cancel" onclick="document.getElementById('vaultModal').style.display='none'">Close</button>
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="bottom-nav">
-        <div class="nav-item active" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
-        </div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
-        </div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
-        </div>
-    </div>
-
-    <div id="sosSheet" class="overlay">
-        <div class="bottom-sheet" style="background: #F8F9FA;">
-            <div class="drag-handle"></div>
-            <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 style="margin-top:0; color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
-            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
-            
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
-                ⚠️ You can also dial 112 for any emergency
-            </div>
-            
-            <a href="tel:112" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1033" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1073" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:100" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:108" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:101" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1091" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-        </div>
-    </div>
-
-    <div id="supportSheet" class="overlay">
-        <div class="bottom-sheet" style="background: #FFFFFF;">
-            <div class="drag-handle"></div>
-            <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 style="margin-top:0; color:var(--primary); font-size: 22px;">Help & Support</h2>
-            <p style="color:#888; font-size:13px; margin-top:-10px; margin-bottom: 20px;">We are here to help you 24/7</p>
-            
-            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
-                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
-                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
-            </a>
-
-            <a href="tel:180093486290" class="support-call">
-                <div class="support-call-icon">📞</div>
-                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
-            </a>
-        </div>
-    </div>
-
-    <div id="loginRequiredModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header-red">
-                <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
-                <h3>Not Logged In!</h3>
-                <p>Login now to secure your vehicle and access your garage.</p>
-            </div>
-            <div class="modal-body">
-                <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
-                <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="emergencyPromoModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header-blue" style="background: #E53935;">
-                <div style="font-size: 35px; margin-bottom: 5px;">🚨</div>
-                <h3>Emergency Profile</h3>
-                <p>Crucial for your safety</p>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 13px; color: #555; margin-top: 0; margin-bottom: 20px; text-align: left; line-height: 1.5; font-weight: 500;">
-                    Help us help you faster! Add your trusted family contacts and critical medical details to your secure profile.
-                </p>
-                <button class="btn-modal-primary" style="background: #E53935;" onclick="window.location.href='emergency.html'">SETUP NOW</button>
-                <button class="btn-modal-cancel" onclick="document.getElementById('emergencyPromoModal').style.display='none'">Maybe Later</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="vaultModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header-blue">
-                <div style="font-size: 35px; margin-bottom: 5px;">🪪</div>
-                <h3>Document Vault</h3>
-                <p>Military-grade security</p>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 13px; color: #555; margin-top: 0; margin-bottom: 20px; text-align: left; line-height: 1.5; font-weight: 500;">
-                    To ensure maximum device-level encryption for your License and RC, this feature is exclusively available on our official App.
-                </p>
-                <div style="background:#E3F2FD; padding:12px; border-radius:10px; font-size:12px; margin-bottom:15px; color:var(--primary); text-align: left;">
-                    <b>📱 Android:</b> Download App<br><br>
-                    <b> iPhone:</b> Coming Soon
-                </div>
-                <button class="btn-modal-primary" onclick="window.open('https://play.google.com/store/apps', '_blank')">GET THE APP</button>
-                <button class="btn-modal-cancel" onclick="document.getElementById('vaultModal').style.display='none'">Close</button>
-            </div>
-        </div>
-    </div>
-
-
-    <script>
+        
+    </div> <script>
         // ==========================================
-        // 🚀 1. Firebase Configuration & Initialization
+        // 🚀 THE FIX: Splash Screen Logic with Session Storage
+        // ==========================================
+        document.addEventListener("DOMContentLoaded", function() {
+            // Agar class lagi hui hai matlab splash skip karna hai
+            if (document.documentElement.classList.contains("skip-splash")) {
+                // Kuch karne ki zarurat nahi, CSS ne already hide kar diya hai
+                return;
+            }
+
+            // Pehli baar aaya hai -> Video dikhao
+            const splash = document.getElementById("splash-screen");
+            const mainContent = document.getElementById("main-content");
+            const splashVideo = document.getElementById('splash-video');
+            const splashPlaceholder = document.getElementById('splash-placeholder');
+            
+            if(splashVideo) {
+                splashVideo.addEventListener('playing', () => {
+                    splashPlaceholder.style.display = 'none';
+                });
+            }
+
+            setTimeout(function() {
+                splash.style.opacity = "0";
+                setTimeout(function() {
+                    splash.style.display = "none";
+                    mainContent.style.display = "block";
+                    
+                    // 🚀 Record save kar lo ki user ne animation dekh liya hai
+                    sessionStorage.setItem("tagownSplashShown", "true");
+                }, 500); 
+            }, 3000); 
+        });
+
+        // ==========================================
+        // 1. Firebase Configuration & Initialization
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
