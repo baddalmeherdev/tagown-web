@@ -452,15 +452,29 @@
             }
         }
 
+        // =======================================================
+        // 🚀 NAYA UPDATE: 5-Minute Time-Lock Session Logic
+        // =======================================================
         function executeCall() {
-            window.location.href = "tel:08040265615,," + callingPinFromDb; 
+            // Firebase mein ActiveCallSessions node par PIN ke aage current time save kar rahe hain
+            database.ref('ActiveCallSessions/' + callingPinFromDb).set(Date.now())
+            .then(() => {
+                // Time save hote hi Exotel ka number dial kar do
+                window.location.href = "tel:08040265615,," + callingPinFromDb; 
+            })
+            .catch((error) => {
+                console.error("Firebase save failed:", error);
+                // Agar kabhi network weak ho, tab bhi call lagne do (Failsafe)
+                window.location.href = "tel:08040265615,," + callingPinFromDb; 
+            });
         }
+        // =======================================================
 
         function updateEmergencyLinks() {
             if(callingPinFromDb) {
                 document.getElementById('em-family-btn').onclick = function(e) {
                     e.preventDefault();
-                    executeCall();
+                    executeCall(); // Ye bhi naye secure function ko hi call karega
                 };
             }
         }
