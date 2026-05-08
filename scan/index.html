@@ -126,8 +126,9 @@
         .sheet-header h3 { font-size: 18px; font-weight: 800; color: #0f172a; }
         .close-btn { font-size: 24px; color: #94a3b8; background: none; border: none; cursor: pointer; }
 
-        .input-field { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; margin-bottom: 16px; background: #f8fafc; outline: none; }
+        .input-field { width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 12px; font-size: 14px; font-weight: 600; margin-bottom: 16px; background: #f8fafc; outline: none; text-align: center; font-size: 18px; letter-spacing: 2px; text-transform: uppercase;}
         .input-field:focus { border-color: #3b82f6; }
+        
         .app-primary-btn { width: 100%; background: #16a34a; color: white; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(22, 163, 74, 0.3); }
 
         .em-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; margin-bottom: 12px; text-decoration: none; color: #fff; font-weight: 800; transition: 0.2s; }
@@ -221,10 +222,6 @@
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">We only collect necessary data to provide vehicle security services.</p>
-            <ul style="font-size: 13px; color: #475569; line-height: 1.6; padding-left: 20px;">
-                <li style="margin-bottom: 5px;"><b>Data:</b> Phone number for registration and vehicle number to link the Tag.</li>
-                <li><b>Security:</b> Your number is encrypted and never displayed to anyone scanning the QR.</li>
-            </ul>
         </div>
 
         <div id="terms-modal" class="center-modal" style="max-height: 80vh; overflow-y: auto;">
@@ -232,11 +229,7 @@
                 <h3 style="color: #1e3a8a;"><i class="fa-solid fa-file-contract"></i> Terms of Service</h3>
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to the following:</p>
-            <ul style="font-size: 13px; color: #475569; line-height: 1.6; padding-left: 20px;">
-                <li style="margin-bottom: 5px;">Tagown is a communication bridge, not a physical security rescue service.</li>
-                <li>Users must not misuse the alert system for spamming or harassment.</li>
-            </ul>
+            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to the following...</p>
         </div>
 
         <div id="contact-modal" class="center-modal" style="text-align: center;">
@@ -245,9 +238,7 @@
                 <button onclick="closeLpModals()" class="close-btn" style="position: absolute; right: 0; top: -5px;"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 15px;">Tagown Customer Support is here to help you 24/7.</p>
-            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>📍 Office:</b> India, Odisha, Bargarh District, Kuchipali, Kuamania</p>
             <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>📧 Email:</b> baddalmeherdev@gmail.com</p>
-            <p style="font-size: 14px; color: #475569; line-height: 1.6; margin-bottom: 8px;"><b>Founder:</b> Badal Meher</p>
         </div>
     </div>
 
@@ -260,7 +251,7 @@
             </div>
 
             <div class="content">
-                <h2 class="title-text">Contact vehicle owner</h2>
+                <h2 class="title-text" id="main-status-title">Contact vehicle owner</h2>
 
                 <div class="number-plate">
                     <div class="ind-strip"><span>IND</span></div>
@@ -273,15 +264,15 @@
                     <div class="green-box"></div> Your privacy is our top service priority.
                 </div>
 
-                <h2 class="title-text">Call or Notify the owner?</h2>
+                <h2 class="title-text" id="action-heading">Call or Notify the owner?</h2>
 
-                <div class="btn-row">
-                    <button onclick="handleCallClick()" class="action-btn call-btn">
+                <div class="btn-row" id="action-btn-row">
+                    <button onclick="attemptAction('call')" class="action-btn call-btn">
                         <i class="fa-solid fa-phone" style="color:#f59e0b;"></i>
                         <span style="color: #64748b;">Call Owner</span>
                     </button>
 
-                    <button onclick="openMessageSheet()" class="action-btn msg-btn">
+                    <button onclick="attemptAction('msg')" class="action-btn msg-btn">
                         <i class="fa-solid fa-comment" style="color:#1e293b;"></i>
                         <span style="color: #1e293b;">Notify Owner</span>
                     </button>
@@ -295,12 +286,21 @@
 
             <div id="main-overlay" class="overlay" onclick="closeAll()"></div>
 
+            <div id="verify-modal" class="center-modal">
+                <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-lock" style="font-size: 40px; color: #2563eb;"></i></div>
+                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Security Verification</h3>
+                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">To prevent spam, please prove you are with the vehicle by entering the <b>last 3 characters</b> of the number plate.</p>
+                <input type="text" id="verify-input" class="input-field" placeholder="Last 3 chars (e.g., 234)" maxlength="3">
+                <button onclick="checkVerification()" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 10px;">VERIFY & UNLOCK</button>
+                <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
+            </div>
+
             <div id="msg-sheet" class="bottom-sheet">
                 <div class="sheet-header">
                     <h3>Select an issue...</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <select id="issue-selector" class="input-field">
+                <select id="issue-selector" class="input-field" style="text-align: left; text-transform: none; letter-spacing: normal;">
                     <option value="🚨 Towing van is nearby!">🚨 Towing van is nearby!</option>
                     <option value="⚠️ Your vehicle is parked wrongly.">⚠️ Parked wrongly</option>
                     <option value="🚗 You are blocking my vehicle.">🚗 Blocking my vehicle</option>
@@ -312,7 +312,7 @@
                     <option value="⚙️ You have a flat tire.">⚙️ Flat tire</option>
                     <option value="🔥 Emergency! Please check your vehicle.">🔥 Emergency! Check vehicle</option>
                 </select>
-                <textarea id="custom-msg" class="input-field" rows="3" placeholder="Or type your custom message here..."></textarea>
+                <textarea id="custom-msg" class="input-field" rows="3" placeholder="Or type your custom message here..." style="text-align: left; text-transform: none; letter-spacing: normal;"></textarea>
                 <button id="send-alert-btn" onclick="executeAlert()" class="app-primary-btn">SEND NOW</button>
             </div>
 
@@ -323,27 +323,15 @@
                 </div>
                 <a href="#" id="em-family-btn" class="em-item" style="background: #f59e0b;">
                     <div class="em-icon"><i class="fa-solid fa-users"></i></div>
-                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly in emergencies</span></div>
+                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly</span></div>
                 </a>
                 <a href="tel:112" class="em-item" style="background: #1d4ed8;">
                     <div class="em-icon"><i class="fa-solid fa-building-shield"></i></div>
-                    <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance in any emergency</span></div>
+                    <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance</span></div>
                 </a>
                 <a href="tel:108" class="em-item" style="background: #16a34a;">
                     <div class="em-icon"><i class="fa-solid fa-truck-medical"></i></div>
                     <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for immediate medical assistance</span></div>
-                </a>
-                <a href="tel:101" class="em-item" style="background: #dc2626;">
-                    <div class="em-icon"><i class="fa-solid fa-fire-extinguisher"></i></div>
-                    <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for fire related emergencies</span></div>
-                </a>
-                <a href="tel:1091" class="em-item" style="background: #e06666;">
-                    <div class="em-icon"><i class="fa-solid fa-person-dress"></i></div>
-                    <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">24/7 helpline for women in distress</span></div>
-                </a>
-                <a href="tel:1033" class="em-item" style="background: #4f81bd;">
-                    <div class="em-icon"><i class="fa-solid fa-truck-pickup"></i></div>
-                    <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Highway rescue, towing, and traffic emergencies</span></div>
                 </a>
             </div>
 
@@ -373,7 +361,7 @@
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 15px;"><strong>Tagown Privacy Guarantee:</strong><br>Tagown acts as a highly secure communication bridge. The vehicle owner's personal details and phone number are completely hidden and encrypted.</p>
-                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is provided for communication assistance only. Tagown does not take responsibility for the actions of users or the immediate physical rescue of the vehicle. In case of legal or medical emergencies, please use the Emergency options to contact Govt. authorities directly.</p>
+                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is provided for communication assistance only.</p>
             </div>
         </div>
     </div>
@@ -394,12 +382,16 @@
         let ownerPhone = "";
         let qrIdFromUrl = "";
         let regNoFromDb = "";
+        let callingPinFromDb = ""; 
+        let isAppActive = false; 
+
+        // 🚀 NEW SECURITY VARIABLES
         let isMessageSent = false;
         let isInvalidTag = false;
-        let callingPinFromDb = ""; 
-
-        // 🚀 SMART ROUTING FLAG ADDED HERE
-        let isAppActive = false; 
+        let isVerified = false;
+        let pendingAction = null;
+        let ownerCallsDisabled = false;
+        let ownerTagPaused = false;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -415,9 +407,7 @@
             }
         };
 
-        function goToHome() {
-            window.location.href = window.location.pathname; 
-        }
+        function goToHome() { window.location.href = window.location.pathname; }
 
         function showToast(msg, type = "normal") {
             const toast = document.getElementById('toast');
@@ -432,49 +422,85 @@
             plate.innerText = "INVALID TAG";
             plate.style.color = "#dc2626";
             plate.style.fontSize = "26px";
+            document.querySelector('.title-text').innerText = "Tag Not Found";
         }
 
         function openLpModal(id) { document.getElementById('lp-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeLpModals() { document.getElementById('lp-overlay').classList.remove('active'); document.getElementById('privacy-modal').classList.remove('active'); document.getElementById('terms-modal').classList.remove('active'); document.getElementById('contact-modal').classList.remove('active'); }
         function openModal(id) { document.getElementById('main-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('main-overlay').classList.remove('active'); document.querySelectorAll('.bottom-sheet, .center-modal').forEach(el => el.classList.remove('active')); }
-        function openMessageSheet() { if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; } if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; } openModal('msg-sheet'); }
-        function openEmergencySheet() { openModal('emergency-sheet'); }
+        function openMessageSheet() { openModal('msg-sheet'); }
 
-        function handleCallClick() {
+        // =======================================================
+        // 🚀 MASTER SECURITY INTERCEPTOR
+        // =======================================================
+        function attemptAction(action) {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
-            if(!ownerPhone || !callingPinFromDb) { showToast("Loading owner securely...", "normal"); return; }
+            if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
             
-            if(!isMessageSent) { 
-                openModal('call-lock-modal'); 
-            } else { 
-                openModal('call-warning-modal'); 
+            // 1. Check if Tag is completely Paused by owner
+            if(ownerTagPaused) { 
+                showToast("The owner is currently unavailable.", "error"); 
+                return; 
+            }
+
+            // 2. Check if Calls are Disabled by owner
+            if(action === 'call' && ownerCallsDisabled) { 
+                showToast("Owner has disabled voice calls. Please notify instead.", "error"); 
+                return; 
+            }
+            
+            // 3. Spammer Verification (Last 3 Digits)
+            if(!isVerified) {
+                pendingAction = action;
+                document.getElementById('verify-input').value = ""; // clear old input
+                openModal('verify-modal');
+            } else {
+                // If already verified, execute directly
+                if(action === 'call') {
+                    if(!isMessageSent) openModal('call-lock-modal'); 
+                    else openModal('call-warning-modal'); 
+                }
+                if(action === 'msg') openMessageSheet();
             }
         }
 
-        // =======================================================
-        // 🚀 NAYA UPDATE: 5-Minute Time-Lock Session Logic
-        // =======================================================
-        function executeCall() {
-            // Firebase mein ActiveCallSessions node par PIN ke aage current time save kar rahe hain
-            database.ref('ActiveCallSessions/' + callingPinFromDb).set(Date.now())
-            .then(() => {
-                // Time save hote hi Exotel ka number dial kar do
-                window.location.href = "tel:08040265615,," + callingPinFromDb; 
-            })
-            .catch((error) => {
-                console.error("Firebase save failed:", error);
-                // Agar kabhi network weak ho, tab bhi call lagne do (Failsafe)
-                window.location.href = "tel:08040265615,," + callingPinFromDb; 
-            });
+        function checkVerification() {
+            const input = document.getElementById('verify-input').value.trim().toUpperCase();
+            const actualLast3 = regNoFromDb.trim().slice(-3).toUpperCase();
+            
+            if(input === actualLast3) {
+                isVerified = true;
+                closeAll();
+                
+                // Unlock UI & Reveal full number plate
+                document.getElementById('display-reg-no').innerText = regNoFromDb; 
+                document.getElementById('display-reg-no').style.color = "#1e293b";
+                showToast("Verified Successfully! Unlocked.", "success");
+                
+                // Automatically execute the action they clicked
+                if(pendingAction === 'call') {
+                    if(!isMessageSent) openModal('call-lock-modal'); 
+                    else openModal('call-warning-modal'); 
+                }
+                if(pendingAction === 'msg') openMessageSheet();
+                
+                pendingAction = null;
+            } else {
+                showToast("Incorrect digits. Please check the number plate again.", "error");
+            }
         }
-        // =======================================================
+
+        function executeCall() {
+            database.ref('ActiveCallSessions/' + callingPinFromDb).set(Date.now())
+            .then(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; })
+            .catch(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; });
+        }
 
         function updateEmergencyLinks() {
             if(callingPinFromDb) {
                 document.getElementById('em-family-btn').onclick = function(e) {
-                    e.preventDefault();
-                    executeCall(); // Ye bhi naye secure function ko hi call karega
+                    e.preventDefault(); executeCall();
                 };
             }
         }
@@ -483,10 +509,6 @@
             database.ref('LinkedTags').child(qrId).once('value').then((snap) => {
                 if(snap.exists()){
                     regNoFromDb = snap.val();
-                    const plate = document.getElementById('display-reg-no');
-                    plate.innerText = regNoFromDb;
-                    plate.style.color = "#1e293b";
-                    plate.style.fontSize = "32px";
                     findOwnerPhone(regNoFromDb);
                 } else { setInvalidTag(); }
             }).catch(err => { setInvalidTag(); showToast("Network Error", "error"); });
@@ -504,11 +526,11 @@
                         if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                             ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
                             callingPinFromDb = phoneNode.child('callingPIN').val();
-                            updateEmergencyLinks();
                             
-                            // 🚀 SMART ROUTING FUNCTION CALL
-                            checkAppStatus(ownerPhone);
-
+                            // Get Privacy Settings
+                            ownerCallsDisabled = phoneNode.child('callsDisabled').val() || false;
+                            ownerTagPaused = phoneNode.child('tagPaused').val() || false;
+                            
                             found = true; 
                         }
                     } else {
@@ -517,17 +539,18 @@
                             if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                 ownerPhone = vNode.child('ownerPhone').val() || phone; 
                                 callingPinFromDb = vNode.child('callingPIN').val();
-                                updateEmergencyLinks();
-
-                                // 🚀 SMART ROUTING FUNCTION CALL
-                                checkAppStatus(ownerPhone);
-
+                                
+                                ownerCallsDisabled = vNode.child('callsDisabled').val() || false;
+                                ownerTagPaused = vNode.child('tagPaused').val() || false;
+                                
                                 found = true; 
                             }
                         });
                     }
                 });
+                
                 if (!found) {
+                    // Fallback for MyVehicles legacy
                     database.ref('MyVehicles').once('value').then((mySnap) => {
                          mySnap.forEach((phoneNode) => {
                             if (found) return;
@@ -537,11 +560,10 @@
                                 if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                     ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
                                     callingPinFromDb = phoneNode.child('callingPIN').val();
-                                    updateEmergencyLinks();
-
-                                    // 🚀 SMART ROUTING FUNCTION CALL
-                                    checkAppStatus(ownerPhone);
-
+                                    
+                                    ownerCallsDisabled = phoneNode.child('callsDisabled').val() || false;
+                                    ownerTagPaused = phoneNode.child('tagPaused').val() || false;
+                                    
                                     found = true; 
                                 }
                             } else {
@@ -550,29 +572,62 @@
                                     if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                         ownerPhone = vNode.child('ownerPhone').val() || phone; 
                                         callingPinFromDb = vNode.child('callingPIN').val();
-                                        updateEmergencyLinks();
-
-                                        // 🚀 SMART ROUTING FUNCTION CALL
-                                        checkAppStatus(ownerPhone);
-
+                                        
+                                        ownerCallsDisabled = vNode.child('callsDisabled').val() || false;
+                                        ownerTagPaused = vNode.child('tagPaused').val() || false;
+                                        
                                         found = true; 
                                     }
                                 });
                             }
                         });
+                        finalizeOwnerData();
                     });
+                } else {
+                    finalizeOwnerData();
                 }
             });
         }
 
-        // 🚀 SMART ROUTING FUNCTION DEFINITION
+        function finalizeOwnerData() {
+            updateEmergencyLinks();
+            checkAppStatus(ownerPhone);
+            applyPrivacyUI();
+        }
+
+        // 🚀 APPLIES MASKING AND PRIVACY STATES ON LOAD
+        function applyPrivacyUI() {
+            const plate = document.getElementById('display-reg-no');
+            const callBtnSpan = document.querySelector('.call-btn span');
+            const callBtnIcon = document.querySelector('.call-btn i');
+
+            if(ownerTagPaused) {
+                document.getElementById('main-status-title').innerText = "Owner is unavailable";
+                document.getElementById('action-btn-row').style.opacity = "0.4";
+                plate.innerText = "STATUS: PAUSED";
+                plate.style.color = "#dc2626";
+                plate.style.fontSize = "22px";
+            } else {
+                // Initial Masking -> OD 17 AB 7***
+                let cleanReg = regNoFromDb.trim();
+                let maskedReg = cleanReg.substring(0, cleanReg.length - 3) + "***";
+                plate.innerText = maskedReg;
+                plate.style.color = "#1e293b";
+                
+                if(ownerCallsDisabled) {
+                    document.querySelector('.call-btn').style.borderColor = "#94a3b8";
+                    callBtnSpan.innerText = "Calls Disabled";
+                    callBtnSpan.style.color = "#94a3b8";
+                    callBtnIcon.style.color = "#94a3b8";
+                }
+            }
+        }
+
         function checkAppStatus(phone) {
             database.ref('Users').child(phone).once('value').then((snap) => {
                 if(snap.exists() && snap.hasChild('app_active')) {
                     isAppActive = snap.child('app_active').val() === true;
-                } else {
-                    isAppActive = false; 
-                }
+                } else { isAppActive = false; }
             }).catch(() => { isAppActive = false; });
         }
 
@@ -588,40 +643,21 @@
                 try {
                     const alertRef = database.ref('Alerts').child(ownerPhone).push();
                     await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
-                } catch(fbError) {
-                    console.warn("Firebase save skipped. Proceeding to notification...");
-                }
+                } catch(fbError) {}
 
                 let cleanPhone = ownerPhone.replace(/\D/g, ''); 
-                if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
-                    cleanPhone = cleanPhone.slice(-10);
-                }
+                if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) { cleanPhone = cleanPhone.slice(-10); }
                 const safeId = await getSecureId(cleanPhone);
 
-                const tagownServerUrl = "https://tagown-server.baddalmeherdev.workers.dev";
-
-                const response = await fetch(tagownServerUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                const response = await fetch("https://tagown-server.baddalmeherdev.workers.dev", {
+                    method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
-                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
-                        target_channel: "push",
-                        include_aliases: {
-                            external_id: [safeId] 
-                        },
-                        headings: {"en": "🚨 Tagown Alert: " + regNoFromDb},
-                        contents: {"en": msg},
-                        // 🚀 SMART ROUTING FLAG ADDED HERE FOR CLOUDFLARE TO READ
-                        data: { 
-                            "trigger_exotel_sms": !isAppActive,
-                            "vehicle_reg_no": regNoFromDb
-                        },
-                        app_url: "tagown://notifications",
-                        existing_android_channel_id: "tagown_urgent_alerts", 
-                        priority: 10,           
-                        android_visibility: 1,
-                        android_sound: "default",
-                        small_icon: "ic_notification_stat"
+                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", target_channel: "push",
+                        include_aliases: { external_id: [safeId] },
+                        headings: {"en": "🚨 Tagown Alert: " + regNoFromDb}, contents: {"en": msg},
+                        data: { "trigger_exotel_sms": !isAppActive, "vehicle_reg_no": regNoFromDb },
+                        app_url: "tagown://notifications", existing_android_channel_id: "tagown_urgent_alerts", 
+                        priority: 10, android_visibility: 1, android_sound: "default", small_icon: "ic_notification_stat"
                     })
                 });
 
@@ -629,18 +665,15 @@
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
                     
-                    const callBtnText = document.querySelector('.call-btn span');
-                    if(callBtnText) {
-                        callBtnText.innerText = "Call Owner\n(Unlocked)";
+                    if(!ownerCallsDisabled) {
+                        const callBtnText = document.querySelector('.call-btn span');
+                        if(callBtnText) callBtnText.innerText = "Call Owner\n(Unlocked)";
                     }
-                    
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent Securely!", "success"); }, 1500);
                 } else {
-                    const errText = await response.text();
-                    throw new Error(errText); 
+                    const errText = await response.text(); throw new Error(errText); 
                 }
             } catch (error) {
-                alert("ALERT FAILED: " + error.message);
                 btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
                 showToast("Server issue. Please try again.", "error");
                 setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
@@ -654,14 +687,10 @@
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
 
-        function enforcePrivacyLock() {
-            window.location.replace(window.location.pathname);
-        }
+        function enforcePrivacyLock() { window.location.replace(window.location.pathname); }
 
         if (window.location.search.includes('id=')) {
-            document.addEventListener("visibilitychange", function() {
-                if (document.visibilityState === 'hidden') enforcePrivacyLock();
-            });
+            document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') enforcePrivacyLock(); });
             window.addEventListener("blur", function() { enforcePrivacyLock(); });
             window.addEventListener("pagehide", function() { enforcePrivacyLock(); });
         }
