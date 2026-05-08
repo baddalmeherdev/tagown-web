@@ -320,9 +320,9 @@
         const urlParams = new URLSearchParams(window.location.search);
         const urlRegNo = urlParams.get('regNo');
         
-        // 🚀 FIX: Fallback directly to Vehicle.html to prevent 404
+        // 🚀 FIX: Fallback directly to vehicles.html to prevent 404
         if(!urlRegNo) {
-            window.location.href = 'Vehicle.html'; 
+            window.location.href = 'vehicles.html'; 
         }
 
         document.getElementById('managePlateText').innerText = urlRegNo;
@@ -348,7 +348,7 @@
                 document.getElementById('managePauseSwitch').checked = currentVehicleData.tagPaused || false;
             } else {
                 alert("Vehicle not found or deleted.");
-                window.location.href = 'Vehicle.html';
+                window.location.href = 'vehicles.html';
             }
         });
 
@@ -433,7 +433,7 @@
                     db.ref('RegisteredTags/' + tempQrId).set("UNASSIGNED");
                 }
                 alert("Vehicle Removed & QR Tag is Free!");
-                window.location.href = 'Vehicle.html'; 
+                window.location.href = 'vehicles.html'; 
             })
             .catch(err => alert("Error: " + err.message));
         }
