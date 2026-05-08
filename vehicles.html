@@ -22,11 +22,9 @@
             padding-bottom: 150px; 
         }
 
-        /* 🚀 FIX: Premium Header like index.html */
         .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 50; height: 60px; }
         .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; padding: 0; }
         
-        /* 🚀 FIX: Center Logo */
         .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-title { color: var(--title-color); font-size: 13px; font-weight: bold; font-style: italic; text-align: center; margin-top: 40px; text-decoration: underline; }
         
@@ -95,7 +93,6 @@
         .accordion-content { display: none; }
         .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
-        /* 🚀 FIX: Premium Bottom Nav EXACTLY like index.html */
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
         .nav-item:active { transform: scale(0.9); }
@@ -109,7 +106,6 @@
         .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
         .hide-nav { display: none !important; }
 
-        /* MODALS & SHEETS */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
         
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -126,8 +122,7 @@
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; text-align: center;}
 
-        /* 🚀 FIX: Full SOS Sheet EXACTLY like index.html */
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; max-height: 90vh; overflow-y: auto; }
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none;}
@@ -138,12 +133,6 @@
         .list-text h4 { margin:0; color:#333; font-size: 14px;}
         .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 13px;}
 
-        .support-wa { background: #E8F5E9; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: 15px; border: 1px solid #C8E6C9;}
-        .support-wa-icon { background: #00C853; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
-        .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
-
-        /* Scanner */
         .scanner-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
         #qrReader { width: 100%; height: 100%; background: #000; border: none; }
         .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 3001; cursor: pointer;}
@@ -191,7 +180,9 @@
     <div id="addView">
         <div class="header">
             <button class="back-btn" onclick="toggleView('garageView')">
-                <img src="ic_back.webp" style="width:28px; height:28px;" onerror="this.src=''; this.alt='«'; this.style.fontSize='26px';">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
             </button>
             <img src="toplogo.webp" class="header-logo" alt="Tagown">
             <div style="width: 26px;"></div>
@@ -268,7 +259,7 @@
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 style="margin-top:0; color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
             <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
             
             <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
@@ -317,17 +308,17 @@
         <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 style="margin-top:0; color:var(--primary-blue); font-size: 22px;">Help & Support</h2>
-            <p style="color:#888; font-size:13px; margin-top:-10px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
             
-            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
-                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
-                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
+            <a href="https://wa.me/916372980014" target="_blank" class="list-item" style="background:#E8F5E9; border-color:#C8E6C9;">
+                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="list-text"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply</p></div>
             </a>
 
-            <a href="tel:180093486290" class="support-call">
-                <div class="support-call-icon">📞</div>
-                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
+            <a href="tel:180093486290" class="list-item" style="background:#E3F2FD; border-color:#BBDEFB;">
+                <div class="list-icon" style="background:#1976D2; color:white;">📞</div>
+                <div class="list-text"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
             </a>
         </div>
     </div>
@@ -340,9 +331,9 @@
             <div class="modal-body">
                 <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold; font-style: italic; line-height: 1.5;">
                     Welcome to your Premium Garage! 🛡️<br><br>
-                    1. <b>Digital QR:</b> Tap 'View QR' on any vehicle card to show your unique scannable tag to anyone.<br><br>
-                    2. <b>Smart Profiles:</b> You can Edit or Delete vehicle profiles anytime. Deleting a vehicle instantly frees up its connected QR Tag for reuse.<br><br>
-                    3. <b>Local Privacy:</b> Your vehicle photos are kept safe on your device only.<br><br>
+                    1. <b>Digital QR:</b> Tap 'View QR' to quickly show your unique scannable tag.<br><br>
+                    2. <b>Manage Tag:</b> Click 'Manage Tag' button to disable public calls, pause notifications temporarily, or update vehicle details.<br><br>
+                    3. <b>Local Privacy:</b> Your photos are kept safe on your device only.<br><br>
                     Tagown: Protecting you and your vehicle.
                 </p>
                 <button class="btn-modal-primary" onclick="document.getElementById('garageGuideModal').style.display='none'">GOT IT</button>
@@ -355,7 +346,7 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('showQrSheet').style.display='none'">×</button>
             <div class="qr-display-container">
-                <h2 class="qr-title-green">Your Tagown QR</h2>
+                <h2 class="qr-title-green" style="color: #1565C0;">Your Tagown QR</h2>
                 
                 <div style="position: relative; display: inline-block;">
                     <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
@@ -601,10 +592,11 @@
         }
         loadVehicles();
 
+        // 🚀 THE FIX: ADDED &ecc=H TO ALLOW LOGO IN THE CENTER WITHOUT BREAKING THE QR!
         function showVehicleQr(qrId, regNo) {
             if(!qrId || qrId === "undefined") { alert("No valid QR linked to this vehicle."); return; }
             const scanUrl = "https://tagown.online/scan?id=" + qrId; 
-            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(scanUrl)}`;
+            const qrImgUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&ecc=H&data=${encodeURIComponent(scanUrl)}`;
             document.getElementById('displayQrImg').src = qrImgUrl;
             document.getElementById('displayQrRegNo').innerText = "Vehicle: " + regNo;
             document.getElementById('showQrSheet').style.display = 'flex';
