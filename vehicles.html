@@ -11,30 +11,18 @@
 
     <style>
         :root { 
-            --primary-blue: #1565C0; 
-            --primary-green: #2E7D32;
-            --light-green: #E8F5E9;
-            --title-color: #1B5E20;
-            --text-main: #1C1C1E;
-            --text-sub: #8E8E93;
-            --bg-color: #F4F6F9;
-            --card-bg: #FFFFFF;
-            --sos-red: #FF0000;
+            --primary-blue: #1565C0; --primary-green: #2E7D32; --light-green: #E8F5E9;
+            --title-color: #1B5E20; --text-main: #1C1C1E; --text-sub: #8E8E93;
+            --bg-color: #F4F6F9; --card-bg: #FFFFFF; --sos-red: #C62828;
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-color); 
-            margin: 0; padding: 0; color: var(--text-main); 
+            background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); 
             padding-bottom: 150px; 
         }
 
-        /* 📱 Top Header */
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            background: var(--bg-color); padding: 15px 20px;
-            position: sticky; top: 0; z-index: 50;
-        }
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-color); padding: 15px 20px; position: sticky; top: 0; z-index: 50; }
         .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; }
         .header-title { color: var(--title-color); font-size: 22px; font-weight: bold; font-style: italic; }
         .info-btn { color: var(--title-color); font-size: 20px; cursor: pointer; border: 2px solid var(--title-color); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-style: italic;}
@@ -42,31 +30,18 @@
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .skeleton {
-            background: #eee;
-            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-            border-radius: 5px; background-size: 200% 100%;
-            animation: 1.5s shine linear infinite;
-        }
+        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 5px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
         @keyframes shine { to { background-position-x: -200%; } }
 
         .garage-title { font-size: 18px; font-weight: bold; font-style: italic; color: #333; margin-bottom: 15px; }
         
-        .vehicle-card {
-            background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #F0F0F0;
-        }
+        .vehicle-card { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #F0F0F0; }
         .vc-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         
-        .vc-icon-box {
-            width: 75px; height: 75px; background: #E1F5FE; border-radius: 16px;
-            display: flex; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; margin-right: 15px;
-        }
+        .vc-icon-box { width: 75px; height: 75px; background: #E1F5FE; border-radius: 16px; display: flex; justify-content: center; align-items: center; padding: 10px; box-sizing: border-box; margin-right: 15px; }
         .vc-icon-box img { width: 100%; height: 100%; object-fit: contain; }
         
-        .ind-plate {
-            display: flex; border: 1.5px solid #222; border-radius: 6px; overflow: hidden; background: white; margin-bottom: 8px; width: fit-content;
-        }
+        .ind-plate { display: flex; border: 1.5px solid #222; border-radius: 6px; overflow: hidden; background: white; margin-bottom: 8px; width: fit-content; }
         .ind-blue { background: #0D47A1; color: white; width: 18px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 7px; font-weight: bold; padding-bottom: 2px; }
         .ind-number { padding: 4px 10px; font-size: 14px; font-weight: bold; letter-spacing: 1px; font-style: italic;}
         
@@ -78,10 +53,7 @@
         .vc-qr-box img { width: 35px; height: 35px; }
         .vc-qr-box span { font-size: 10px; color: var(--primary-green); font-weight: bold; margin-top: 5px; font-style: italic;}
 
-        .btn-manage-tag { 
-            background: #1565C0; color: white; padding: 15px; border-radius: 14px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-style: italic;
-            box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2); transition: transform 0.1s ease; margin-top: 15px;
-        }
+        .btn-manage-tag { background: #1565C0; color: white; padding: 15px; border-radius: 14px; border: none; font-weight: bold; font-size: 16px; cursor: pointer; width: 100%; display: flex; align-items: center; justify-content: center; gap: 10px; font-style: italic; box-shadow: 0 4px 10px rgba(21, 101, 192, 0.2); transition: transform 0.1s ease; margin-top: 15px; }
         .btn-manage-tag:active { transform: scale(0.98); }
         .btn-manage-tag img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
 
@@ -90,17 +62,9 @@
         .empty-title { font-size: 16px; color: #666; font-style: italic; font-weight: bold; margin: 0; }
         .empty-sub { font-size: 13px; color: #999; font-style: italic; margin-top: 5px; }
 
-        .btn-float-add {
-            position: fixed; 
-            bottom: 130px; 
-            right: 20px; 
-            background: #1B5E20; color: white; padding: 15px 25px; border-radius: 30px;
-            font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(27, 94, 32, 0.4);
-            cursor: pointer; z-index: 80; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px;
-        }
+        .btn-float-add { position: fixed; bottom: 130px; right: 20px; background: #1B5E20; color: white; padding: 15px 25px; border-radius: 30px; font-weight: bold; font-size: 14px; border: none; box-shadow: 0 5px 15px rgba(27, 94, 32, 0.4); cursor: pointer; z-index: 80; display: flex; align-items: center; gap: 8px; font-style: italic; letter-spacing: 1px; }
 
         #addView { display: none; }
-        
         .photo-box { background: var(--light-green); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 15px; border: 1px solid #C8E6C9; cursor: pointer;}
         .photo-icon { background: white; border-radius: 50%; width: 50px; height: 50px; display: inline-flex; justify-content: center; align-items: center; font-size: 24px; color: var(--primary-green); border: 2px solid var(--primary-green); margin-bottom: 10px; }
         .photo-text { color: var(--primary-green); font-size: 13px; font-weight: bold; font-style: italic; }
@@ -111,7 +75,6 @@
         .btn-scan-qr.success { background: #0D47A1; }
 
         .form-section-title { color: var(--title-color); font-weight: bold; font-size: 16px; font-style: italic; margin-bottom: 10px; }
-        
         .ind-input-wrapper { display: flex; border: 1.5px solid #ccc; border-radius: 8px; overflow: hidden; background: white; margin-bottom: 15px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);}
         .ind-input-blue { background: #1565C0; color: white; width: 40px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 10px; font-weight: bold; padding-bottom: 4px; }
         .ind-input-field { flex-grow: 1; padding: 15px; font-size: 18px; font-weight: bold; border: none; outline: none; font-style: italic; text-transform: uppercase; color: #333; letter-spacing: 1px;}
@@ -125,27 +88,25 @@
         
         .accordion-header { display: flex; justify-content: space-between; align-items: center; color: #E65100; font-weight: bold; font-size: 14px; font-style: italic; cursor: pointer; margin-top: 20px; margin-bottom: 10px;}
         .accordion-content { display: none; }
-        
         .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 400px; background: #FFFFFF; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            display: flex; justify-content: space-around; align-items: center; 
-            padding: 6px 0 10px 0; z-index: 90; border-radius: 35px;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
+        /* 🧭 FLOATING BOTTOM NAV */
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 400px; background: #FFFFFF; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 10px 0; z-index: 90; border-radius: 35px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        .nav-item:active { transform: scale(0.9); }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; }
         
-        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); }
-        .sos-circle { background: #FF0000; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); border: none;}
+        /* 🚨 SOS Fix */
+        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); transition: 0.2s; }
+        .nav-sos:active { transform: translateY(-20px) scale(0.9); }
+        .sos-circle { background: var(--sos-red); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4); border: none;}
         .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
-        .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
+        .nav-sos span { font-size: 11px; font-weight: bold; color: var(--sos-red); margin-top: 4px; }
         .hide-nav { display: none !important; }
 
+        /* MODALS & SHEETS */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-box { background: white; border-radius: 24px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -169,12 +130,12 @@
         .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
         
-        .list-item-pop { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; margin: 0 20px;}
-        .list-item-pop:active { transform: scale(0.96); }
-        .list-icon-pop { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
-        .list-text-pop { flex-grow:1; text-align: left;}
-        .list-text-pop h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
-        .list-text-pop p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
+        .em-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; margin: 0 20px 12px 20px; text-decoration: none; color: #fff; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+        .em-item:active { transform: scale(0.96); }
+        .em-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-size: 20px; }
+        .em-text-box { display: flex; flex-direction: column; }
+        .em-title { font-size: 15px; font-weight: bold; font-style: italic;}
+        .em-desc { font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px; }
 
         .scanner-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
         #qrReader { width: 100%; flex-grow: 1; }
@@ -221,7 +182,9 @@
 
     <div id="addView">
         <div class="header">
-            <button class="back-btn" onclick="toggleView('garageView')">«</button>
+            <button class="back-btn" onclick="toggleView('garageView')">
+                <img src="ic_back.webp" style="width:28px; height:28px;" onerror="this.src=''; this.alt='«'; this.style.fontSize='26px';">
+            </button>
             <div class="header-title">Add Your Vehicle</div>
             <div style="width: 26px;"></div>
         </div>
@@ -323,7 +286,16 @@
             <button class="close-btn" onclick="document.getElementById('showQrSheet').style.display='none'">×</button>
             <div class="qr-display-container">
                 <h2 class="qr-title-green">Your Tagown QR</h2>
-                <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
+                
+                <div style="position: relative; display: inline-block;">
+                    <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 4px; border-radius: 8px;">
+                        <div style="border: 2px solid #1A237E; border-radius: 6px; padding: 2px 6px; background: white;">
+                            <span style="color: #1A237E; font-weight: 900; font-size: 14px; font-style: normal; font-family: sans-serif;">TAGOWN</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="qr-vehicle-no" id="displayQrRegNo">Vehicle: OD 17 AB 1234</div>
                 <p class="qr-subtitle">🔒 Privacy Guaranteed. Connect without sharing personal numbers.</p>
             </div>
@@ -409,13 +381,31 @@
     </div>
 
     <div id="sosSheet" class="modal-overlay" style="align-items: flex-end;">
-        <div class="bottom-sheet" style="background: #F8F9FA; padding: 25px 0;">
+        <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:var(--sos-red); margin-left: 20px;">🚨 Emergency Helplines</h2>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin: 0 20px 15px 20px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
-            <a href="tel:112" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
-            <a href="tel:100" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
+            <h2 class="sheet-header" style="color:#C62828; margin-left: 20px; border:none; margin-bottom:10px;">🚨 Emergency Helplines</h2>
+            
+            <a href="tel:112" class="em-item" style="background: #1d4ed8;">
+                <div class="em-icon">🚓</div>
+                <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance</span></div>
+            </a>
+            <a href="tel:108" class="em-item" style="background: #16a34a;">
+                <div class="em-icon">🚑</div>
+                <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for medical emergencies</span></div>
+            </a>
+            <a href="tel:101" class="em-item" style="background: #dc2626;">
+                <div class="em-icon">🔥</div>
+                <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for fire related emergencies</span></div>
+            </a>
+            <a href="tel:1091" class="em-item" style="background: #e06666;">
+                <div class="em-icon">🛡️</div>
+                <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">24/7 helpline for women in distress</span></div>
+            </a>
+            <a href="tel:1033" class="em-item" style="background: #4f81bd;">
+                <div class="em-icon">🛣️</div>
+                <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Highway rescue & towing</span></div>
+            </a>
         </div>
     </div>
 
@@ -423,14 +413,14 @@
         <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="margin-left: 20px;">🎧 Help & Support</h2>
-            <a href="https://wa.me/916372980014" target="_blank" class="list-item-pop" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
-                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply</p></div>
+            <h2 class="sheet-header" style="margin-left: 20px; border:none; margin-bottom:10px;">🎧 Help & Support</h2>
+            <a href="https://wa.me/916372980014" target="_blank" class="em-item" style="background:#2E7D32;">
+                <div class="em-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="em-text-box"><span class="em-title">Chat on WhatsApp</span><span class="em-desc">Instant reply</span></div>
             </a>
-            <a href="tel:180093486290" class="list-item-pop" style="background:#E3F2FD; border-color:#BBDEFB;">
-                <div class="list-icon-pop" style="background:#1976D2; color:white;">📞</div>
-                <div class="list-text-pop"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+            <a href="tel:180093486290" class="em-item" style="background:#1565C0;">
+                <div class="em-icon">📞</div>
+                <div class="em-text-box"><span class="em-title">Call Helpline</span><span class="em-desc">1800-9348-6290</span></div>
             </a>
         </div>
     </div>
@@ -456,6 +446,8 @@
             alert("Security Alert: Please login to view your vehicles.");
             window.location.href = 'auth.html';
         }
+
+        let userVehiclesData = {};
 
         function generateUniqueCallingPIN() {
             return Math.floor(100000 + Math.random() * 900000).toString();
@@ -546,11 +538,13 @@
             
             db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
                 listDiv.innerHTML = ''; 
+                userVehiclesData = {};
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
                         const regNo = child.key; 
+                        userVehiclesData[regNo] = data;
                         
                         let iconFile = "ic_bike.webp"; 
                         const t = data.vehicleType || "";

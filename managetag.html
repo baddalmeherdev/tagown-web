@@ -12,7 +12,7 @@
         :root { 
             --primary-blue: #1565C0; --primary-green: #2E7D32; --light-green: #E8F5E9;
             --title-color: #1B5E20; --text-main: #1C1C1E; --text-sub: #8E8E93;
-            --bg-color: #F4F6F9; --card-bg: #FFFFFF; --sos-red: #FF0000;
+            --bg-color: #F4F6F9; --card-bg: #FFFFFF; --sos-red: #C62828;
         }
         
         body { 
@@ -21,14 +21,11 @@
             padding-bottom: 150px; 
         }
 
-        .header {
-            display: flex; justify-content: space-between; align-items: center;
-            background: #FFFFFF; padding: 15px 20px;
-            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; }
-        .header-title { color: var(--primary-blue); font-size: 22px; font-weight: bold; font-style: italic; }
-        .info-btn { color: var(--primary-blue); font-size: 20px; cursor: pointer; border: 2px solid var(--primary-blue); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-style: italic;}
+        /* 🚀 NAYA: Header with Logo in center, Manage Tag shifted */
+        .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 15px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; }
+        .header-logo { height: 26px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .header-title-small { color: var(--primary-blue); font-size: 13px; font-weight: bold; font-style: italic; line-height: 1.1; text-align: right; }
 
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -48,22 +45,18 @@
         input:checked + .slider { background-color: #2196F3; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .bottom-nav {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 400px; background: #FFFFFF; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            display: flex; justify-content: space-around; align-items: center; 
-            padding: 6px 0 10px 0; z-index: 90; border-radius: 35px;
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 400px; background: #FFFFFF; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 10px 0; z-index: 90; border-radius: 35px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        .nav-item:active { transform: scale(0.9); }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; }
         
-        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); }
-        .sos-circle { background: #FF0000; width: 52px; height: 52px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); border: none;}
+        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); transition: 0.2s; }
+        .nav-sos:active { transform: translateY(-20px) scale(0.9); }
+        .sos-circle { background: var(--sos-red); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4); border: none;}
         .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
-        .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
+        .nav-sos span { font-size: 11px; font-weight: bold; color: var(--sos-red); margin-top: 4px; }
         .hide-nav { display: none !important; }
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -71,8 +64,9 @@
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         .modal-header-green { background: #2E7D32; color: white; padding: 25px 20px; }
+        .modal-header-blue { background: #1565C0; color: white; padding: 25px 20px; }
         .modal-header-red { background: #D32F2F; color: white; padding: 25px 20px; }
-        .modal-header-green h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
+        .modal-header-green h3, .modal-header-blue h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
         .modal-body { padding: 25px 20px; text-align: left; }
         
         .btn-modal-primary { background: #2E7D32; color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
@@ -82,30 +76,34 @@
         .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 20px 0; box-sizing: border-box; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto;}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .sheet-header { font-size: 18px; font-weight: bold; color: var(--title-color); font-style: italic; padding: 0 20px 15px 20px; border-bottom: 1px solid #eee; margin: 0;}
-        
+        .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 15px; font-weight: bold; font-style: italic; color: #333; cursor: pointer;}
+        .type-item:active { background: #F9F9F9; }
+
         .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
         .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
         
+        .em-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; margin: 0 20px 12px 20px; text-decoration: none; color: #fff; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
+        .em-item:active { transform: scale(0.96); }
+        .em-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-size: 20px; }
+        .em-text-box { display: flex; flex-direction: column; }
+        .em-title { font-size: 15px; font-weight: bold; font-style: italic;}
+        .em-desc { font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px; }
+
         .edit-label { font-size: 12px; color: var(--primary-green); font-weight: bold; margin-bottom: 5px; display: block; padding: 0 20px;}
         .edit-input { width: calc(100% - 40px); margin: 0 20px 15px 20px; }
         .form-input, .form-select { width: 100%; padding: 15px; border: 1.5px solid #E5E5EA; border-radius: 8px; font-size: 14px; box-sizing: border-box; font-style: italic; color: #555; background: white;}
         .form-input:disabled { background: #F5F7FA; color: #888; border: 1px dashed #ccc; cursor: not-allowed; }
         .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px;}
-        
-        .list-item-pop { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; margin: 0 20px;}
-        .list-item-pop:active { transform: scale(0.96); }
-        .list-icon-pop { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
-        .list-text-pop { flex-grow:1; text-align: left;}
-        .list-text-pop h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
-        .list-text-pop p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
     </style>
 </head>
 <body>
 
     <div class="header">
-        <button class="back-btn" onclick="window.location.href='Vehicle.html'">«</button>
-        <div class="header-title">Manage Tag</div>
-        <div class="info-btn" onclick="document.getElementById('garageGuideModal').style.display='flex'">i</div>
+        <button class="back-btn" onclick="window.history.back();">
+            <img src="ic_back.webp" style="width:28px; height:28px;" onerror="this.src=''; this.alt='«'; this.style.fontSize='26px';">
+        </button>
+        <img src="toplogo.webp" class="header-logo" alt="Tagown">
+        <div class="header-title-small">Manage<br>Tag</div>
     </div>
 
     <div class="container">
@@ -117,7 +115,6 @@
         </div>
 
         <div class="manage-card">
-            
             <div class="manage-item" onclick="openContactPageInTab()">
                 <img src="ic_manage_view.webp" class="manage-icon">
                 <div class="manage-text">
@@ -167,7 +164,6 @@
                     <div class="manage-sub" style="color: #D32F2F;">Remove vehicle and Free up QR tag</div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -193,23 +189,6 @@
         <div class="nav-item" onclick="window.location.href='settings.html'">
             <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src=''; this.alt='⚙️'; this.style.fontSize='20px'">
             <span>Settings</span>
-        </div>
-    </div>
-
-    <div id="garageGuideModal" class="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-header-green" style="background: #FFFFFF; color: var(--primary-blue); padding-bottom: 10px;">
-                <h3 style="font-size: 18px;">Tag Control Center</h3>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold; font-style: italic; line-height: 1.5;">
-                    1. View Page: Open your Tag's public page to see exactly what people see when they scan it.<br><br>
-                    2. Disable Calls: If you are busy, turn this ON. Scanners won't be able to call you.<br><br>
-                    3. Pause Tag: Going on a private trip? Turn this ON to completely stop the QR code from functioning temporarily.<br><br>
-                    Tagown Priority: You have 100% control over your privacy.
-                </p>
-                <button class="btn-modal-primary" style="background: #1565C0;" onclick="document.getElementById('garageGuideModal').style.display='none'">GOT IT</button>
-            </div>
         </div>
     </div>
 
@@ -259,13 +238,31 @@
     </div>
 
     <div id="sosSheet" class="modal-overlay" style="align-items: flex-end;">
-        <div class="bottom-sheet" style="background: #F8F9FA; padding: 25px 0;">
+        <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:var(--sos-red); margin-left: 20px;">🚨 Emergency Helplines</h2>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin: 0 20px 15px 20px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
-            <a href="tel:112" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
-            <a href="tel:100" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
+            <h2 class="sheet-header" style="color:#C62828; margin-left: 20px; border:none; margin-bottom:10px;">🚨 Emergency Helplines</h2>
+            
+            <a href="tel:112" class="em-item" style="background: #1d4ed8;">
+                <div class="em-icon">🚓</div>
+                <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance</span></div>
+            </a>
+            <a href="tel:108" class="em-item" style="background: #16a34a;">
+                <div class="em-icon">🚑</div>
+                <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for medical emergencies</span></div>
+            </a>
+            <a href="tel:101" class="em-item" style="background: #dc2626;">
+                <div class="em-icon">🔥</div>
+                <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for fire related emergencies</span></div>
+            </a>
+            <a href="tel:1091" class="em-item" style="background: #e06666;">
+                <div class="em-icon">🛡️</div>
+                <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">24/7 helpline for women in distress</span></div>
+            </a>
+            <a href="tel:1033" class="em-item" style="background: #4f81bd;">
+                <div class="em-icon">🛣️</div>
+                <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Highway rescue & towing</span></div>
+            </a>
         </div>
     </div>
 
@@ -273,14 +270,14 @@
         <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="margin-left: 20px;">🎧 Help & Support</h2>
-            <a href="https://wa.me/916372980014" target="_blank" class="list-item-pop" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
-                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply</p></div>
+            <h2 class="sheet-header" style="margin-left: 20px; border:none; margin-bottom:10px;">🎧 Help & Support</h2>
+            <a href="https://wa.me/916372980014" target="_blank" class="em-item" style="background:#2E7D32;">
+                <div class="em-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="em-text-box"><span class="em-title">Chat on WhatsApp</span><span class="em-desc">Instant reply</span></div>
             </a>
-            <a href="tel:180093486290" class="list-item-pop" style="background:#E3F2FD; border-color:#BBDEFB;">
-                <div class="list-icon-pop" style="background:#1976D2; color:white;">📞</div>
-                <div class="list-text-pop"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+            <a href="tel:180093486290" class="em-item" style="background:#1565C0;">
+                <div class="em-icon">📞</div>
+                <div class="em-text-box"><span class="em-title">Call Helpline</span><span class="em-desc">1800-9348-6290</span></div>
             </a>
         </div>
     </div>
@@ -301,12 +298,11 @@
             window.location.href = 'auth.html';
         }
 
-        // Get regNo from URL
         const urlParams = new URLSearchParams(window.location.search);
         const urlRegNo = urlParams.get('regNo');
         
         if(!urlRegNo) {
-            window.location.href = 'Vehicle.html';
+            window.history.back(); // Fallback if opened wrongly
         }
 
         document.getElementById('managePlateText').innerText = urlRegNo;
@@ -325,7 +321,6 @@
             "Other": ["Custom/Other"]
         };
 
-        // Real-time data loader
         db.ref('Vehicles/' + currentUserPhone + '/' + urlRegNo).on('value', (snapshot) => {
             if (snapshot.exists()) {
                 currentVehicleData = snapshot.val();
@@ -333,12 +328,12 @@
                 document.getElementById('managePauseSwitch').checked = currentVehicleData.tagPaused || false;
             } else {
                 alert("Vehicle not found or deleted.");
-                window.location.href = 'Vehicle.html';
+                window.history.back();
             }
         });
 
         window.onclick = function(e) {
-            const modals = ['garageGuideModal', 'editVehicleSheet', 'deleteVehicleModal', 'sosSheet', 'supportSheet'];
+            const modals = ['editVehicleSheet', 'deleteVehicleModal', 'sosSheet', 'supportSheet'];
             modals.forEach(id => {
                 let m = document.getElementById(id);
                 if (m && e.target == m) m.style.display = "none";
@@ -418,7 +413,7 @@
                     db.ref('RegisteredTags/' + tempQrId).set("UNASSIGNED");
                 }
                 alert("Vehicle Removed & QR Tag is Free!");
-                window.location.href = 'Vehicle.html';
+                window.history.back(); // Delete hone pe peechhe list me chala jayega
             })
             .catch(err => alert("Error: " + err.message));
         }
