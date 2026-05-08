@@ -22,11 +22,15 @@
             padding-bottom: 150px; 
         }
 
-        /* 🚀 FIX: Same Header as index.html */
+        /* 🚀 FIX: Premium Header like index.html */
         .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 50; height: 60px; }
-        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; padding: 0;}
+        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; padding: 0; }
+        
+        /* 🚀 FIX: Center Logo */
         .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
-        .info-btn { color: var(--primary-blue); font-size: 18px; cursor: pointer; border: 2px solid var(--primary-blue); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-style: italic; font-weight: bold;}
+        .header-title { color: var(--title-color); font-size: 13px; font-weight: bold; font-style: italic; text-align: center; margin-top: 40px; text-decoration: underline; }
+        
+        .info-btn { color: var(--primary-blue); font-size: 20px; cursor: pointer; border: 2px solid var(--primary-blue); border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-style: italic; font-weight: bold;}
 
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -91,7 +95,7 @@
         .accordion-content { display: none; }
         .btn-save-full { background: #1B5E20; color: white; padding: 16px; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; letter-spacing: 1px; font-style: italic; margin-top: 15px; box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);}
 
-        /* 🚀 FIX: Bottom Nav EXACTLY like index.html */
+        /* 🚀 FIX: Premium Bottom Nav EXACTLY like index.html */
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
         .nav-item:active { transform: scale(0.9); }
@@ -122,7 +126,7 @@
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; text-align: center;}
 
-        /* 🚀 FIX: SOS & Support Sheets EXACTLY like index.html */
+        /* 🚀 FIX: Full SOS Sheet EXACTLY like index.html */
         .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
@@ -141,7 +145,7 @@
 
         /* Scanner */
         .scanner-view { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 3000; flex-direction: column; }
-        #qrReader { width: 100%; background: #000; flex-grow: 1; border: none; }
+        #qrReader { width: 100%; height: 100%; background: #000; border: none; }
         .scanner-close { position: absolute; top: 20px; right: 20px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: 50%; width: 40px; height: 40px; font-size: 20px; z-index: 3001; cursor: pointer;}
 
         .qr-display-container { text-align: center; padding: 20px; }
@@ -155,9 +159,7 @@
 
     <div id="garageView">
         <div class="header">
-            <button class="back-btn" onclick="window.history.back();">
-                <img src="ic_back.webp" style="width:28px; height:28px;" onerror="this.src=''; this.alt='«'; this.style.fontSize='26px';">
-            </button>
+            <div style="width: 26px;"></div>
             <img src="toplogo.webp" class="header-logo" alt="Tagown">
             <div class="info-btn" onclick="document.getElementById('garageGuideModal').style.display='flex'">i</div>
         </div>
@@ -196,7 +198,7 @@
         </div>
 
         <div class="container" style="padding-bottom: 40px;">
-            <div style="color: #1565C0; font-size: 18px; font-weight: bold; font-style: italic; margin-bottom: 15px; text-align: center;">Add Your Vehicle</div>
+            <div class="garage-title" style="color: #1565C0; font-size: 20px; font-weight: bold; text-align: center;">Add Your Vehicle</div>
             
             <div class="photo-box" onclick="document.getElementById('appOnlyModal').style.display='flex'">
                 <div class="photo-icon">📷</div><br>
@@ -338,9 +340,9 @@
             <div class="modal-body">
                 <p style="font-size: 13px; color: #333; margin-bottom: 15px; font-weight: bold; font-style: italic; line-height: 1.5;">
                     Welcome to your Premium Garage! 🛡️<br><br>
-                    1. <b>Digital QR:</b> Tap 'View QR' to quickly show your unique scannable tag.<br><br>
-                    2. <b>Manage Tag:</b> Click 'Manage Tag' button to disable public calls, pause notifications temporarily, or update vehicle details.<br><br>
-                    3. <b>Local Privacy:</b> Your photos are kept safe on your device only.<br><br>
+                    1. <b>Digital QR:</b> Tap 'View QR' on any vehicle card to show your unique scannable tag to anyone.<br><br>
+                    2. <b>Smart Profiles:</b> You can Edit or Delete vehicle profiles anytime. Deleting a vehicle instantly frees up its connected QR Tag for reuse.<br><br>
+                    3. <b>Local Privacy:</b> Your vehicle photos are kept safe on your device only.<br><br>
                     Tagown: Protecting you and your vehicle.
                 </p>
                 <button class="btn-modal-primary" onclick="document.getElementById('garageGuideModal').style.display='none'">GOT IT</button>
@@ -353,7 +355,7 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('showQrSheet').style.display='none'">×</button>
             <div class="qr-display-container">
-                <h2 class="qr-title-green" style="color: #1565C0;">Your Tagown QR</h2>
+                <h2 class="qr-title-green">Your Tagown QR</h2>
                 
                 <div style="position: relative; display: inline-block;">
                     <img id="displayQrImg" src="" class="qr-code-img" alt="Tagown QR">
@@ -432,7 +434,7 @@
         </div>
     </div>
 
-    <div id="vehicleSheet" class="overlay" style="align-items: flex-end;">
+    <div id="vehicleSheet" class="modal-overlay" style="align-items: flex-end;">
         <div class="bottom-sheet">
             <div class="drag-handle"></div>
             <h3 class="sheet-header" style="border:none; margin-bottom:0;">Select Vehicle Type</h3>
@@ -451,7 +453,7 @@
     <div id="scannerOverlay" class="scanner-view">
         <button class="scanner-close" onclick="closeScanner()">×</button>
         <h3 style="color:white; text-align:center; margin-top:30px;">Scan Official Tagown QR</h3>
-        <div id="qrReader" style="width:100%; height:calc(100% - 100px);"></div>
+        <div id="qrReader" style="width:100%; height:100%;"></div>
     </div>
 
     <script>
@@ -608,21 +610,13 @@
             document.getElementById('showQrSheet').style.display = 'flex';
         }
 
-        // 🚀 FIX: SCANNER CONFIG FOR MOBILE BROWSERS
         let html5QrCode;
         function startScanner() {
             document.getElementById('qrInfoModal').style.display = 'none';
             document.getElementById('scannerOverlay').style.display = 'flex';
-            
             html5QrCode = new Html5Qrcode("qrReader");
-            
-            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
-            
-            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess)
-            .catch(err => { 
-                alert("Camera Access Error! Please allow camera permissions in your browser."); 
-                closeScanner(); 
-            });
+            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, onScanSuccess)
+            .catch(err => { alert("Camera Access Error!"); closeScanner(); });
         }
 
         function closeScanner() {

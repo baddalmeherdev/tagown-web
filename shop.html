@@ -17,7 +17,7 @@
             --card-bg: #FFFFFF;
             --text-main: #1C1C1E;
             --text-sub: #8E8E93;
-            --sos-red: #FF0000; /* Pure Red for SOS */
+            --sos-red: #D32F2F; /* 🚀 FIX: Pure Red changed to exact Index color */
             --btn-yellow: #FFB300;
         }
         
@@ -43,9 +43,7 @@
         .active-view { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================= */
         /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
-        /* ========================================= */
         .skeleton {
             background: #eee;
             background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
@@ -59,9 +57,7 @@
         .skel-text { height: 15px; border-radius: 4px; width: 80%; }
         .skel-price { height: 20px; border-radius: 4px; width: 40%; }
 
-        /* ========================================= */
         /* 🛒 1. SHOP LIST VIEW */
-        /* ========================================= */
         .cod-banner {
             background: #E3F2FD; color: #1565C0; font-size: 13px; font-weight: bold; 
             text-align: center; padding: 12px; margin: 15px; border-radius: 8px; font-style: italic;
@@ -81,9 +77,7 @@
         .price-current { font-size: 18px; font-weight: 900; color: var(--primary-blue); font-style: italic;}
         .price-old { font-size: 13px; color: #999; text-decoration: line-through; font-weight: bold; font-style: italic;}
 
-        /* ========================================= */
         /* 📦 2. PRODUCT DETAIL VIEW */
-        /* ========================================= */
         .slider-container { width: 100%; height: 240px; overflow: hidden; background: white; position: relative; border-bottom: 1px solid #E5E5EA;}
         .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
         .slider-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
@@ -106,9 +100,7 @@
         .btn-buy-blue { background: var(--primary-blue); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-buy-blue:active { transform: scale(0.98); }
         
-        /* ========================================= */
         /* 📝 3. CHECKOUT FORM VIEW */
-        /* ========================================= */
         .checkout-container { padding: 15px; }
         .order-summary { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 20px;}
         .summary-title { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin: 0 0 5px 0;}
@@ -125,9 +117,7 @@
         .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-place-order:active { transform: scale(0.98); }
 
-        /* ========================================= */
         /* 📋 4. MY ORDERS HISTORY VIEW */
-        /* ========================================= */
         .order-history-container { padding: 15px; }
         .order-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
@@ -145,54 +135,25 @@
         .tracking-text { font-size: 12px; color: #444; font-weight: bold;}
         .btn-copy { background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; font-style: italic;}
 
-        /* ========================================= */
-        /* 🧭 PREMIUM FLOATING BOTTOM NAV (SLIM & Seamless SOS) */
-        /* ========================================= */
-        .bottom-nav {
-            position: fixed; 
-            bottom: 20px; /* Distance from bottom screen */
-            left: 50%; 
-            transform: translateX(-50%);
-            width: 92%; /* Dynamic width with margins */
-            max-width: 400px;
-            background: #FFFFFF; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
-            display: flex; justify-content: space-around; align-items: center; 
-            padding: 6px 0 10px 0; /* Slim padding */
-            z-index: 90; 
-            border-radius: 35px; /* Fully Rounded corners */
-        }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; }
-        
+        /* 🚀 FIX: Premium Bottom Nav EXACTLY like index.html */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        .nav-item:active { transform: scale(0.9); }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
-        
-        /* Active State (Blue text, bright icon) */
         .nav-item.active { color: var(--primary-blue); }
-        .nav-item.active img { opacity: 1; }
+        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
         
-        /* Floating Pure Red SOS Button EXACT Match */
-        .nav-sos {
-            display: flex; flex-direction: column; align-items: center; justify-content: center; 
-            cursor: pointer; transform: translateY(-20px); /* Lift up to overlap border */
-        }
-        .sos-circle {
-            background: #FF0000; /* Seamless Pure Red solid circle */
-            width: 52px; height: 52px; 
-            border-radius: 50%;
-            display: flex; justify-content: center; align-items: center;
-            box-shadow: 0 5px 15px rgba(255, 0, 0, 0.3); /* Glowing shadow */
-            border: none;
-        }
-        .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); } /* Pure white siren */
-        .nav-sos span { font-size: 11px; font-weight: bold; color: #FF0000; margin-top: 4px; }
-        
+        .nav-sos { width: 60px; height: 60px; transform: translateY(-20px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .nav-sos:active { transform: translateY(-20px) scale(0.9); }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); }
+        .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
         .hide-nav { display: none !important; }
 
-        /* ========================================= */
         /* 🚨 PREMIUM POPUP MODALS & ALERTS */
-        /* ========================================= */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
+        
+        /* 🚀 FIX: SOS & Support Sheets EXACTLY like index.html */
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
         .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
@@ -208,6 +169,11 @@
         
         .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 16px; font-weight: bold; font-style: italic; color: #333; cursor: pointer; transition: background 0.2s;}
         .type-item:active { background: #F0F0F0; }
+
+        .support-wa { background: #E8F5E9; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: 15px; border: 1px solid #C8E6C9;}
+        .support-wa-icon { background: #00C853; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
+        .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
 
         /* Generic Central Modal */
         .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
@@ -344,14 +310,70 @@
         </div>
     </div>
 
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
+        </div>
+    </div>
+
     <div id="sosSheet" class="overlay">
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:var(--sos-red);">🚨 Emergency Helplines</h2>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
-            <a href="tel:112" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
-            <a href="tel:100" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
+            <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
+            
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
+            
+            <a href="tel:112" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1033" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1073" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:100" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:108" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:101" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1091" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
         </div>
     </div>
 
@@ -359,14 +381,17 @@
         <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header">🎧 Help & Support</h2>
-            <a href="https://wa.me/916372980014" target="_blank" class="list-item" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
-                <div class="list-text"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
+            <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            
+            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
+                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
             </a>
-            <a href="tel:180093486290" class="list-item" style="background:#E3F2FD; border-color:#BBDEFB;">
-                <div class="list-icon" style="background:#1976D2; color:white;">📞</div>
-                <div class="list-text"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+
+            <a href="tel:180093486290" class="support-call">
+                <div class="support-call-icon">📞</div>
+                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
             </a>
         </div>
     </div>
@@ -398,31 +423,6 @@
         </div>
     </div>
 
-    <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home" onerror="this.src=''; this.alt='🏠'; this.style.fontSize='20px'">
-            <span>Home</span>
-        </div>
-        <div class="nav-item active" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src=''; this.alt='🛍️'; this.style.fontSize='20px'">
-            <span>Shop</span>
-        </div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <div class="sos-circle">
-                <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src=''; this.alt='🚨'; this.style.fontSize='22px'">
-            </div>
-            <span>SOS</span>
-        </div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src=''; this.alt='📞'; this.style.fontSize='20px'">
-            <span>Support</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src=''; this.alt='⚙️'; this.style.fontSize='20px'">
-            <span>Settings</span>
-        </div>
-    </div>
-
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
@@ -446,9 +446,6 @@
             });
         }
 
-        // =====================================
-        // 🚨 PREMIUM ALERT FUNCTION
-        // =====================================
         function showPremiumAlert(title, message, type) {
             document.getElementById('alertTitle').innerText = title;
             document.getElementById('alertMessage').innerText = message;
@@ -467,9 +464,6 @@
             document.getElementById('alertModal').style.display = 'flex';
         }
 
-        // =====================================
-        // 🛒 1. LOAD PRODUCTS
-        // =====================================
         db.ref('ShopProducts').on('value', (snapshot) => {
             const grid = document.getElementById('shopGrid');
             if (snapshot.exists()) {
@@ -498,9 +492,6 @@
             }
         });
 
-        // =====================================
-        // 📦 2. OPEN PRODUCT DETAIL
-        // =====================================
         function openProductDetail(id) {
             selectedProductId = id; const data = currentProducts[id];
             document.getElementById('pageTitle').innerText = "Product Details";
@@ -536,9 +527,6 @@
             switchView('viewDetail');
         }
 
-        // =====================================
-        // 🗂️ 3. VEHICLE TYPE & CHECKOUT
-        // =====================================
         function openVehicleSheet() { document.getElementById('vehicleSheet').style.display = 'flex'; }
         
         window.onclick = function(event) {
@@ -564,9 +552,6 @@
             switchView('viewCheckout');
         }
 
-        // =====================================
-        // 📝 4. PLACE ORDER (DUAL SYNC LOGIC)
-        // =====================================
         function placeOrder() {
             const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
             const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincode').value.trim();
@@ -587,7 +572,6 @@
                 customerName: name, customerPhone: phone, deliveryAddress: fullAddress, orderStatus: "New Order (COD)", timestamp: date, trackingId: ""
             };
 
-            // 🚀 THE MASTER SYNC: Save to both User's folder AND Global Orders folder
             db.ref('UserOrders/' + currentUserPhone + '/' + orderId).set(orderData).then(() => {
                 
                 db.ref('Orders/' + orderId).set(orderData);
@@ -604,9 +588,6 @@
             });
         }
 
-        // =====================================
-        // 📋 5. LOAD ORDER HISTORY (SYNCED & FIXED)
-        // =====================================
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
             document.getElementById('pageTitle').innerText = "My Orders";
@@ -617,7 +598,6 @@
         function loadOrders() {
             const container = document.getElementById('ordersContainer');
             
-            // Fetch perfectly from UserOrders -> Phone Number (Matches App logic)
             db.ref('UserOrders/' + currentUserPhone).on('value', (snapshot) => {
                 let html = ''; let orders = [];
                 if(snapshot.exists()){
@@ -635,7 +615,6 @@
                             trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
                         }
 
-                        // 🚀 THE FIX: We are now explicitly passing correct variables (data.productTitle and data.price) instead of old app format logic!
                         const itemTitle = data.productTitle || "Tagown Security Product";
                         const itemPrice = data.price || "299";
                         const itemVehicle = data.vehicleType || "Vehicle";
@@ -671,9 +650,6 @@
             }); 
         }
 
-        // =====================================
-        // 🔄 6. VIEW SWITCHER
-        // =====================================
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
             document.getElementById(viewId).classList.add('active-view');
