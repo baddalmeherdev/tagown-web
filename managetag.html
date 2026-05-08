@@ -21,10 +21,10 @@
             padding-bottom: 150px; 
         }
 
-        /* 🚀 NAYA: Header with Logo in center, Manage Tag shifted */
-        .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 15px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* 🚀 FIX: Header with Logo in center, Manage Tag shifted */
+        .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 12px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 60px;}
         .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; }
-        .header-logo { height: 26px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
         .header-title-small { color: var(--primary-blue); font-size: 13px; font-weight: bold; font-style: italic; line-height: 1.1; text-align: right; }
 
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
@@ -45,49 +45,51 @@
         input:checked + .slider { background-color: #2196F3; }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 400px; background: #FFFFFF; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: flex; justify-content: space-around; align-items: center; padding: 6px 0 10px 0; z-index: 90; border-radius: 35px; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 11px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        /* 🚀 FIX: Bottom Nav EXACTLY like index.html */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
         .nav-item:active { transform: scale(0.9); }
         .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
-        .nav-item.active img { opacity: 1; }
+        .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
         
-        .nav-sos { display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transform: translateY(-20px); transition: 0.2s; }
+        .nav-sos { width: 60px; height: 60px; transform: translateY(-20px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
         .nav-sos:active { transform: translateY(-20px) scale(0.9); }
-        .sos-circle { background: var(--sos-red); width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4); border: none;}
-        .sos-circle img { width: 26px; height: 26px; filter: brightness(0) invert(1); }
-        .nav-sos span { font-size: 11px; font-weight: bold; color: var(--sos-red); margin-top: 4px; }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); }
+        .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
         .hide-nav { display: none !important; }
 
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        
         .modal-box { background: white; border-radius: 24px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         .modal-header-green { background: #2E7D32; color: white; padding: 25px 20px; }
-        .modal-header-blue { background: #1565C0; color: white; padding: 25px 20px; }
         .modal-header-red { background: #D32F2F; color: white; padding: 25px 20px; }
-        .modal-header-green h3, .modal-header-blue h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
+        .modal-header-green h3, .modal-header-red h3 { margin: 0; font-size: 20px; font-style: italic; letter-spacing: 1px;}
         .modal-body { padding: 25px 20px; text-align: left; }
         
         .btn-modal-primary { background: #2E7D32; color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px; text-align: center;}
 
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 20px 0; box-sizing: border-box; animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto;}
+        /* 🚀 FIX: SOS & Support Sheets EXACTLY like index.html */
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-        .sheet-header { font-size: 18px; font-weight: bold; color: var(--title-color); font-style: italic; padding: 0 20px 15px 20px; border-bottom: 1px solid #eee; margin: 0;}
-        .type-item { padding: 16px 20px; border-bottom: 1px solid #F5F5F5; font-size: 15px; font-weight: bold; font-style: italic; color: #333; cursor: pointer;}
-        .type-item:active { background: #F9F9F9; }
-
-        .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
+        .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none;}
         
-        .em-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; margin: 0 20px 12px 20px; text-decoration: none; color: #fff; transition: 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);}
-        .em-item:active { transform: scale(0.96); }
-        .em-icon { width: 40px; height: 40px; background: rgba(255,255,255,0.2); border-radius: 10px; display: flex; justify-content: center; align-items: center; margin-right: 15px; font-size: 20px; }
-        .em-text-box { display: flex; flex-direction: column; }
-        .em-title { font-size: 15px; font-weight: bold; font-style: italic;}
-        .em-desc { font-size: 11px; font-weight: 600; opacity: 0.9; margin-top: 2px; }
+        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 2px 5px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;}
+        .list-icon { width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
+        .list-text { flex-grow:1; text-align: left;}
+        .list-text h4 { margin:0; color:#333; font-size: 14px;}
+        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 13px;}
+
+        .support-wa { background: #E8F5E9; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: 15px; border: 1px solid #C8E6C9;}
+        .support-wa-icon { background: #00C853; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
+        .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
 
         .edit-label { font-size: 12px; color: var(--primary-green); font-weight: bold; margin-bottom: 5px; display: block; padding: 0 20px;}
         .edit-input { width: calc(100% - 40px); margin: 0 20px 15px 20px; }
@@ -99,7 +101,7 @@
 <body>
 
     <div class="header">
-        <button class="back-btn" onclick="window.history.back();">
+        <button class="back-btn" onclick="window.location.href='Vehicle.html'">
             <img src="ic_back.webp" style="width:28px; height:28px;" onerror="this.src=''; this.alt='«'; this.style.fontSize='26px';">
         </button>
         <img src="toplogo.webp" class="header-logo" alt="Tagown">
@@ -169,30 +171,23 @@
 
     <div class="bottom-nav" id="bottomNav">
         <div class="nav-item active" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home" onerror="this.src=''; this.alt='🏠'; this.style.fontSize='20px'">
-            <span>Home</span>
+            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
         </div>
         <div class="nav-item" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src=''; this.alt='🛍️'; this.style.fontSize='20px'">
-            <span>Shop</span>
+            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
         </div>
         <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <div class="sos-circle">
-                <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src=''; this.alt='🚨'; this.style.fontSize='22px'">
-            </div>
-            <span>SOS</span>
+            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
         </div>
         <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src=''; this.alt='📞'; this.style.fontSize='20px'">
-            <span>Support</span>
+            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
         </div>
         <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src=''; this.alt='⚙️'; this.style.fontSize='20px'">
-            <span>Settings</span>
+            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
         </div>
     </div>
 
-    <div id="editVehicleSheet" class="modal-overlay" style="align-items: flex-end;">
+    <div id="editVehicleSheet" class="overlay" style="align-items: flex-end;">
         <div class="bottom-sheet" style="padding-bottom: 0;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('editVehicleSheet').style.display='none'">×</button>
@@ -237,47 +232,70 @@
         </div>
     </div>
 
-    <div id="sosSheet" class="modal-overlay" style="align-items: flex-end;">
-        <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
+    <div id="sosSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:#C62828; margin-left: 20px; border:none; margin-bottom:10px;">🚨 Emergency Helplines</h2>
+            <h2 style="margin-top:0; color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
             
-            <a href="tel:112" class="em-item" style="background: #1d4ed8;">
-                <div class="em-icon">🚓</div>
-                <div class="em-text-box"><span class="em-title">National Emergency (112)</span><span class="em-desc">Dial 112 for immediate assistance</span></div>
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
+            
+            <a href="tel:112" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
-            <a href="tel:108" class="em-item" style="background: #16a34a;">
-                <div class="em-icon">🚑</div>
-                <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for medical emergencies</span></div>
+            <a href="tel:1033" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
-            <a href="tel:101" class="em-item" style="background: #dc2626;">
-                <div class="em-icon">🔥</div>
-                <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for fire related emergencies</span></div>
+            <a href="tel:1073" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
-            <a href="tel:1091" class="em-item" style="background: #e06666;">
-                <div class="em-icon">🛡️</div>
-                <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">24/7 helpline for women in distress</span></div>
+            <a href="tel:100" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
-            <a href="tel:1033" class="em-item" style="background: #4f81bd;">
-                <div class="em-icon">🛣️</div>
-                <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Highway rescue & towing</span></div>
+            <a href="tel:108" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:101" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1091" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
         </div>
     </div>
 
-    <div id="supportSheet" class="modal-overlay" style="align-items: flex-end;">
-        <div class="bottom-sheet" style="background: #FFFFFF; padding: 25px 0;">
+    <div id="supportSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="margin-left: 20px; border:none; margin-bottom:10px;">🎧 Help & Support</h2>
-            <a href="https://wa.me/916372980014" target="_blank" class="em-item" style="background:#2E7D32;">
-                <div class="em-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
-                <div class="em-text-box"><span class="em-title">Chat on WhatsApp</span><span class="em-desc">Instant reply</span></div>
+            <h2 style="margin-top:0; color:var(--primary-blue); font-size: 22px;">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-10px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            
+            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
+                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
             </a>
-            <a href="tel:180093486290" class="em-item" style="background:#1565C0;">
-                <div class="em-icon">📞</div>
-                <div class="em-text-box"><span class="em-title">Call Helpline</span><span class="em-desc">1800-9348-6290</span></div>
+
+            <a href="tel:180093486290" class="support-call">
+                <div class="support-call-icon">📞</div>
+                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
             </a>
         </div>
     </div>
@@ -302,7 +320,7 @@
         const urlRegNo = urlParams.get('regNo');
         
         if(!urlRegNo) {
-            window.history.back(); // Fallback if opened wrongly
+            window.location.href = 'Vehicle.html'; 
         }
 
         document.getElementById('managePlateText').innerText = urlRegNo;
@@ -328,7 +346,7 @@
                 document.getElementById('managePauseSwitch').checked = currentVehicleData.tagPaused || false;
             } else {
                 alert("Vehicle not found or deleted.");
-                window.history.back();
+                window.location.href = 'Vehicle.html';
             }
         });
 
@@ -413,7 +431,7 @@
                     db.ref('RegisteredTags/' + tempQrId).set("UNASSIGNED");
                 }
                 alert("Vehicle Removed & QR Tag is Free!");
-                window.history.back(); // Delete hone pe peechhe list me chala jayega
+                window.location.href = 'Vehicle.html'; // Delete hone pe peechhe list me chala jayega
             })
             .catch(err => alert("Error: " + err.message));
         }
