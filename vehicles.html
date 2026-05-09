@@ -60,6 +60,9 @@
         .btn-manage-tag:active { transform: scale(0.98); }
         .btn-manage-tag img { width: 20px; height: 20px; filter: brightness(0) invert(1); }
 
+        .btn-manage-route { padding: 15px; border-radius: 14px; font-weight: bold; font-size: 14px; cursor: pointer; width: 100%; display: none; align-items: center; justify-content: space-between; font-style: italic; margin-top: 10px; transition: 0.2s; border-width: 1px; border-style: solid;}
+        .btn-manage-route:active { transform: scale(0.98); }
+
         .empty-state { text-align: center; padding: 40px 20px; }
         .empty-icon { width: 60px; height: 60px; opacity: 0.2; margin-bottom: 15px; }
         .empty-title { font-size: 16px; color: #666; font-style: italic; font-weight: bold; margin: 0; }
@@ -436,7 +439,8 @@
             <div class="type-item" onclick="selectType('Auto')">Auto</div>
             <div class="type-item" onclick="selectType('E-rickshaw')">E-rickshaw</div>
             <div class="type-item" onclick="selectType('Truck')">Truck</div>
-            <div class="type-item" onclick="selectType('Van/Bus')">Van/Bus</div>
+            <div class="type-item" onclick="selectType('Van')">Van</div>
+            <div class="type-item" onclick="selectType('Bus')">Bus</div>
             <div class="type-item" onclick="selectType('Other')">Other</div>
         </div>
     </div>
@@ -454,7 +458,9 @@
             databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
             projectId: "meherdevlopstudio"
         };
-        firebase.initializeApp(firebaseConfig);
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
@@ -465,6 +471,7 @@
 
         function generateUniqueCallingPIN() { return Math.floor(100000 + Math.random() * 900000).toString(); }
 
+        // 🚀 FIX: Brand list mein Van aur Bus ke liye alag brands
         const brandsData = {
             "Bike/Scooter": ["Royal Enfield", "Honda", "TVS", "Bajaj", "Hero", "Yamaha", "Suzuki", "KTM", "Other"],
             "Electric Bike/Scooter": ["Ather", "Ola", "TVS iQube", "Bajaj Chetak", "Revolt", "Hero Electric", "Other"],
@@ -473,7 +480,8 @@
             "Auto": ["Bajaj", "TVS", "Piaggio", "Mahindra", "Other"],
             "E-rickshaw": ["Mahindra Treo", "Kinetic Green", "Udaan", "Other"],
             "Truck": ["Tata Motors", "Ashok Leyland", "Mahindra", "Eicher", "BharatBenz", "Other"],
-            "Van/Bus": ["Tata", "Force Motors", "Swaraj Mazda", "Other"],
+            "Van": ["Tata", "Maruti Suzuki", "Force Motors", "Mahindra", "Other"],
+            "Bus": ["Tata", "Ashok Leyland", "Volvo", "Swaraj Mazda", "Eicher", "BharatBenz", "Other"],
             "Other": ["Custom/Other"]
         };
 
@@ -536,25 +544,48 @@
             });
         }
 
+        // 🚀 FIX: Smart DB Logic - Checks if Bus Route already exists!
         function loadVehicles() {
             const listDiv = document.getElementById('vehicleList');
-            db.ref('Vehicles/' + currentUserPhone).on('value', (snapshot) => {
+            db.ref('Vehicles/' + currentUserPhone).on('value', async (snapshot) => {
                 listDiv.innerHTML = ''; 
                 if (snapshot.exists()) {
+                    
+                    // Pehle pata karo ki is user ki kaunsi gaadiyo ka route save hai
+                    let existingRoutes = {};
+                    try {
+                        const routeSnap = await db.ref("BusRoutes").once("value");
+                        if(routeSnap.exists()){
+                            routeSnap.forEach(state => {
+                                state.forEach(dist => {
+                                    dist.forEach(bus => {
+                                        existingRoutes[bus.key] = true;
+                                    });
+                                });
+                            });
+                        }
+                    } catch(e) { console.log(e); }
+
                     snapshot.forEach((child) => {
                         const data = child.val();
                         const regNo = child.key; 
                         let iconFile = "ic_bike.webp"; 
                         const t = data.vehicleType || "";
+                        
+                        let isBus = false;
+
                         if(t.includes("Electric Bike") || t.includes("Electric Scooter")) iconFile = "ic_ev_bike.webp";
                         else if(t.includes("Car/Jeep")) iconFile = "ic_car.webp";
                         else if(t.includes("Electric Car")) iconFile = "ic_ev_car.webp";
                         else if(t.includes("Auto") && !t.includes("E-")) iconFile = "ic_auto.webp";
                         else if(t.includes("E-rickshaw")) iconFile = "ic_erickshaw.webp";
                         else if(t.includes("Truck")) iconFile = "ic_truck.webp";
-                        else if(t.includes("Van") || t.includes("Bus")) iconFile = "ic_van.webp";
+                        else if(t.includes("Van") || t.includes("Bus")) {
+                            iconFile = "ic_default_bus.webp"; 
+                            isBus = true; 
+                        }
 
-                        listDiv.innerHTML += `
+                        let cardContent = `
                             <div class="vehicle-card">
                                 <div class="vc-top">
                                     <div style="display:flex;">
@@ -573,11 +604,30 @@
                                         <span>View QR</span>
                                     </div>
                                 </div>
+                                
                                 <button class="btn-manage-tag" onclick="window.location.href='managetag.html?regNo=${encodeURIComponent(regNo)}'">
                                     <img src="ic_manage_tag.webp" onerror="this.style.display='none'"> MANAGE TAG
                                 </button>
-                            </div>
                         `;
+
+                        // 🚀 FIX: Agar route saved hai toh "Edit", warna "Add"
+                        if(isBus) {
+                            let hasRoute = existingRoutes[regNo];
+                            let btnText = hasRoute ? "🗺️ Edit Public Route" : "🗺️ Add Public Route";
+                            let btnBg = hasRoute ? "#FFF3E0" : "#E8F5E9";
+                            let btnColor = hasRoute ? "#E65100" : "#2E7D32";
+                            let btnBorder = hasRoute ? "#FFE0B2" : "#C8E6C9";
+
+                            cardContent += `
+                                <button class="btn-manage-route" style="display: flex; background: ${btnBg}; color: ${btnColor}; border-color: ${btnBorder};" onclick="window.location.href='manage_bus_route.html?regNo=${encodeURIComponent(regNo)}'">
+                                    <span>${btnText}</span>
+                                    <span>➔</span>
+                                </button>
+                            `;
+                        }
+
+                        cardContent += `</div>`; 
+                        listDiv.innerHTML += cardContent;
                     });
                 } else {
                     listDiv.innerHTML = `
@@ -592,7 +642,6 @@
         }
         loadVehicles();
 
-        // 🚀 THE FIX: ADDED &ecc=H TO ALLOW LOGO IN THE CENTER WITHOUT BREAKING THE QR!
         function showVehicleQr(qrId, regNo) {
             if(!qrId || qrId === "undefined") { alert("No valid QR linked to this vehicle."); return; }
             const scanUrl = "https://tagown.online/scan?id=" + qrId; 

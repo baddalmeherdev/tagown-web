@@ -180,8 +180,8 @@
         /* 🏷️ Section Titles */
         .section-title { font-size: 20px; font-weight: 800; margin: 0 0 15px 5px; color: var(--text-main); }
 
-        /* 🗂️ Core Services Grid */
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 25px; }
+        /* 🗂️ Core Services Grid (Updated for 4 Buttons to maintain balance) */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 25px; }
         .service-card {
             background: var(--card-bg); border-radius: 20px; padding: 20px 10px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -340,7 +340,8 @@
             </div>
 
             <h2 class="section-title">Core Services</h2>
-            <div class="grid-3">
+            
+            <div class="grid-2">
                 <div class="service-card" onclick="window.location.href='scanner.html'">
                     <img src="ic_scan_qr.webp" alt="Scan QR">
                     <div class="service-name">Scan QR</div>
@@ -354,6 +355,11 @@
                 <div class="service-card" onclick="document.getElementById('vaultModal').style.display='flex'">
                     <img src="ic_license.webp" alt="Document Vault">
                     <div class="service-name">Document /<br>License</div>
+                </div>
+
+                <div class="service-card" onclick="window.location.href='search.html'">
+                    <img src="ic_bus_search.webp" alt="Search Bus">
+                    <div class="service-name" style="color: #1565C0;">Search Bus</div>
                 </div>
             </div>
 
@@ -526,13 +532,10 @@
         // 🚀 THE FIX: Splash Screen Logic with Session Storage
         // ==========================================
         document.addEventListener("DOMContentLoaded", function() {
-            // Agar class lagi hui hai matlab splash skip karna hai
             if (document.documentElement.classList.contains("skip-splash")) {
-                // Kuch karne ki zarurat nahi, CSS ne already hide kar diya hai
                 return;
             }
 
-            // Pehli baar aaya hai -> Video dikhao
             const splash = document.getElementById("splash-screen");
             const mainContent = document.getElementById("main-content");
             const splashVideo = document.getElementById('splash-video');
@@ -549,8 +552,6 @@
                 setTimeout(function() {
                     splash.style.display = "none";
                     mainContent.style.display = "block";
-                    
-                    // 🚀 Record save kar lo ki user ne animation dekh liya hai
                     sessionStorage.setItem("tagownSplashShown", "true");
                 }, 500); 
             }, 3000); 
@@ -588,11 +589,10 @@
         
         let autoSlide = setInterval(moveSlide, 3000);
 
-        // Touch Events for Swiping
         track.addEventListener('touchstart', (e) => {
             startX = e.touches[0].clientX;
             isDragging = true;
-            clearInterval(autoSlide); // Pause auto slide when touched
+            clearInterval(autoSlide); 
             track.style.transition = 'none';
         });
 
@@ -608,7 +608,7 @@
             }
             updateSlider();
             isDragging = false;
-            autoSlide = setInterval(moveSlide, 3000); // Resume auto slide
+            autoSlide = setInterval(moveSlide, 3000); 
         });
 
         // ==========================================
@@ -618,7 +618,6 @@
             const promoBox = document.getElementById('promoContent');
             if (snapshot.exists()) {
                 const data = snapshot.val();
-                // If admin sets an active message, show it
                 if (data.active === true && data.message) {
                     promoBox.innerHTML = `
                         <span style="color:#1565C0; font-size:14px; font-weight:800; font-style:italic; padding-right: 20px;">
@@ -628,7 +627,6 @@
                     return;
                 }
             }
-            // Default View if no active announcement
             promoBox.innerHTML = `
                 <div class="promo-ios">
                     <span class="promo-ios-text">Apple / iOS App</span>

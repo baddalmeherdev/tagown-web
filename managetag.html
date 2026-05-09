@@ -21,7 +21,6 @@
             padding-bottom: 150px; 
         }
 
-        /* 🚀 FIX: Premium Header with Clean Single Line Title */
         .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 12px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 60px;}
         .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
         .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
@@ -30,6 +29,12 @@
         .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
+        /* 🚀 NEW: Premium Bus Owner Controls Card */
+        .bus-controls-card { background: #F0F8FF; border-radius: 20px; overflow: hidden; margin-top: 20px; border: 1px solid #BBDEFB; display: none; }
+        .bcc-header { background: #E3F2FD; color: #1565C0; font-weight: bold; font-style: italic; text-align: center; padding: 12px; font-size: 15px; display: flex; justify-content: center; align-items: center; gap: 8px;}
+        .bus-manage-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #F0F0F0; cursor: pointer; background: white;}
+        .bus-manage-item:last-child { border-bottom: none; }
+        
         .manage-card { background: white; border-radius: 20px; overflow: hidden; margin-top: 20px; border: 1px solid #E3F2FD;}
         .manage-item { display: flex; align-items: center; padding: 16px; border-bottom: 1px solid #F0F0F0; cursor: pointer;}
         .manage-item:last-child { border-bottom: none; }
@@ -110,10 +115,44 @@
     </div>
 
     <div class="container">
-        <div style="display: flex; justify-content: center; margin-bottom: 20px; margin-top: 10px;">
+        <div style="display: flex; justify-content: center; margin-top: 10px;">
             <div style="border: 2.5px solid #212121; border-radius: 8px; background: white; display: flex; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
                 <div style="background: #1565C0; color: white; width: 22px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; font-size: 8px; font-weight: bold; padding-bottom: 4px;">IND</div>
                 <div id="managePlateText" style="padding: 10px 15px; font-size: 24px; font-weight: 900; color: #212121; letter-spacing: 1px;">Loading...</div>
+            </div>
+        </div>
+
+        <div id="busControlsCard" class="bus-controls-card">
+            <div class="bcc-header">🚌 Bus Owner Controls</div>
+            
+            <div class="bus-manage-item">
+                <img src="ic_manage_delete.webp" class="manage-icon" style="filter: grayscale(100%) brightness(80%) sepia(100%) hue-rotate(0deg) saturate(500%);">
+                <div class="manage-text">
+                    <div class="manage-title" style="color: #D32F2F;">Bus Not Running Today</div>
+                    <div class="manage-sub">Show public that bus is cancelled today.</div>
+                </div>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="manageBusRunningSwitch" onchange="updateTagPrivacy('busNotRunningToday', this.checked)">
+                    <span class="slider" style="background-color: #EF9A9A;"></span>
+                </label>
+            </div>
+
+            <div class="bus-manage-item" onclick="window.location.href='manage_bus_route.html?regNo='+urlRegNo">
+                <img src="ic_manage_edit.webp" class="manage-icon" style="filter: grayscale(100%) brightness(80%) sepia(100%) hue-rotate(35deg) saturate(500%);">
+                <div class="manage-text">
+                    <div class="manage-title" style="color: #E65100;">Edit Route & Timings</div>
+                    <div class="manage-sub">Update your public stops and time.</div>
+                </div>
+                <span style="color:#aaa; font-size:18px;">▶</span>
+            </div>
+
+            <div class="bus-manage-item" onclick="window.location.href='preview_public_route.html?regNo='+urlRegNo">
+                <img src="ic_manage_view.webp" class="manage-icon" style="filter: grayscale(100%) brightness(80%) sepia(100%) hue-rotate(80deg) saturate(500%);">
+                <div class="manage-text">
+                    <div class="manage-title" style="color: #2E7D32;">Preview Public Search View</div>
+                    <div class="manage-sub">See how passengers view your route.</div>
+                </div>
+                <span style="color:#aaa; font-size:18px;">▶</span>
             </div>
         </div>
 
@@ -124,7 +163,7 @@
                     <div class="manage-title">View Contact Page</div>
                     <div class="manage-sub">See how your profile looks to the public</div>
                 </div>
-                <img src="ic_manage_play.webp" class="manage-icon" style="margin-right:0; width:20px; height:20px;">
+                <span style="color:#1565C0; font-size:18px;">▶</span>
             </div>
 
             <div class="manage-item">
@@ -157,7 +196,7 @@
                     <div class="manage-title">Edit Vehicle Details</div>
                     <div class="manage-sub">Update your model, type, or photo</div>
                 </div>
-                <img src="ic_manage_play.webp" class="manage-icon" style="margin-right:0; width:20px; height:20px;">
+                <span style="color:#212121; font-size:18px;">▶</span>
             </div>
 
             <div class="manage-item" onclick="document.getElementById('deleteVehicleModal').style.display='flex'">
@@ -320,7 +359,6 @@
         const urlParams = new URLSearchParams(window.location.search);
         const urlRegNo = urlParams.get('regNo');
         
-        // 🚀 FIX: Fallback directly to vehicles.html to prevent 404
         if(!urlRegNo) {
             window.location.href = 'vehicles.html'; 
         }
@@ -337,7 +375,8 @@
             "Auto": ["Bajaj", "TVS", "Piaggio", "Mahindra", "Other"],
             "E-rickshaw": ["Mahindra Treo", "Kinetic Green", "Udaan", "Other"],
             "Truck": ["Tata Motors", "Ashok Leyland", "Mahindra", "Eicher", "BharatBenz", "Other"],
-            "Van/Bus": ["Tata", "Force Motors", "Swaraj Mazda", "Other"],
+            "Van": ["Tata", "Maruti Suzuki", "Force Motors", "Mahindra", "Other"],
+            "Bus": ["Tata", "Ashok Leyland", "Volvo", "Swaraj Mazda", "Eicher", "BharatBenz", "Other"],
             "Other": ["Custom/Other"]
         };
 
@@ -346,6 +385,16 @@
                 currentVehicleData = snapshot.val();
                 document.getElementById('manageCallSwitch').checked = currentVehicleData.callsDisabled || false;
                 document.getElementById('managePauseSwitch').checked = currentVehicleData.tagPaused || false;
+                
+                // 🚀 NEW: Show Bus Controls Only for Vans & Buses
+                let vType = currentVehicleData.vehicleType || "";
+                if(vType.includes("Van") || vType.includes("Bus")) {
+                    document.getElementById('busControlsCard').style.display = 'block';
+                    document.getElementById('manageBusRunningSwitch').checked = currentVehicleData.busNotRunningToday || false;
+                } else {
+                    document.getElementById('busControlsCard').style.display = 'none';
+                }
+
             } else {
                 alert("Vehicle not found or deleted.");
                 window.location.href = 'vehicles.html';
@@ -364,7 +413,12 @@
             db.ref('Vehicles/' + currentUserPhone + '/' + urlRegNo).update({
                 [field]: value
             }).then(() => {
-                alert(field === 'callsDisabled' ? (value ? "Calls Disabled 🚫" : "Calls Enabled 📞") : (value ? "Tag Paused ⏸️" : "Tag Active ▶️"));
+                let msg = "";
+                if(field === 'callsDisabled') msg = value ? "Calls Disabled 🚫" : "Calls Enabled 📞";
+                else if(field === 'tagPaused') msg = value ? "Tag Paused ⏸️" : "Tag Active ▶️";
+                else if(field === 'busNotRunningToday') msg = value ? "Route Cancelled Today 🛑" : "Route Active 🟢";
+                
+                alert(msg);
             });
         }
 

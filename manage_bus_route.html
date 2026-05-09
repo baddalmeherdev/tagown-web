@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Manage Public Route</title>
+    
+    <link rel="icon" type="image/webp" href="app_logo.webp">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,600&display=swap');
+
+        :root { 
+            --primary-blue: #1565C0; --primary-green: #2E7D32; --light-green: #E8F5E9;
+            --title-color: #1B5E20; --text-main: #1C1C1E; --text-sub: #8E8E93;
+            --bg-color: #F8FAFC; --card-bg: #FFFFFF; --orange: #E65100;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 50px; 
+        }
+
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 50; }
+        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; padding: 0; }
+        .header-title { color: var(--primary-blue); font-size: 18px; font-weight: bold; font-style: italic; text-align: center; flex-grow: 1;}
+        .info-btn { color: var(--primary-blue); font-size: 18px; cursor: pointer; border: 2px solid var(--primary-blue); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-style: italic; font-weight: bold;}
+
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .section-title { color: var(--title-color); font-size: 14px; font-weight: bold; margin-bottom: 10px; font-style: italic;}
+
+        /* Selectors & Inputs */
+        .input-card { background: var(--card-bg); border-radius: 12px; border: 1px solid #E0E0E0; margin-bottom: 12px; overflow: hidden; position: relative;}
+        .input-card select, .input-card input { width: 100%; padding: 15px 16px; border: none; font-size: 14px; color: #424242; font-style: italic; font-weight: 600; outline: none; background: transparent; appearance: none;}
+        .input-card::after { content: '▼'; position: absolute; right: 16px; top: 15px; color: #aaa; pointer-events: none; font-size: 12px; font-style: normal;}
+        
+        .row-2 { display: flex; gap: 10px; margin-bottom: 12px; }
+        .row-2 .input-card { flex: 1; margin-bottom: 0; }
+
+        .note-box { background: #E3F2FD; border-radius: 8px; padding: 12px; display: flex; gap: 10px; align-items: center; margin-bottom: 25px; }
+        .note-box p { margin: 0; color: #1565C0; font-size: 12px; font-weight: bold; font-style: italic; line-height: 1.4;}
+
+        .main-route-card { background: var(--card-bg); border-radius: 16px; padding: 20px; border: 1px solid #E3F2FD; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 25px;}
+        .main-route-card input { width: 100%; border: 1px solid #E0E0E0; border-radius: 8px; padding: 14px; margin-bottom: 12px; font-size: 14px; font-style: italic; outline: none; transition: 0.2s;}
+        .main-route-card input:focus { border-color: var(--primary-green); }
+        
+        .time-row { display: flex; gap: 10px; margin-bottom: 12px; }
+        .time-row input[type="text"] { flex: 6; margin-bottom: 0;}
+        .time-row input[type="time"] { flex: 4; margin-bottom: 0; color: #F97316; font-weight: bold; text-align: center;}
+        
+        .warning-box { background: #FFF3E0; border-radius: 8px; padding: 12px; display: flex; gap: 10px; align-items: center; margin-bottom: 15px; }
+        .warning-box p { margin: 0; color: var(--orange); font-size: 12px; font-weight: bold; font-style: italic; line-height: 1.4;}
+
+        .btn-add-stop { width: 100%; background: #00C853; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 14px; cursor: pointer; margin-bottom: 15px; font-style: italic; transition: 0.2s;}
+        .btn-add-stop:active { transform: scale(0.98); }
+
+        /* Dynamic Stops */
+        .stop-row { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; animation: slideDown 0.2s ease;}
+        @keyframes slideDown { from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
+        .stop-row input[type="text"] { flex: 6; border: 1px solid #E0E0E0; border-radius: 8px; padding: 14px; font-size: 14px; font-style: italic; outline: none;}
+        .stop-row input[type="time"] { flex: 4; border: 1px solid #E0E0E0; border-radius: 8px; padding: 14px; font-size: 14px; font-style: italic; color: var(--primary-blue); font-weight: bold; text-align: center; outline: none;}
+        .btn-remove-stop { background: none; border: none; color: #D32F2F; font-size: 24px; cursor: pointer; padding: 5px; font-weight: bold;}
+
+        .hint-text { text-align: center; color: #757575; font-size: 12px; font-style: italic; margin-bottom: 30px;}
+
+        .btn-save { width: 100%; background: var(--primary-blue); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; font-size: 16px; cursor: pointer; font-style: italic; letter-spacing: 1px; transition: 0.2s; box-shadow: 0 4px 15px rgba(21,101,192,0.3);}
+        .btn-save:active { transform: scale(0.98); }
+
+        /* Modals */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: white; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; }
+        @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .modal-title { color: var(--primary-blue); font-size: 20px; font-style: italic; font-weight: bold; text-align: center; padding: 20px 20px 10px 20px; margin:0;}
+        
+        .timeline-container { background: #F1F5F9; margin: 0 20px; padding: 15px; border-radius: 12px; max-height: 250px; overflow-y: auto;}
+        .timeline-row { display: flex; align-items: center; padding: 8px 0; gap: 10px;}
+        .tl-icon { font-size: 16px; }
+        .tl-city { flex: 1; color: #212121; font-weight: bold; font-style: italic; font-size: 14px;}
+        .tl-time { color: var(--orange); font-weight: bold; font-style: italic; font-size: 13px;}
+
+        .modal-actions { padding: 20px; }
+        .btn-map { width: 100%; background: #E8F5E9; color: var(--primary-green); border: none; padding: 12px; border-radius: 10px; font-weight: bold; margin-bottom: 15px; cursor: pointer;}
+        .modal-split-btns { display: flex; gap: 10px; }
+        .btn-edit { flex: 1; background: #F1F5F9; color: #64748B; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;}
+        .btn-confirm { flex: 1; background: var(--primary-blue); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer;}
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.history.back()">❮</button>
+        <div class="header-title">Manage Public Route</div>
+        <div class="info-btn" onclick="alert('Search Engine: Every city and stop you add becomes searchable. For safety, direct calls are disabled during active journeys.')">i</div>
+    </div>
+
+    <div class="container">
+        
+        <div class="section-title">Operating Region (Crucial for Search)</div>
+        
+        <div class="input-card">
+            <select id="selState" onchange="updateDistricts()">
+                <option value="Odisha">Odisha (Currently Active)</option>
+                <option value="Other">Other States (Coming Soon)</option>
+            </select>
+        </div>
+
+        <div class="row-2">
+            <div class="input-card">
+                <select id="selOriginDist">
+                    <option value="">Origin Dist. *</option>
+                </select>
+            </div>
+            <div class="input-card">
+                <select id="selDestDist">
+                    <option value="">Dest. Dist. *</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <span style="font-size: 20px;">📝</span>
+            <p>Note: If your bus travels only within one district, please select the SAME district in both Origin and Destination.</p>
+        </div>
+
+        <div class="section-title">Main Route Details</div>
+
+        <div class="main-route-card">
+            <input type="text" id="inpBusName" placeholder="Bus/Travels Name (e.g. Mahalaxmi)">
+            
+            <div class="time-row">
+                <input type="text" id="inpSource" placeholder="From (Start City)">
+                <input type="time" id="inpSourceTime">
+            </div>
+            
+            <div class="time-row">
+                <input type="text" id="inpDest" placeholder="To (End City)">
+                <input type="time" id="inpDestTime" style="color: #D32F2F;">
+            </div>
+        </div>
+
+        <div class="warning-box">
+            <span style="font-size: 20px;">⚠️</span>
+            <p>The Villages, Cities, and Bus Stops you add below will be directly visible to passengers on the Tagown Website.</p>
+        </div>
+
+        <button class="btn-add-stop" onclick="addStopRow('', '')">+ ADD BUS STOP OR LOCATION</button>
+
+        <div id="stopsContainer"></div>
+
+        <p class="hint-text">* Add at least 2 stops for a complete route timeline.</p>
+
+        <button class="btn-save" id="btnSaveRoute" onclick="validateRoute()">PREVIEW & SAVE ROUTE</button>
+    </div>
+
+    <div id="previewModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="modal-title">Review Route Timeline</h3>
+            
+            <div class="timeline-container" id="timelineList">
+                </div>
+
+            <div class="modal-actions">
+                <button class="btn-map" onclick="openMap()">VERIFY ON GOOGLE MAPS 🗺️</button>
+                <div class="modal-split-btns">
+                    <button class="btn-edit" onclick="document.getElementById('previewModal').style.display='none'">EDIT ROUTE</button>
+                    <button class="btn-confirm" onclick="saveToFirebase()">CONFIRM & SAVE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 🚀 FIREBASE INITIALIZATION
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // Check Login & Get RegNo
+        const currentUserPhone = localStorage.getItem("tagownUserPhone");
+        if(!currentUserPhone) {
+            alert("Security Alert: Please login.");
+            window.location.href = 'auth.html';
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const regNo = urlParams.get('regNo');
+        if(!regNo) {
+            alert("Vehicle Registration Number Missing!");
+            window.history.back();
+        }
+
+        // ==========================================
+        // 🚀 DISTRICTS LOGIC
+        // ==========================================
+        const odishaDistricts = [
+            "Angul", "Balangir", "Balasore", "Bargarh", "Bhadrak", "Boudh", "Cuttack", 
+            "Deogarh", "Dhenkanal", "Gajapati", "Ganjam", "Jagatsinghpur", "Jajpur", 
+            "Jharsuguda", "Kalahandi", "Kandhamal", "Kendrapara", "Kendujhar", 
+            "Khurda", "Koraput", "Malkangiri", "Mayurbhanj", "Nabarangpur", "Nayagarh", 
+            "Nuapada", "Puri", "Rayagada", "Sambalpur", "Subarnapur", "Sundargarh"
+        ];
+
+        function updateDistricts() {
+            const state = document.getElementById("selState").value;
+            const originSel = document.getElementById("selOriginDist");
+            const destSel = document.getElementById("selDestDist");
+            
+            originSel.innerHTML = '<option value="">Origin Dist. *</option>';
+            destSel.innerHTML = '<option value="">Dest. Dist. *</option>';
+
+            if(state === "Odisha") {
+                odishaDistricts.forEach(dist => {
+                    originSel.innerHTML += `<option value="${dist}">${dist}</option>`;
+                    destSel.innerHTML += `<option value="${dist}">${dist}</option>`;
+                });
+            } else {
+                originSel.innerHTML = '<option value="">Coming Soon</option>';
+                destSel.innerHTML = '<option value="">Coming Soon</option>';
+            }
+        }
+        updateDistricts(); // Initial load
+
+        // ==========================================
+        // 🚀 DYNAMIC STOPS LOGIC
+        // ==========================================
+        const stopsContainer = document.getElementById("stopsContainer");
+
+        function addStopRow(name, time24h) {
+            if(stopsContainer.children.length >= 10) {
+                alert("Maximum 10 stops allowed for optimal route tracking.");
+                return;
+            }
+
+            const row = document.createElement("div");
+            row.className = "stop-row";
+            
+            let valTime = time24h ? time24h : "";
+
+            row.innerHTML = `
+                <input type="text" class="stop-name-inp" placeholder="Stop Name (e.g. Bijepur)" value="${name}">
+                <input type="time" class="stop-time-inp" value="${valTime}">
+                <button class="btn-remove-stop" onclick="this.parentElement.remove()">✖</button>
+            `;
+            stopsContainer.appendChild(row);
+        }
+
+        // ==========================================
+        // 🚀 TIME FORMATTING (24h to 12h AM/PM & vice versa)
+        // ==========================================
+        function timeTo12h(time24) {
+            if(!time24) return "Set Time";
+            let [hours, minutes] = time24.split(':');
+            hours = parseInt(hours);
+            let ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            let strHours = hours < 10 ? '0' + hours : hours;
+            return `${strHours}:${minutes} ${ampm}`;
+        }
+
+        function timeTo24h(time12) {
+            if(!time12 || time12 === "Set Time") return "";
+            let [time, modifier] = time12.split(' ');
+            let [hours, minutes] = time.split(':');
+            if (hours === '12') hours = '00';
+            if (modifier === 'PM') hours = parseInt(hours, 10) + 12;
+            return `${hours}:${minutes}`;
+        }
+
+        // ==========================================
+        // 🚀 FETCH EXISTING DATA
+        // ==========================================
+        function loadExistingRoute() {
+            const btn = document.getElementById('btnSaveRoute');
+            btn.innerText = "LOADING...";
+            btn.disabled = true;
+
+            db.ref("BusRoutes").once("value").then(snapshot => {
+                let isFound = false;
+                if(snapshot.exists()){
+                    snapshot.forEach(stateSnap => {
+                        stateSnap.forEach(distSnap => {
+                            if(distSnap.hasChild(regNo)) {
+                                isFound = true;
+                                let routeData = distSnap.child(regNo).val();
+                                
+                                // Auto-fill State & Districts
+                                document.getElementById("selState").value = stateSnap.key;
+                                updateDistricts();
+                                document.getElementById("selOriginDist").value = distSnap.key;
+                                document.getElementById("selDestDist").value = routeData.destDistrict || distSnap.key;
+
+                                // Auto-fill Main details
+                                document.getElementById("inpBusName").value = routeData.busName || "";
+                                document.getElementById("inpSource").value = routeData.source || "";
+                                document.getElementById("inpDest").value = routeData.destination || "";
+                                
+                                document.getElementById("inpSourceTime").value = timeTo24h(routeData.sourceTime);
+                                document.getElementById("inpDestTime").value = timeTo24h(routeData.destTime);
+
+                                // Auto-fill Stops
+                                if(routeData.stops) {
+                                    routeData.stops.forEach(stop => {
+                                        addStopRow(stop.station, timeTo24h(stop.time));
+                                    });
+                                }
+                            }
+                        });
+                    });
+                }
+                
+                if(!isFound) {
+                    // Default 2 empty stops
+                    addStopRow("", "");
+                    addStopRow("", "");
+                }
+
+                btn.innerText = "PREVIEW & SAVE ROUTE";
+                btn.disabled = false;
+            }).catch(e => {
+                addStopRow("", "");
+                addStopRow("", "");
+                btn.innerText = "PREVIEW & SAVE ROUTE";
+                btn.disabled = false;
+            });
+        }
+        
+        loadExistingRoute();
+
+        // ==========================================
+        // 🚀 VALIDATE & SHOW PREVIEW
+        // ==========================================
+        let finalDataToSave = null;
+        let mapWaypoints = "";
+
+        function validateRoute() {
+            const state = document.getElementById("selState").value;
+            const originDist = document.getElementById("selOriginDist").value;
+            const destDist = document.getElementById("selDestDist").value;
+            
+            const busName = document.getElementById("inpBusName").value.trim();
+            const source = document.getElementById("inpSource").value.trim();
+            const sourceTime24 = document.getElementById("inpSourceTime").value;
+            const dest = document.getElementById("inpDest").value.trim();
+            const destTime24 = document.getElementById("inpDestTime").value;
+
+            if(!originDist || !destDist) return alert("Please select Origin and Destination Districts.");
+            if(!busName || !source || !dest || !sourceTime24 || !destTime24) {
+                return alert("Please fill Main Route Details completely including Times.");
+            }
+
+            let validStops = [];
+            let routeCitiesIndex = [source.toLowerCase()];
+            mapWaypoints = "";
+
+            const rows = document.querySelectorAll(".stop-row");
+            rows.forEach(row => {
+                let sName = row.querySelector(".stop-name-inp").value.trim();
+                let sTime = row.querySelector(".stop-time-inp").value;
+                if(sName && sTime) {
+                    validStops.push({ station: sName, time: timeTo12h(sTime) });
+                    routeCitiesIndex.push(sName.toLowerCase());
+                    if(mapWaypoints !== "") mapWaypoints += "|";
+                    mapWaypoints += sName;
+                }
+            });
+            routeCitiesIndex.push(dest.toLowerCase());
+
+            if(validStops.length < 2) return alert("Please add minimum 2 valid stops with time.");
+
+            // Prepare final data object
+            finalDataToSave = {
+                state: state,
+                originDist: originDist,
+                busName: busName,
+                source: source,
+                sourceTime: timeTo12h(sourceTime24),
+                destination: dest,
+                destTime: timeTo12h(destTime24),
+                destDistrict: destDist,
+                stops: validStops,
+                routeCities: routeCitiesIndex,
+                allowContact: false
+            };
+
+            buildPreviewTimeline();
+        }
+
+        function buildPreviewTimeline() {
+            const tl = document.getElementById("timelineList");
+            tl.innerHTML = ""; // clear
+
+            // Start
+            tl.innerHTML += `<div class="timeline-row"><span class="tl-icon">🟢</span><span class="tl-city">START: ${finalDataToSave.source}</span><span class="tl-time">${finalDataToSave.sourceTime}</span></div>`;
+            
+            // Stops
+            finalDataToSave.stops.forEach(stop => {
+                tl.innerHTML += `<div class="timeline-row"><span class="tl-icon">⬇️</span><span class="tl-city">${stop.station}</span><span class="tl-time">${stop.time}</span></div>`;
+            });
+
+            // End
+            tl.innerHTML += `<div class="timeline-row"><span class="tl-icon">🔴</span><span class="tl-city">END: ${finalDataToSave.destination}</span><span class="tl-time" style="color:#D32F2F;">${finalDataToSave.destTime}</span></div>`;
+
+            document.getElementById("previewModal").style.display = "flex";
+        }
+
+        function openMap() {
+            if(!finalDataToSave) return;
+            const uri = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(finalDataToSave.source)}&destination=${encodeURIComponent(finalDataToSave.destination)}&waypoints=${encodeURIComponent(mapWaypoints)}`;
+            window.open(uri, '_blank');
+        }
+
+        // ==========================================
+        // 🚀 SAVE TO FIREBASE
+        // ==========================================
+        function saveToFirebase() {
+            if(!finalDataToSave) return;
+            
+            const btn = document.querySelector(".btn-confirm");
+            btn.innerText = "SAVING...";
+            btn.disabled = true;
+
+            const path = `BusRoutes/${finalDataToSave.state}/${finalDataToSave.originDist}/${regNo}`;
+            
+            // Create Firebase object (excluding State & originDist as they are in path)
+            const fbData = {
+                busName: finalDataToSave.busName,
+                source: finalDataToSave.source,
+                sourceTime: finalDataToSave.sourceTime,
+                destination: finalDataToSave.destination,
+                destTime: finalDataToSave.destTime,
+                destDistrict: finalDataToSave.destDistrict,
+                stops: finalDataToSave.stops,
+                routeCities: finalDataToSave.routeCities,
+                allowContact: false
+            };
+
+            db.ref(path).set(fbData).then(() => {
+                alert("Route Updated! It is now searchable by ALL intermediate stops.");
+                window.location.href = 'vehicles.html'; // Go back to garage
+            }).catch(err => {
+                alert("Failed to save. Check internet connection.");
+                btn.innerText = "CONFIRM & SAVE";
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

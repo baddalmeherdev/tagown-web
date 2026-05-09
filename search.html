@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown - Search Public Buses</title>
+    
+    <link rel="icon" type="image/webp" href="app_logo.webp">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,600&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #F8FAFC;
+            color: #212121;
+        }
+
+        /* Premium Top Bar */
+        .top-bar {
+            background-color: #FFFFFF;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar img { height: 30px; object-fit: contain; }
+        .top-bar-title { color: #1565C0; font-size: 16px; font-weight: bold; font-style: italic; }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+            padding-bottom: 100px;
+        }
+
+        /* Search Card */
+        .search-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06);
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 50px;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 0 15px 0 45px;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+            color: #212121;
+            text-transform: capitalize;
+        }
+
+        .input-group input:focus {
+            border-color: #1565C0;
+            background: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(21,101,192,0.1);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            font-size: 18px;
+        }
+
+        .btn-search {
+            width: 100%;
+            height: 55px;
+            background: #1565C0;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 10px rgba(21,101,192,0.3);
+        }
+
+        .btn-search:active { transform: scale(0.98); }
+        .btn-search:disabled { background: #90CAF9; cursor: not-allowed; box-shadow: none;}
+
+        /* Note Section */
+        .info-note {
+            background: #E3F2FD;
+            border-radius: 10px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .info-note span { font-size: 20px; }
+        .info-note p { color: #1565C0; font-size: 12px; font-weight: bold; font-style: italic; margin: 0; line-height: 1.4;}
+
+        /* Status & Results */
+        .status-text {
+            text-align: center;
+            color: #757575;
+            font-size: 14px;
+            font-style: italic;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .result-card {
+            background: #FFFFFF;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 1px solid #E3F2FD;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .bus-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .bus-icon {
+            width: 45px; height: 45px;
+            background: #E8F5E9;
+            border-radius: 10px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .bus-icon img { width: 30px; height: 30px; object-fit: contain; }
+
+        .bus-details { flex: 1; }
+        .bus-name { color: #1565C0; font-size: 18px; font-weight: bold; font-style: italic; line-height: 1.2;}
+        .bus-reg { color: #757575; font-size: 12px; font-weight: bold; letter-spacing: 0.5px; margin-top: 2px;}
+        
+        .arrow-icon { width: 24px; height: 24px; }
+
+        .divider { height: 1px; background: #F1F5F9; margin: 12px 0; }
+
+        .route-info {
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .city-name { color: #212121; font-size: 14px; font-weight: bold; text-transform: capitalize; }
+        .arrow-sm { color: #9E9E9E; font-size: 12px; margin: 0 10px;}
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <img src="toplogo.webp" alt="Tagown" onclick="window.location.href='index.html'" style="cursor: pointer;">
+        <span class="top-bar-title">Search Bus</span>
+    </div>
+
+    <div class="container">
+        
+        <div class="search-card">
+            <div class="input-group">
+                <span class="input-icon">📍</span>
+                <input type="text" id="etSearchFrom" placeholder="Leaving From (e.g. Padampur)">
+            </div>
+            
+            <div class="input-group">
+                <span class="input-icon">🛣️</span>
+                <input type="text" id="etSearchTo" placeholder="Going To (e.g. Bargarh)">
+            </div>
+
+            <button class="btn-search" id="btnFindBuses" onclick="performSearch()">FIND BUSES</button>
+        </div>
+
+        <div class="info-note">
+            <span>💡</span>
+            <p>Note: Enter only 'From' to see all buses leaving a city. Enter both to find direct buses going in that specific direction.</p>
+        </div>
+
+        <div id="tvSearchStatus" class="status-text">Enter cities to find available buses.</div>
+        <div id="searchResultsContainer"></div>
+
+    </div>
+
+    <script>
+        // ==========================================
+        // 🚀 FIREBASE INITIALIZATION (Your Asli Details)
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // ==========================================
+        // 🚀 THE MAGIC: LOCAL CACHE ALGORITHM
+        // ==========================================
+        let allBusesCache = []; // Saari buses isme pehle hi load ho jayengi
+        let isDataLoaded = false;
+
+        // Background loading of buses as soon as website opens
+        db.ref("BusRoutes").on("value", (snapshot) => {
+            allBusesCache = []; // Clear old data
+            if (snapshot.exists()) {
+                snapshot.forEach((stateSnap) => {
+                    stateSnap.forEach((distSnap) => {
+                        distSnap.forEach((busSnap) => {
+                            let busData = busSnap.val();
+                            let liveRouteList = [];
+                            
+                            if(busData.source) liveRouteList.push(busData.source.toLowerCase().trim());
+                            if(busData.stops) {
+                                busData.stops.forEach(stop => {
+                                    if(stop.station) liveRouteList.push(stop.station.toLowerCase().trim());
+                                });
+                            }
+                            if(busData.destination) liveRouteList.push(busData.destination.toLowerCase().trim());
+
+                            allBusesCache.push({
+                                regNo: busSnap.key,
+                                data: busData,
+                                routeList: liveRouteList
+                            });
+                        });
+                    });
+                });
+            }
+            isDataLoaded = true;
+        });
+
+        // ==========================================
+        // 🚀 INSTANT SEARCH FUNCTION (0.1 Seconds)
+        // ==========================================
+        function performSearch() {
+            let fromCity = document.getElementById("etSearchFrom").value.trim().toLowerCase();
+            let toCity = document.getElementById("etSearchTo").value.trim().toLowerCase();
+            let statusText = document.getElementById("tvSearchStatus");
+            let resultsContainer = document.getElementById("searchResultsContainer");
+            let searchBtn = document.getElementById("btnFindBuses");
+
+            if (fromCity === "" && toCity === "") {
+                alert("Please enter at least one city to search.");
+                return;
+            }
+
+            if (!isDataLoaded) {
+                statusText.innerText = "Connecting to server... Please wait a second.";
+                return;
+            }
+
+            // Quick UI update
+            statusText.innerText = "Searching for best routes... ⏳";
+            statusText.style.display = "block";
+            resultsContainer.innerHTML = "";
+            searchBtn.disabled = true;
+
+            // XSS Security
+            fromCity = fromCity.replace(/<[^>]*>?/gm, '');
+            toCity = toCity.replace(/<[^>]*>?/gm, '');
+
+            // 🚀 FAST DELAY: 200ms delay taaki user ko "Searching" dikhe aur feel premium aaye
+            setTimeout(() => {
+                let foundCount = 0;
+
+                allBusesCache.forEach((busObj) => {
+                    let isMatch = false;
+                    let routeList = busObj.routeList;
+
+                    // UNIVERSAL DIRECTIONAL ALGORITHM (Local Cache)
+                    if (fromCity !== "" && toCity !== "") {
+                        let fromIndex = routeList.findIndex(city => city.includes(fromCity));
+                        let toIndex = -1;
+                        for(let i = routeList.length - 1; i >= 0; i--) {
+                            if(routeList[i].includes(toCity)){
+                                toIndex = i;
+                                break;
+                            }
+                        }
+                        if (fromIndex !== -1 && toIndex !== -1 && fromIndex < toIndex) {
+                            isMatch = true;
+                        }
+                    } else if (fromCity !== "") {
+                        if (routeList.some(city => city.includes(fromCity))) isMatch = true;
+                    } else if (toCity !== "") {
+                        if (routeList.some(city => city.includes(toCity))) isMatch = true;
+                    }
+
+                    if (isMatch) {
+                        foundCount++;
+                        addResultCard(busObj.regNo, busObj.data);
+                    }
+                });
+
+                searchBtn.disabled = false;
+
+                if (foundCount > 0) {
+                    statusText.style.display = "none";
+                } else {
+                    statusText.innerText = "Oops! No buses found matching this route. 😔";
+                }
+                
+            }, 200); // Only 0.2 Seconds search time!
+        }
+
+        // ==========================================
+        // 🚀 UI GENERATION (With Privacy & Custom Icons)
+        // ==========================================
+        function addResultCard(regNo, busData) {
+            let container = document.getElementById("searchResultsContainer");
+            
+            // Format Number Plate (Privacy Hide last 4 digits) -> OD 17 BA ****
+            let formattedRegNo = "****";
+            if (regNo && regNo.length >= 6) {
+                let cleanReg = regNo.replace(/\s/g, "");
+                if(cleanReg.length > 4) {
+                    let visiblePart = cleanReg.substring(0, cleanReg.length - 4);
+                    formattedRegNo = visiblePart.replace(/(.{2})(.{2})/, "$1 $2 ") + " ****";
+                }
+            }
+
+            let busName = busData.busName ? busData.busName.toUpperCase() : "TAGOWN BUS";
+
+            let cardHTML = `
+                <div class="result-card" onclick="openRouteDetails('${regNo}')">
+                    <div class="bus-header">
+                        <div class="bus-icon">
+                            <img src="ic_default_bus.webp" alt="Bus">
+                        </div>
+                        <div class="bus-details">
+                            <div class="bus-name">${busName}</div>
+                            <div class="bus-reg">${formattedRegNo}</div>
+                        </div>
+                        <img src="ic_manage_play.webp" alt="Play" class="arrow-icon">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="route-info">
+                        <span class="city-name">${busData.source}</span>
+                        <span class="arrow-sm">➔</span>
+                        <span class="city-name">${busData.destination}</span>
+                    </div>
+                </div>
+            `;
+
+            container.insertAdjacentHTML('beforeend', cardHTML);
+        }
+
+        function openRouteDetails(regNo) {
+            // Abhi ke liye Alert. Future mein idhar web wala Preview Timeline map khulega
+            alert("Route Selected! Map view coming soon to Website.");
+        }
+    </script>
+
+</body>
+</html>

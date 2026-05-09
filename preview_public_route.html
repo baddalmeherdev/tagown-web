@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tagown | Route Timeline</title>
+    
+    <link rel="icon" type="image/webp" href="app_logo.webp">
+    
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,600;0,700;1,600&display=swap');
+
+        :root { 
+            --primary-blue: #1565C0; --primary-green: #2E7D32; 
+            --bg-color: #F8FAFC; --card-bg: #FFFFFF; 
+            --text-main: #1C1C1E; --orange: #F97316;
+            --red: #D32F2F; --grey-light: #E0E0E0;
+        }
+        
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 50px; 
+        }
+
+        /* 📱 Premium Header */
+        .header { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 15px 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 50; }
+        .back-btn { background: transparent; border: none; font-size: 26px; color: var(--primary-blue); font-weight: bold; cursor: pointer; padding: 0; }
+        .header-logo { height: 30px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .info-btn { color: var(--primary-green); font-size: 18px; cursor: pointer; border: 2px solid var(--primary-green); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-style: italic; font-weight: bold;}
+
+        .container { padding: 20px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 🚌 Bus Info Section */
+        .bus-title { color: var(--primary-blue); font-size: 24px; font-weight: 800; font-style: italic; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px;}
+        .bus-reg-badge { display: inline-block; border: 1px solid #CFD8DC; padding: 4px 10px; border-radius: 6px; font-size: 13px; font-weight: 700; color: #757575; letter-spacing: 1px; font-style: italic; background: white; margin-bottom: 20px;}
+
+        /* 🟢 Live Status Card */
+        .status-card { border-radius: 12px; padding: 15px; display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 25px; border: 1px solid transparent;}
+        .status-running { background: #E8F5E9; border-color: #A5D6A7; color: var(--primary-green); }
+        .status-cancelled { background: #FFEBEE; border-color: #EF9A9A; color: var(--red); }
+        
+        .status-dot { width: 16px; height: 16px; border-radius: 50%; box-shadow: 0 0 8px currentColor;}
+        .status-running .status-dot { background: linear-gradient(135deg, #69F0AE, #00C853); }
+        .status-cancelled .status-dot { background: linear-gradient(135deg, #FF5252, #D32F2F); }
+        
+        .status-text { font-weight: 800; font-style: italic; font-size: 14px; letter-spacing: 0.5px;}
+
+        /* 📍 Timeline Section */
+        .section-title { color: var(--title-color); font-size: 16px; font-weight: bold; font-style: italic; margin-bottom: 15px;}
+
+        .timeline-card { background: var(--card-bg); border-radius: 20px; padding: 25px 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.04); border: 1px solid #F1F5F9; margin-bottom: 30px;}
+        
+        .timeline-item { display: flex; align-items: center; position: relative; padding-bottom: 30px; }
+        .timeline-item:last-child { padding-bottom: 0; }
+        
+        /* The connecting vertical line */
+        .timeline-item:not(:last-child)::before { content: ''; position: absolute; left: 6px; top: 20px; bottom: -10px; width: 2px; background: #CFD8DC; z-index: 1;}
+        
+        .tl-dot { width: 14px; height: 14px; border-radius: 50%; margin-right: 20px; z-index: 2; position: relative; border: 2px solid white; box-shadow: 0 0 0 1px #CFD8DC;}
+        .tl-dot-start { background: #00E676; }
+        .tl-dot-stop { background: #1976D2; }
+        .tl-dot-end { background: #D32F2F; }
+
+        .tl-content { flex: 1; display: flex; justify-content: space-between; align-items: center; }
+        .tl-city { font-weight: 700; font-style: italic; color: #212121; text-transform: capitalize; font-size: 16px; }
+        .tl-time { font-weight: 800; font-style: italic; font-size: 14px; }
+        .tl-time-start, .tl-time-stop { color: var(--orange); }
+        .tl-time-end { color: var(--red); }
+
+        /* 🛡️ Safety Banner */
+        .safety-banner { background: #FFF3E0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #FFE0B2;}
+        .safety-icon { width: 35px; height: 35px; opacity: 0.8; }
+        .safety-text { color: #D84315; font-size: 12px; font-weight: 700; font-style: italic; line-height: 1.4;}
+
+        .loader { text-align: center; color: #757575; font-style: italic; padding: 30px; font-weight: bold;}
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <button class="back-btn" onclick="window.history.back()">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <img src="toplogo.webp" class="header-logo" alt="Tagown">
+        <div class="info-btn" onclick="alert('This is how passengers see your route on Tagown Website.')">i</div>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        
+        <div class="bus-title" id="tvBusName">LOADING...</div>
+        <div class="bus-reg-badge" id="tvRegNo">OD ** ** ****</div>
+
+        <div id="liveStatusCard" class="status-card status-running">
+            <div class="status-dot"></div>
+            <div class="status-text" id="tvLiveStatus">RUNNING ON TIME</div>
+        </div>
+
+        <div class="section-title">Route Timeline</div>
+
+        <div class="timeline-card" id="timelineContainer">
+            </div>
+
+        <div class="safety-banner">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Security_shield_icon.svg" class="safety-icon" alt="Safety">
+            <div class="safety-text">
+                For driver and passenger safety, direct calls and messages are disabled during active journeys.
+            </div>
+        </div>
+    </div>
+
+    <div id="loaderView" class="loader">
+        <div style="font-size: 30px; margin-bottom: 10px;">⏳</div>
+        Fetching live route data...
+    </div>
+
+    <script>
+        // ==========================================
+        // 🚀 FIREBASE INITIALIZATION
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
+            authDomain: "meherdevlopstudio.firebaseapp.com",
+            databaseURL: "https://meherdevlopstudio-default-rtdb.firebaseio.com",
+            projectId: "meherdevlopstudio"
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.database();
+
+        // Check URL for Registration Number
+        const urlParams = new URLSearchParams(window.location.search);
+        const urlRegNo = urlParams.get('regNo');
+        
+        if(!urlRegNo) {
+            alert("No Vehicle Selected!");
+            window.history.back();
+        }
+
+        // ==========================================
+        // 🚀 PRIVACY LOGIC (Hide last 4 digits)
+        // ==========================================
+        function applyPrivacyFormat(regNo) {
+            let formattedRegNo = "****";
+            if (regNo && regNo.length >= 6) {
+                let cleanReg = regNo.replace(/\s/g, "");
+                if(cleanReg.length > 4) {
+                    let visiblePart = cleanReg.substring(0, cleanReg.length - 4);
+                    formattedRegNo = visiblePart.replace(/(.{2})(.{2})/, "$1 $2 ") + " ****";
+                }
+            }
+            document.getElementById('tvRegNo').innerText = formattedRegNo;
+        }
+
+        // ==========================================
+        // 🚀 FETCH ROUTE AND TIMELINE
+        // ==========================================
+        function fetchRouteDetails() {
+            db.ref("BusRoutes").once("value").then(snapshot => {
+                let isFound = false;
+
+                if(snapshot.exists()){
+                    snapshot.forEach(stateSnap => {
+                        stateSnap.forEach(distSnap => {
+                            if(distSnap.hasChild(urlRegNo)) {
+                                isFound = true;
+                                let routeData = distSnap.child(urlRegNo).val();
+                                
+                                // Set Name
+                                document.getElementById("tvBusName").innerText = routeData.busName ? routeData.busName : "TAGOWN BUS";
+                                applyPrivacyFormat(urlRegNo);
+
+                                buildTimelineUI(routeData);
+                                fetchLiveRunningStatus(); // Fetch status after route is found
+                            }
+                        });
+                    });
+                }
+
+                if(!isFound) {
+                    alert("This bus has not published its route yet.");
+                    window.history.back();
+                }
+
+            }).catch(e => {
+                alert("Server error connecting to Tagown.");
+                window.history.back();
+            });
+        }
+
+        // ==========================================
+        // 🚀 FETCH LIVE STATUS (Running / Cancelled)
+        // ==========================================
+        function fetchLiveRunningStatus() {
+            // Because this is a public page, we iterate over Vehicles to find the status
+            db.ref("Vehicles").once("value").then(snapshot => {
+                let isCancelled = false;
+                
+                if(snapshot.exists()){
+                    snapshot.forEach(userSnap => {
+                        if(userSnap.hasChild(urlRegNo)) {
+                            let vData = userSnap.child(urlRegNo).val();
+                            if(vData.busNotRunningToday === true) {
+                                isCancelled = true;
+                            }
+                        }
+                    });
+                }
+
+                const statusCard = document.getElementById("liveStatusCard");
+                const statusText = document.getElementById("tvLiveStatus");
+
+                if(isCancelled) {
+                    statusCard.className = "status-card status-cancelled";
+                    statusText.innerText = "CANCELLED TODAY";
+                } else {
+                    statusCard.className = "status-card status-running";
+                    statusText.innerText = "RUNNING ON TIME";
+                }
+
+                // Show UI
+                document.getElementById('loaderView').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+
+            }).catch(e => {
+                // If permission denied or error, default to Running
+                document.getElementById('loaderView').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+            });
+        }
+
+        // ==========================================
+        // 🚀 BUILD DYNAMIC TIMELINE HTML
+        // ==========================================
+        function buildTimelineUI(data) {
+            const tlContainer = document.getElementById("timelineContainer");
+            let html = "";
+
+            // 1. START NODE
+            let sTime = data.sourceTime || "Start";
+            html += `
+                <div class="timeline-item">
+                    <div class="tl-dot tl-dot-start"></div>
+                    <div class="tl-content">
+                        <div class="tl-city">${data.source}</div>
+                        <div class="tl-time tl-time-start">${sTime}</div>
+                    </div>
+                </div>
+            `;
+
+            // 2. MIDDLE STOPS
+            if(data.stops && data.stops.length > 0) {
+                data.stops.forEach(stop => {
+                    html += `
+                        <div class="timeline-item">
+                            <div class="tl-dot tl-dot-stop"></div>
+                            <div class="tl-content">
+                                <div class="tl-city">${stop.station}</div>
+                                <div class="tl-time tl-time-stop">${stop.time}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // 3. END NODE
+            let eTime = data.destTime || "End";
+            html += `
+                <div class="timeline-item">
+                    <div class="tl-dot tl-dot-end"></div>
+                    <div class="tl-content">
+                        <div class="tl-city">${data.destination}</div>
+                        <div class="tl-time tl-time-end">${eTime}</div>
+                    </div>
+                </div>
+            `;
+
+            tlContainer.innerHTML = html;
+        }
+
+        // Start Process
+        fetchRouteDetails();
+
+    </script>
+</body>
+</html>
