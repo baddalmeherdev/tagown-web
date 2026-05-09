@@ -9,136 +9,108 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
-        /* 🍏 iOS Premium Theme Variables */
         :root { 
-            --primary-blue: #1565C0; 
-            --primary-green: #00C853;
-            --bg-color: #F4F6F9; 
-            --card-bg: #FFFFFF;
-            --text-main: #1C1C1E;
-            --text-sub: #666666;
-            --sos-red: #D32F2F;
+            --primary-blue: #1565C0; --primary-green: #2E7D32; --light-green: #E8F5E9;
+            --title-color: #1B5E20; --text-main: #1C1C1E; --text-sub: #8E8E93;
+            --bg-color: #F4F6F9; --card-bg: #FFFFFF; --sos-red: #D32F2F;
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: var(--bg-color); 
-            margin: 0; padding: 0; color: var(--text-main); 
-            padding-bottom: 100px;
+            background-color: var(--bg-color); margin: 0; padding: 0; color: var(--text-main); 
+            padding-bottom: 150px; 
         }
 
-        /* 📱 Top Header (Blue - Back Button Removed) */
-        .header {
-            display: flex; align-items: center; justify-content: center;
-            background: var(--primary-blue); padding: 18px 20px;
-            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+        /* 🚀 FIX: Premium Header with App Back Button & Logo */
+        .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 12px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 60px;}
+        .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
+        .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .header-title-clean { color: var(--title-color); font-size: 13px; font-weight: bold; font-style: italic; text-align: right; }
 
-        /* 📦 Main Container */
-        .container { padding: 20px 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .page-intro { text-align: center; margin-bottom: 30px; }
-        .page-intro h2 { font-size: 20px; color: #222; font-style: italic; margin: 0; }
+        .page-intro { text-align: center; margin-bottom: 25px; margin-top: 10px;}
+        .page-intro h2 { font-size: 20px; color: #212121; font-weight: bold; margin: 0; }
         .page-intro p { font-size: 13px; color: var(--text-sub); font-weight: 600; margin-top: 5px; font-style: italic; }
 
-        /* ========================================= */
-        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
-        /* ========================================= */
-        .skeleton {
-            background: #eee;
-            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-            border-radius: 5px; background-size: 200% 100%;
-            animation: 1.5s shine linear infinite;
-        }
+        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 5px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
         @keyframes shine { to { background-position-x: -200%; } }
         
-        .skel-list-item { 
-            background: var(--card-bg); border-radius: 12px; padding: 18px 20px;
-            display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); 
-            border: 1px solid #E5E5EA; pointer-events: none;
-        }
+        .skel-list-item { background: var(--card-bg); border-radius: 16px; padding: 18px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #E3F2FD; pointer-events: none; margin-bottom: 12px;}
         .skel-circle { width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0; }
         .skel-lines { flex-grow: 1; display: flex; flex-direction: column; gap: 6px; }
         .skel-line-1 { height: 16px; width: 80%; border-radius: 4px; }
         .skel-line-2 { height: 12px; width: 50%; border-radius: 4px; }
 
-        /* 📋 Compact Tutorial List */
-        .tutorial-list { display: flex; flex-direction: column; gap: 15px; }
+        .tutorial-list { display: flex; flex-direction: column; gap: 12px; }
         
+        /* 🚀 FIX: Premium Card Design for Tutorial Item */
         .tutorial-item {
-            background: var(--card-bg); border-radius: 12px; padding: 18px 20px;
+            background: var(--card-bg); border-radius: 16px; padding: 16px;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #E5E5EA;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.04); border: 1px solid #E0E0E0;
             transition: 0.2s; cursor: pointer; text-decoration: none;
         }
         .tutorial-item:active { background: #F5F7FA; transform: scale(0.98); }
 
-        .item-left { display: flex; align-items: center; gap: 15px; flex-grow: 1; max-width: 85%;}
+        .item-left { display: flex; align-items: center; gap: 16px; flex-grow: 1; max-width: 85%;}
         
-        /* Dynamic Platform Icon */
-        .platform-icon {
-            width: 40px; height: 40px; border-radius: 50%; display: flex; 
-            justify-content: center; align-items: center; font-size: 20px;
-            flex-shrink: 0;
-        }
-        .yt-icon { background: #FFEBEE; color: #FF0000; }
-        .ig-icon { background: #FCE4EC; color: #E91E63; }
-        .other-icon { background: #E3F2FD; color: #1976D2; }
+        .platform-icon { width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; flex-shrink: 0; }
+        .platform-icon img { width: 100%; height: 100%; object-fit: contain; }
 
-        .item-title { font-size: 15px; font-weight: bold; color: #111; margin: 0; line-height: 1.4; font-style: italic;}
-        .item-action { color: #8E8E93; font-size: 16px; font-weight: bold; }
+        .item-text-box { display: flex; flex-direction: column;}
+        .item-title { font-size: 16px; font-weight: 900; color: #212121; margin: 0; line-height: 1.3;}
+        .item-sub { font-size: 12px; color: #757575; font-style: italic; margin-top: 2px;}
 
-        /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV (DASHBOARD STYLE) */
-        /* ========================================= */
-        .bottom-nav {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px;
-        }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain; }
+        /* 🚀 FIX: Manage Play Custom Icon */
+        .item-action img { width: 26px; height: 26px; object-fit: contain; }
+
+        /* 🚀 FIX: Premium Bottom Nav EXACTLY like index.html */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        .nav-item:active { transform: scale(0.9); }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
         
-        .nav-sos {
-            width: 60px; height: 60px; transform: translateY(-20px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
+        .nav-sos { width: 60px; height: 60px; transform: translateY(-20px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .nav-sos:active { transform: translateY(-20px) scale(0.9); }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); }
         .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
 
-        /* ========================================= */
-        /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
-        /* ========================================= */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
+        /* MODALS & SHEETS */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(3px); }
+        
+        /* 🚀 FIX: SOS & Support Sheets EXACTLY like index.html */
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.3s ease-out; position: relative; max-height: 90vh; overflow-y: auto; }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .drag-handle { width: 40px; height: 5px; background: #E0E0E0; border-radius: 5px; margin: 0 auto 20px auto; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none;}
         
-        .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
-        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; color: #888; cursor: pointer; background: none; border: none; font-weight: bold;}
-        .sheet-header { font-size: 22px; font-weight: 900; color: var(--primary-blue); font-style: italic; margin-top: 0; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
-        
-        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 4px 10px rgba(0,0,0,0.03); border: 1px solid #F0F0F0; cursor: pointer; transition: transform 0.2s;}
-        .list-item:active { transform: scale(0.96); }
-        .list-icon { width:45px; height:45px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
+        .list-item { display:flex; align-items:center; padding:15px; background:white; border-radius:16px; margin-bottom:10px; text-decoration:none; box-shadow:0 2px 5px rgba(0,0,0,0.02); border: 1px solid #F0F0F0;}
+        .list-icon { width:40px; height:40px; border-radius:50%; display:flex; justify-content:center; align-items:center; margin-right:15px; font-size: 20px;}
         .list-text { flex-grow:1; text-align: left;}
-        .list-text h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
-        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
+        .list-text h4 { margin:0; color:#333; font-size: 14px;}
+        .list-text p { margin:2px 0 0 0; font-weight:bold; font-size: 13px;}
+
+        .support-wa { background: #E8F5E9; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; margin-bottom: 15px; border: 1px solid #C8E6C9;}
+        .support-wa-icon { background: #00C853; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
+        .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
+
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="header-title">How to Use Tagown</div>
+        <button class="back-btn" onclick="window.history.back();">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1565C0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </button>
+        <img src="toplogo.webp" class="header-logo" alt="Tagown">
+        <div class="header-title-clean" style="color: #1565C0;">Tutorials</div>
     </div>
 
     <div class="container">
@@ -174,20 +146,69 @@
         </div>
     </div>
 
+    <div class="bottom-nav" id="bottomNav">
+        <div class="nav-item active" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
+        </div>
+    </div>
+
     <div id="sosSheet" class="overlay">
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:var(--sos-red);">🚨 Emergency Helplines</h2>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
+            <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
+            
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
             
             <a href="tel:112" class="list-item">
                 <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1033" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1073" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
             <a href="tel:100" class="list-item">
                 <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:108" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:101" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1091" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
             </a>
         </div>
     </div>
@@ -196,38 +217,22 @@
         <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header">🎧 Help & Support</h2>
-            <a href="https://wa.me/916372980014" target="_blank" class="list-item" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.src='app_logo.webp'"></div>
-                <div class="list-text"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply within minutes</p></div>
+            <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            
+            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
+                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
             </a>
-            <a href="tel:180093486290" class="list-item" style="background:#E3F2FD; border-color:#BBDEFB;">
-                <div class="list-icon" style="background:#1976D2; color:white;">📞</div>
-                <div class="list-text"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
-            </a>
-        </div>
-    </div>
 
-    <div class="bottom-nav">
-        <div class="nav-item" onclick="window.location.href='index.html'">
-            <img src="ic_nav_home.webp" alt="Home" onerror="this.src='app_logo.webp'"><span>Home</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='shop.html'">
-            <img src="ic_nav_shop.webp" alt="Shop" onerror="this.src='app_logo.webp'"><span>Shop</span>
-        </div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
-            <img src="ic_nav_sos.webp" alt="SOS" onerror="this.src='app_logo.webp'"><span>SOS</span>
-        </div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
-            <img src="ic_nav_call_support.webp" alt="Support" onerror="this.src='app_logo.webp'"><span>Support</span>
-        </div>
-        <div class="nav-item" onclick="window.location.href='settings.html'">
-            <img src="ic_nav_settings.webp" alt="Settings" onerror="this.src='app_logo.webp'"><span>Settings</span>
+            <a href="tel:180093486290" class="support-call">
+                <div class="support-call-icon">📞</div>
+                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
+            </a>
         </div>
     </div>
 
     <script>
-        // 🚀 FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -237,7 +242,6 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Overlay Close Logic
         window.onclick = function(event) {
             const modals = ['sosSheet', 'supportSheet'];
             modals.forEach(id => {
@@ -246,37 +250,41 @@
             });
         }
 
-        // 📺 FETCH & RENDER COMPACT LIST
+        // 📺 FETCH & RENDER PREMIUM COMPACT LIST
         function loadTutorials() {
             const listDiv = document.getElementById('tutorialList');
             
-            db.ref('Tutorials').on('value', (snapshot) => {
-                listDiv.innerHTML = ''; // Clear Shimmer Skeleton
+            db.ref('HowToUseVideos').on('value', (snapshot) => {
+                listDiv.innerHTML = ''; 
                 
                 if (snapshot.exists()) {
                     snapshot.forEach((child) => {
                         const data = child.val();
                         
-                        let iconClass = 'other-icon';
-                        let platformText = '📹'; // default
+                        let platformIconSrc = 'ic_youtube.webp'; // Default fallback
+                        let platformText = 'Watch on YouTube'; 
 
                         const platform = (data.platform || '').toLowerCase();
-                        if (platform.includes('youtube')) {
-                            iconClass = 'yt-icon'; platformText = '▶️';
-                        } else if (platform.includes('instagram')) {
-                            iconClass = 'ig-icon'; platformText = '📸';
-                        } else if (platform.includes('shorts')) {
-                            iconClass = 'yt-icon'; platformText = '🩳';
+                        if (platform.includes('insta')) {
+                            platformIconSrc = 'ic_instagram.webp'; // Ensure you have this icon
+                            platformText = 'Watch on Instagram';
+                        } else {
+                            platformIconSrc = 'ic_youtube.webp'; // Ensure you have this icon
+                            platformText = 'Watch on YouTube';
                         }
 
+                        // 🚀 Render with Custom Manage Play Icon
                         listDiv.innerHTML += `
                             <div class="tutorial-item" onclick="window.open('${data.videoUrl}', '_blank')">
                                 <div class="item-left">
-                                    <div class="platform-icon ${iconClass}">${platformText}</div>
-                                    <h3 class="item-title">${data.title}</h3>
+                                    <div class="platform-icon"><img src="${platformIconSrc}" onerror="this.src='app_logo.webp'"></div>
+                                    <div class="item-text-box">
+                                        <h3 class="item-title">${data.title}</h3>
+                                        <div class="item-sub">${platformText}</div>
+                                    </div>
                                 </div>
                                 <div class="item-action">
-                                    <span style="color:var(--primary-blue);">▶</span>
+                                    <img src="ic_manage_play.webp" onerror="this.style.display='none'">
                                 </div>
                             </div>
                         `;
@@ -287,7 +295,6 @@
             });
         }
 
-        // Initialize loading
         loadTutorials();
     </script>
 </body>
