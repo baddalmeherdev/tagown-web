@@ -14,116 +14,86 @@
         :root { 
             --primary-blue: #1565C0; 
             --primary-green: #00C853;
-            --bg-color: #F4F6F9; 
+            --bg-color: #F8FAFC; 
             --card-bg: #FFFFFF;
             --text-main: #1C1C1E;
-            --text-sub: #555555;
-            --danger-red: #D32F2F;
-            --warning-orange: #FF9800;
-            --sos-red: #D32F2F;
+            --text-sub: #64748B;
+            --danger-red: #EF4444;
+            --warning-orange: #F97316;
+            --sos-red: #C62828;
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            padding-bottom: 120px; /* Space for Nav */
+            padding-bottom: 120px; 
         }
 
-        /* 📱 Top Header (Blue) */
-        .header {
-            display: flex; align-items: center; justify-content: center;
-            background: var(--primary-blue); padding: 18px 20px;
-            position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .header-title { color: white; font-size: 20px; font-weight: bold; font-style: italic; }
+        /* 🚀 NAYA HEADER (App Style) */
+        .header { display: flex; justify-content: space-between; align-items: center; background: #FFFFFF; padding: 12px 20px; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 10px rgba(0,0,0,0.05); height: 60px;}
+        .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none;}
+        .header-logo { height: 35px; position: absolute; left: 50%; transform: translateX(-50%); }
+        .header-title-clean { color: var(--primary-blue); font-size: 16px; font-weight: bold; font-style: italic; text-align: right; }
 
         /* 📦 Main Container */
-        .container { padding: 15px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
+        .container { padding: 20px 16px; max-width: 500px; margin: 0 auto; animation: fadeIn 0.3s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* ========================================= */
         /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
-        /* ========================================= */
-        .skeleton {
-            background: #eee;
-            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
-            border-radius: 5px; background-size: 200% 100%;
-            animation: 1.5s shine linear infinite;
-        }
+        .skeleton { background: #eee; background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%); border-radius: 5px; background-size: 200% 100%; animation: 1.5s shine linear infinite; }
         @keyframes shine { to { background-position-x: -200%; } }
         
         .skel-name { height: 24px; width: 150px; margin-bottom: 8px; }
         .skel-phone { height: 16px; width: 100px; }
 
-        /* 👤 Profile Card */
+        /* 🚀 Premium Profile Card (App Style) */
         .profile-card {
-            background: var(--card-bg); border-radius: 16px; padding: 22px 20px; margin-top: 10px; margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center;
-            border: 1px solid #E5E5EA;
+            background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center;
+            border: 1px solid #E3F2FD;
         }
-        .profile-info h2 { margin: 0; font-size: 22px; font-style: italic; color: #222; }
-        .profile-info p { margin: 5px 0 0 0; font-size: 14px; color: var(--text-sub); font-style: italic; font-weight: 600;}
-        .edit-icon { color: #64B5F6; font-size: 20px; cursor: pointer; padding: 5px;}
+        .profile-avatar { width: 55px; height: 55px; border-radius: 50%; object-fit: center; }
+        .profile-info { flex-grow: 1; margin-left: 16px;}
+        .profile-info h2 { margin: 0; font-size: 20px; font-style: italic; color: #1E293B; }
+        .profile-info p { margin: 2px 0 0 0; font-size: 14px; color: var(--text-sub); font-style: italic; font-weight: 600;}
+        .edit-icon { width: 28px; height: 28px; cursor: pointer;}
 
         /* 🗂️ Section Headers */
-        .section-header {
-            font-size: 12px; font-weight: 800; color: #757575; letter-spacing: 1px;
-            margin: 0 0 10px 15px; font-style: italic; text-transform: uppercase;
-        }
+        .section-header { font-size: 13px; font-weight: 800; color: #475569; margin: 0 0 8px 4px; font-style: italic; text-transform: uppercase; }
 
-        /* 📋 Grouped Lists (iOS Style) */
-        .list-group {
-            background: var(--card-bg); border-radius: 16px; margin-bottom: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid #E5E5EA;
-        }
-        .list-item {
-            display: flex; align-items: center; padding: 18px 20px;
-            text-decoration: none; color: var(--text-main); font-size: 16px; font-weight: 700; font-style: italic;
-            border-bottom: 1px solid #F2F2F7; cursor: pointer; transition: background 0.2s;
-        }
-        .list-item:active { background: #F9F9F9; transform: scale(0.99); }
+        /* 📋 Grouped Lists (App Style) */
+        .list-group { background: var(--card-bg); border-radius: 16px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.03); overflow: hidden; border: 1px solid #F1F5F9; }
+        .list-item { display: flex; align-items: center; padding: 16px 20px; text-decoration: none; color: #1E293B; font-size: 16px; font-weight: 800; font-style: italic; border-bottom: 1px solid #F1F5F9; cursor: pointer; transition: background 0.2s; }
+        .list-item:active { background: #F8FAFC; }
         .list-item:last-child { border-bottom: none; }
         
-        .item-icon { margin-right: 12px; font-size: 18px; }
+        .item-icon { width: 22px; height: 22px; margin-right: 16px; object-fit: contain;}
+        .item-arrow { width: 20px; height: 20px; margin-left: auto; opacity: 0.4;}
+        
         .text-red { color: var(--danger-red); }
         .text-orange { color: var(--warning-orange); }
 
         /* 💖 Footer */
-        .footer {
-            text-align: center; margin-top: 30px; font-size: 13px; color: #9E9E9E; font-style: italic; font-weight: bold; line-height: 1.6;
-        }
+        .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #94A3B8; font-style: italic; font-weight: bold; line-height: 1.6; }
 
-        /* ========================================= */
-        /* 🧭 FLOATING BOTTOM NAV (DASHBOARD STYLE) */
-        /* ========================================= */
-        .bottom-nav {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            display: flex; justify-content: space-around; align-items: center;
-            padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90;
-        }
-        .nav-item {
-            display: flex; flex-direction: column; align-items: center;
-            color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px;
-        }
-        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain; }
+        /* 🧭 FIX: Premium Bottom Nav EXACTLY like index.html */
+        .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
+        .nav-item:active { transform: scale(0.9); }
+        .nav-item img { width: 24px; height: 24px; margin-bottom: 4px; opacity: 0.6; transition: 0.3s; object-fit: contain;}
         .nav-item.active { color: var(--primary-blue); }
         .nav-item.active img { opacity: 1; filter: sepia(100%) hue-rotate(190deg) saturate(500%); }
         
-        .nav-sos {
-            width: 60px; height: 60px; transform: translateY(-20px);
-            display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer;
-        }
-        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); background: white; padding: 2px;}
+        .nav-sos { width: 60px; height: 60px; transform: translateY(-20px); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .nav-sos:active { transform: translateY(-20px) scale(0.9); }
+        .nav-sos img { width: 55px; height: 55px; border-radius: 50%; box-shadow: 0 8px 15px rgba(211, 47, 47, 0.3); }
         .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
 
-        /* ========================================= */
         /* 🚨 PREMIUM POPUP MODALS (Glassmorphism) */
-        /* ========================================= */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        
         .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 28px 28px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
@@ -138,7 +108,7 @@
         .list-text-pop h4 { margin:0; color:#333; font-size: 16px; font-style: italic; font-weight: 800;}
         .list-text-pop p { margin:2px 0 0 0; font-weight:bold; font-size: 12px; color: #666;}
 
-        /* Central Modal for Login/Delete */
+        /* Central Modal for App Style LogOut / Delete */
         .modal-box { background: white; border-radius: 24px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .modal-header-red { background: #B71C1C; color: white; padding: 25px 20px; }
@@ -147,6 +117,11 @@
         .modal-body { padding: 25px 20px; }
         .btn-modal-primary { background: var(--primary-blue); color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
+
+        /* App Style Custom Modal Header for Delete/Logout */
+        .custom-modal-header { padding: 30px 20px 10px 20px; display: flex; flex-direction: column; align-items: center;}
+        .custom-modal-header img { width: 60px; height: 60px; margin-bottom: 10px; }
+        .custom-modal-header h3 { margin: 0; font-size: 22px; font-style: italic; }
 
         /* Edit Profile Bottom Sheet Inputs */
         .edit-input-group { text-align: left; margin-bottom: 20px; }
@@ -160,45 +135,69 @@
 <body>
 
     <div class="header">
-        <div class="header-title">Settings & Profile</div>
+        <button class="back-btn"><svg width="28" height="28" viewBox="0 0 24 24"></svg></button> <img src="toplogo.webp" class="header-logo" alt="Tagown">
+        <div class="header-title-clean">Settings</div>
     </div>
 
     <div class="container">
         
         <div class="profile-card">
+            <img src="ic_profile_avatar.webp" class="profile-avatar" onerror="this.src='app_logo.webp'">
             <div class="profile-info" id="profileInfo">
                 <div class="skeleton skel-name"></div>
                 <div class="skeleton skel-phone"></div>
             </div>
-            <div class="edit-icon" onclick="openEditProfile()">✏️</div>
+            <img src="ic_manage_edit.webp" class="edit-icon" onclick="openEditProfile()" onerror="this.style.display='none'">
         </div>
 
         <div class="section-header">SECURITY & EMERGENCY</div>
         <div class="list-group">
-            <div class="list-item text-red" onclick="handleSecureAction('emergency')">
-                <span class="item-icon">🚨</span> Setup Emergency Contact
+            <div class="list-item" onclick="handleSecureAction('emergency')">
+                <img src="ic_emergency_shield.webp" class="item-icon" onerror="this.src=''"> 
+                <span class="text-red">Setup Emergency Contact</span>
+                <img src="ic_arrow_right.webp" class="item-arrow" onerror="this.src=''">
             </div>
         </div>
 
         <div class="section-header">LEGAL & POLICIES</div>
         <div class="list-group">
-            <div class="list-item" onclick="window.location.href='legal.html#privacy'">Privacy Policy</div>
-            <div class="list-item" onclick="window.location.href='legal.html#terms'">Terms & Conditions</div>
-            <div class="list-item" onclick="window.location.href='legal.html#disclaimer'">Disclaimer</div>
-            <div class="list-item" onclick="window.location.href='legal.html#copyright'">Copyright Info</div>
+            <div class="list-item" onclick="window.location.href='legal.html#privacy'">
+                <img src="ic_privacy.webp" class="item-icon" onerror="this.src=''">
+                <span>Privacy Policy</span>
+                <img src="ic_arrow_right.webp" class="item-arrow" onerror="this.src=''">
+            </div>
+            <div class="list-item" onclick="window.location.href='legal.html#terms'">
+                <img src="ic_terms.webp" class="item-icon" onerror="this.src=''">
+                <span>Terms & Conditions</span>
+                <img src="ic_arrow_right.webp" class="item-arrow" onerror="this.src=''">
+            </div>
+            <div class="list-item" onclick="window.location.href='legal.html#disclaimer'">
+                <img src="ic_disclaimer.webp" class="item-icon" onerror="this.src=''">
+                <span>Disclaimer</span>
+                <img src="ic_arrow_right.webp" class="item-arrow" onerror="this.src=''">
+            </div>
+            <div class="list-item" onclick="window.location.href='legal.html#copyright'">
+                <img src="ic_copyright.webp" class="item-icon" onerror="this.src=''">
+                <span>Copyright Info</span>
+                <img src="ic_arrow_right.webp" class="item-arrow" onerror="this.src=''">
+            </div>
         </div>
 
         <div class="section-header">ACCOUNT ACTIONS</div>
         <div class="list-group">
-            <div class="list-item text-orange" onclick="handleSecureAction('logout')">
-                Log Out
+            <div class="list-item" onclick="handleSecureAction('logout')">
+                <img src="ic_logout.webp" class="item-icon" onerror="this.src=''">
+                <span class="text-orange">Log Out</span>
             </div>
-            <div class="list-item text-red" onclick="handleSecureAction('delete')">
-                Delete Account Permanently
+            
+            <div class="list-item" style="background-color: #FFF5F5;" onclick="handleSecureAction('delete')">
+                <img src="ic_manage_delete.webp" class="item-icon" onerror="this.src=''">
+                <span class="text-red">Delete Account Permanently</span>
             </div>
         </div>
 
         <div class="footer">
+            <img src="toplogo.webp" style="width: 60px; filter: grayscale(1) opacity(0.5); margin-bottom: 5px;"><br>
             App Version 1.0<br>
             Made in India with ❤️
         </div>
@@ -209,7 +208,7 @@
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('editProfileSheet').style.display='none'">×</button>
-            <h2 class="sheet-header">✏️ Edit Profile</h2>
+            <h2 class="sheet-header" style="color: #1E293B;">✏️ Edit Profile</h2>
             
             <div class="edit-input-group">
                 <label class="edit-label">Full Name</label>
@@ -226,14 +225,95 @@
         </div>
     </div>
 
+    <div id="logoutWarningModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="custom-modal-header">
+                <img src="ic_logout.webp" onerror="this.src=''">
+                <h3 style="color: #F97316;">Log Out</h3>
+            </div>
+            <div class="modal-body" style="padding-top: 0;">
+                <p style="font-size: 14px; color: #475569; font-weight: 500; font-style: italic; margin-bottom: 20px;">
+                    Are you sure you want to log out from your secure account?<br><br>
+                    You will stop receiving instant emergency notifications until you log in again.
+                </p>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-modal-cancel" style="flex: 1; background: #F1F5F9; color: #64748B; font-weight: bold;" onclick="document.getElementById('logoutWarningModal').style.display='none'">CANCEL</button>
+                    <button class="btn-modal-primary" style="background:#F97316; flex: 1;" onclick="logout()">LOG OUT</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteWarningModal" class="modal-overlay">
+        <div class="modal-box">
+            <div class="custom-modal-header">
+                <img src="ic_manage_delete.webp" onerror="this.src=''">
+                <h3 style="color: #EF4444;">Delete Account?</h3>
+            </div>
+            <div class="modal-body" style="padding-top: 0;">
+                <p style="font-size: 13px; color: #475569; line-height: 1.5; font-weight: 500; margin-top:0; text-align:left;">
+                    Deleting your account will <b>permanently erase</b> your:<br><br>
+                    • Profile & Emergency Contacts<br>
+                    • Secured Vehicles & QR Links<br>
+                    • This action cannot be undone. All your vehicles and profile data will be permanently deleted from our servers.<br><br>
+                    <span style="color: #D32F2F; font-weight: bold; font-style:italic; display: block; text-align: center;">This action cannot be undone.</span>
+                </p>
+                <input type="text" id="deleteConfirmText" class="edit-input" style="width:100%; padding:12px; margin: 15px 0; border:1px solid #ccc; border-radius:8px; text-align:center; font-weight:bold; font-style:normal;" placeholder="Type 'DELETE' to confirm">
+                
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <button class="btn-modal-primary" id="btnFinalDelete" style="background: #EF4444; width: 100%;" onclick="executeFinalDelete()">PERMANENTLY DELETE</button>
+                    <button class="btn-modal-cancel" style="background: #E8F5E9; color: #2E7D32; font-weight: bold; width: 100%;" onclick="document.getElementById('deleteWarningModal').style.display='none'">CANCEL & STAY SECURE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="sosSheet" class="overlay">
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
-            <h2 class="sheet-header" style="color:var(--sos-red);">🚨 Emergency Helplines</h2>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px; font-style: italic;">⚠️ Dial 112 for any emergency</div>
-            <a href="tel:112" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
-            <a href="tel:100" class="list-item-pop"><div class="list-icon-pop" style="background:#FFEBEE;">📞</div><div class="list-text-pop"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div></a>
+            <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
+            
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
+            
+            <a href="tel:112" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1033" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1073" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:100" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:108" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:101" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1091" class="list-item-pop">
+                <div class="list-icon-pop" style="background:#FFEBEE;">📞</div>
+                <div class="list-text-pop"><h4 style="color:var(--text-main);">Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
         </div>
     </div>
 
@@ -241,14 +321,17 @@
         <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
-            <h2 class="sheet-header">🎧 Help & Support</h2>
+            <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            
             <a href="https://wa.me/916372980014" target="_blank" class="list-item-pop" style="background:#E8F5E9; border-color:#C8E6C9;">
-                <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
-                <div class="list-text-pop"><h4 style="color:#2E7D32;">Chat on WhatsApp</h4><p style="color:#388E3C;">Instant reply</p></div>
+                <div class="list-icon-pop" style="background:#00C853;"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="list-text-pop"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
             </a>
+
             <a href="tel:180093486290" class="list-item-pop" style="background:#E3F2FD; border-color:#BBDEFB;">
-                <div class="list-icon-pop" style="background:#1976D2; color:white;">📞</div>
-                <div class="list-text-pop"><h4 style="color:#1565C0;">Call Helpline</h4><p style="color:#1976D2;">1800-9348-6290</p></div>
+                <div class="list-icon-pop" style="background:#1976D2; color:white; font-size: 20px;">📞</div>
+                <div class="list-text-pop"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
             </a>
         </div>
     </div>
@@ -263,29 +346,6 @@
             <div class="modal-body">
                 <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
                 <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="deleteWarningModal" class="overlay" style="align-items: center; z-index: 3000;">
-        <div class="modal-box">
-            <div class="modal-header-red">
-                <div style="font-size: 35px; margin-bottom: 5px;">🥺</div>
-                <h3>WARNING:</h3>
-                <p>Are you sure you want to leave?</p>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 13px; color: #555; line-height: 1.5; font-weight: 500; margin-top:0; text-align:left;">
-                    Deleting your account will <b>permanently erase</b> your:<br><br>
-                    • Profile & Emergency Contacts<br>
-                    • Secured Vehicles & QR Links<br>
-                    • This action cannot be undone. All your vehicles,profile data etc will be permanently deleted from our servers. Do you wish to proceed?<br><br>
-                    <span style="color: #D32F2F; font-weight: bold; font-style:italic;">This action cannot be undone.</span>
-                </p>
-                <input type="text" id="deleteConfirmText" class="edit-input" style="width:100%; padding:12px; margin: 15px 0; border:1px solid #ccc; border-radius:8px; text-align:center; font-weight:bold; font-style:normal;" placeholder="Type 'DELETE' to confirm">
-                
-                <button class="btn-modal-primary" id="btnFinalDelete" style="background: #D32F2F; margin-bottom: 10px;" onclick="executeFinalDelete()">PERMANENTLY DELETE</button>
-                <button class="btn-modal-cancel" style="background: #E8F5E9; color: #2E7D32; font-weight: bold;" onclick="document.getElementById('deleteWarningModal').style.display='none'">CANCEL & STAY SECURE</button>
             </div>
         </div>
     </div>
@@ -323,9 +383,8 @@
         const profileDiv = document.getElementById('profileInfo');
         let globalUserName = "Tagown User";
 
-        // Close Overlay logic
         window.onclick = function(event) {
-            const modals = ['sosSheet', 'supportSheet', 'loginRequiredModal', 'editProfileSheet', 'deleteWarningModal'];
+            const modals = ['sosSheet', 'supportSheet', 'loginRequiredModal', 'editProfileSheet', 'deleteWarningModal', 'logoutWarningModal'];
             modals.forEach(id => {
                 const modal = document.getElementById(id);
                 if (event.target == modal) modal.style.display = "none";
@@ -391,7 +450,9 @@
                 return;
             }
             if (action === 'emergency') window.location.href = 'emergency.html';
-            else if (action === 'logout') logout();
+            else if (action === 'logout') {
+                document.getElementById('logoutWarningModal').style.display = 'flex';
+            }
             else if (action === 'delete') {
                 document.getElementById('deleteConfirmText').value = '';
                 document.getElementById('deleteWarningModal').style.display = 'flex';
@@ -399,13 +460,11 @@
         }
 
         function logout() {
-            if(confirm("Are you sure you want to log out?")) {
-                localStorage.removeItem("tagownUserPhone");
-                auth.signOut().then(() => { window.location.href = 'index.html'; });
-            }
+            localStorage.removeItem("tagownUserPhone");
+            auth.signOut().then(() => { window.location.href = 'index.html'; });
         }
 
-        // 🚀 NEW: Master Delete Engine (Safely deletes data from all 5 locations)
+        // 🚀 NEW: Master Delete Engine
         function executeFinalDelete() {
             const confirmText = document.getElementById('deleteConfirmText').value;
             if (confirmText !== "DELETE") {
@@ -418,31 +477,22 @@
 
             const phone = currentUserPhone;
 
-            // Step 1: Find user's vehicles to delete Linked Tags and Call Routes
             db.ref('Vehicles/' + phone).once('value').then(snapshot => {
                 if (snapshot.exists()) {
                     const vehicles = snapshot.val();
                     Object.keys(vehicles).forEach(regNo => {
                         const vData = vehicles[regNo];
-                        // 1. Delete CallRouting PIN
-                        if (vData.callingPIN) {
-                            db.ref('CallRouting/' + vData.callingPIN).remove();
-                        }
-                        // 2. Unassign LinkedTag QR
-                        if (vData.linkedQrId) {
-                            db.ref('LinkedTags/' + vData.linkedQrId).remove();
-                        }
+                        if (vData.callingPIN) { db.ref('CallRouting/' + vData.callingPIN).remove(); }
+                        if (vData.linkedQrId) { db.ref('LinkedTags/' + vData.linkedQrId).remove(); }
                     });
                 }
                 
-                // Step 2: Delete all core user profile folders simultaneously
                 const multiDelete = {};
-                multiDelete['Vehicles/' + phone] = null;   // Delete Vehicles
-                multiDelete['UserOrders/' + phone] = null; // Delete Orders
-                multiDelete['Users/' + phone] = null;      // Delete Profile & Emergency Data
+                multiDelete['Vehicles/' + phone] = null;   
+                multiDelete['UserOrders/' + phone] = null; 
+                multiDelete['Users/' + phone] = null;      
                 
                 db.ref().update(multiDelete).then(() => {
-                    // Step 3: Clear local storage and log out
                     alert("Your account and all associated data have been permanently deleted.");
                     localStorage.removeItem("tagownUserPhone");
                     auth.signOut().then(() => {
