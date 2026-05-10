@@ -209,7 +209,7 @@
 
     <script>
         // ==========================================
-        // 🚀 FIREBASE INITIALIZATION (Your Asli Details)
+        // 🚀 FIREBASE INITIALIZATION
         // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
@@ -224,12 +224,11 @@
         const db = firebase.database();
 
         // ==========================================
-        // 🚀 THE MAGIC: LOCAL CACHE ALGORITHM
+        // 🚀 LOCAL CACHE ALGORITHM (Pre-Fetch)
         // ==========================================
-        let allBusesCache = []; // Saari buses isme pehle hi load ho jayengi
+        let allBusesCache = []; 
         let isDataLoaded = false;
 
-        // Background loading of buses as soon as website opens
         db.ref("BusRoutes").on("value", (snapshot) => {
             allBusesCache = []; // Clear old data
             if (snapshot.exists()) {
@@ -260,7 +259,7 @@
         });
 
         // ==========================================
-        // 🚀 INSTANT SEARCH FUNCTION (0.1 Seconds)
+        // 🚀 FAST SEARCH FUNCTION
         // ==========================================
         function performSearch() {
             let fromCity = document.getElementById("etSearchFrom").value.trim().toLowerCase();
@@ -279,17 +278,15 @@
                 return;
             }
 
-            // Quick UI update
             statusText.innerText = "Searching for best routes... ⏳";
             statusText.style.display = "block";
             resultsContainer.innerHTML = "";
             searchBtn.disabled = true;
 
-            // XSS Security
             fromCity = fromCity.replace(/<[^>]*>?/gm, '');
             toCity = toCity.replace(/<[^>]*>?/gm, '');
 
-            // 🚀 FAST DELAY: 200ms delay taaki user ko "Searching" dikhe aur feel premium aaye
+            // Premium Delay for UX
             setTimeout(() => {
                 let foundCount = 0;
 
@@ -297,7 +294,7 @@
                     let isMatch = false;
                     let routeList = busObj.routeList;
 
-                    // UNIVERSAL DIRECTIONAL ALGORITHM (Local Cache)
+                    // UNIVERSAL DIRECTIONAL ALGORITHM
                     if (fromCity !== "" && toCity !== "") {
                         let fromIndex = routeList.findIndex(city => city.includes(fromCity));
                         let toIndex = -1;
@@ -330,16 +327,16 @@
                     statusText.innerText = "Oops! No buses found matching this route. 😔";
                 }
                 
-            }, 200); // Only 0.2 Seconds search time!
+            }, 300); 
         }
 
         // ==========================================
-        // 🚀 UI GENERATION (With Privacy & Custom Icons)
+        // 🚀 UI GENERATION
         // ==========================================
         function addResultCard(regNo, busData) {
             let container = document.getElementById("searchResultsContainer");
             
-            // Format Number Plate (Privacy Hide last 4 digits) -> OD 17 BA ****
+            // Format Number Plate (OD 17 BA ****)
             let formattedRegNo = "****";
             if (regNo && regNo.length >= 6) {
                 let cleanReg = regNo.replace(/\s/g, "");
@@ -351,6 +348,7 @@
 
             let busName = busData.busName ? busData.busName.toUpperCase() : "TAGOWN BUS";
 
+            // 🚀 BHAIG FIX: Onclick updated to call openRouteDetails!
             let cardHTML = `
                 <div class="result-card" onclick="openRouteDetails('${regNo}')">
                     <div class="bus-header">
@@ -375,9 +373,12 @@
             container.insertAdjacentHTML('beforeend', cardHTML);
         }
 
+        // ==========================================
+        // 🚀 BHAIG FIX: NAVIGATION TO TIMELINE PAGE
+        // ==========================================
         function openRouteDetails(regNo) {
-            // Abhi ke liye Alert. Future mein idhar web wala Preview Timeline map khulega
-            alert("Route Selected! Map view coming soon to Website.");
+            // Redirect to the detailed preview page, passing the registration number
+            window.location.href = `preview_public_route.html?regNo=${encodeURIComponent(regNo)}`;
         }
     </script>
 
