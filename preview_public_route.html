@@ -26,7 +26,7 @@
             padding-bottom: 50px; 
         }
 
-        /* 📱 Premium Header - BHAIG FIX */
+        /* 📱 Premium Header */
         .header { 
             display: flex; 
             align-items: center; 
@@ -44,7 +44,6 @@
 
         .back-btn { background: transparent; border: none; cursor: pointer; padding: 0; display: flex; align-items: center; justify-content: center; }
         
-        /* 🚀 BHAIG FIX: Logo Styling */
         .header-logo { height: 35px; width: auto; object-fit: contain; }
 
         .info-btn { color: var(--primary-green); font-size: 18px; cursor: pointer; border: 2px solid var(--primary-green); border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-style: italic; font-weight: bold;}
@@ -88,9 +87,9 @@
         .tl-time-start, .tl-time-stop { color: var(--orange); }
         .tl-time-end { color: var(--red); }
 
-        /* Safety Banner */
+        /* 🛡️ Safety Banner (FIXED ICON) */
         .safety-banner { background: #FFF3E0; border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; border: 1px solid #FFE0B2;}
-        .safety-icon { width: 35px; height: 35px; opacity: 0.8; }
+        .safety-icon-wrapper { width: 35px; height: 35px; flex-shrink: 0; display: flex; justify-content: center; align-items: center; }
         .safety-text { color: #D84315; font-size: 12px; font-weight: 700; font-style: italic; line-height: 1.4;}
 
         .loader { text-align: center; color: #757575; font-style: italic; padding: 30px; font-weight: bold;}
@@ -130,7 +129,11 @@
             </div>
 
         <div class="safety-banner">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Security_shield_icon.svg" class="safety-icon" alt="Safety">
+            <div class="safety-icon-wrapper">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#D84315" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 100%; height: 100%;">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
             <div class="safety-text">
                 For driver and passenger safety, direct calls and messages are disabled during active journeys.
             </div>
@@ -139,7 +142,7 @@
 
     <div id="loaderView" class="loader">
         <div style="font-size: 30px; margin-bottom: 10px;">⏳</div>
-        Fetching live route data...
+        Wait A Sec...
     </div>
 
     <script>
@@ -221,8 +224,6 @@
         // 🚀 FETCH LIVE STATUS (From owner settings)
         // ==========================================
         function fetchLiveRunningStatus() {
-            // Note: Public read permission required on 'Vehicles' node for this specific path
-            // to check status anonymously.
             db.ref("Vehicles").once("value").then(snapshot => {
                 let isCancelled = false;
                 
@@ -253,7 +254,7 @@
                 document.getElementById('mainContainer').style.display = 'block';
 
             }).catch(e => {
-                // If permission denied or error, default to Running for public view
+                // Default to Running
                 document.getElementById('loaderView').style.display = 'none';
                 document.getElementById('mainContainer').style.display = 'block';
             });
