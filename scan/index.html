@@ -707,7 +707,7 @@
         }
 
         async function executeAlert() {
-            // ✅ NEW: Check rate limit before sending
+            // Check rate limit before sending
             const rateLimitStatus = await checkRateLimit();
             if (rateLimitStatus.blocked) {
                 showToast("Too many attempts. Please come back after 1 hour.", "error");
@@ -719,59 +719,152 @@
             const customMsg = document.getElementById('custom-msg').value;
             const msg = customMsg.trim() !== "" ? customMsg : issueSelector;
             const btn = document.getElementById('send-alert-btn');
-            
+
             btn.innerText = "SENDING..."; btn.disabled = true;
 
-            try {
-                try {
-                    const alertRef = database.ref('Alerts').child(ownerPhone).push();
-                    await alertRef.set({ vehicleNo: regNoFromDb, message: msg, timestamp: Date.now().toString(), status: 'unread' });
-                } catch(fbError) {}
+            let firebaseSuccess = false;
+            let workerSuccess = false;
 
-                let cleanPhone = ownerPhone.replace(/\D/g, ''); 
-                if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) { cleanPhone = cleanPhone.slice(-10); }
-                const safeId = await getSecureId(cleanPhone);
+            // PRIMARY: Firebase Realtime DB write
+            try {
+                const alertRef = database.ref('Alerts').child(ownerPhone).push();
+                await alertRef.set({
+                    vehicleNo: regNoFromDb,
+                    message: msg,
+                    timestamp: Date.now().toString(),
+                    status: 'unread',
+                    sound: 'tagown_siren'
+                });
+                firebaseSuccess = true;
+            } catch(fbError) {
+                console.warn("Firebase write failed:", fbError);
+            }
+
+            // SECONDARY: OneSignal via Cloudflare Worker
+            // Tries 3 external_id formats so it always matches
+            // whatever format the Android app registered with OneSignal
+            workerSuccess = await sendOneSignalPush(msg);
+
+            // SUCCESS if EITHER channel delivered the alert
+            if (firebaseSuccess || workerSuccess) {
+                btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
+                isMessageSent = true;
+
+                const limitHit = await incrementRateLimit();
+                if (limitHit) {
+                    showToast("Alert limit reached. Try again after 1 hour.", "error");
+                }
+
+                if (!ownerCallsDisabled) {
+                    const callBtnText = document.querySelector('.call-btn span');
+                    if (callBtnText) callBtnText.innerText = "Call Owner\n(Unlocked)";
+                }
+                setTimeout(() => {
+                    closeAll();
+                    btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a";
+                    if (!limitHit) showToast("Alert Sent Securely!", "success");
+                }, 1500);
+
+            } else {
+                btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
+                showToast("Network error. Check your internet connection.", "error");
+                setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
+            }
+        }
+
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        // OneSignal Push — 3-format fallback system
+        //
+        // Problem: Android app might have registered with
+        // OneSignal using any of these as external_id:
+        //   1. SHA-256 hash of phone  (getSecureId format)
+        //   2. Raw 10-digit phone number
+        //   3. Phone with 91 country code
+        //
+        // We try all 3 until one returns recipients > 0.
+        // Also tries both old & new OneSignal API formats.
+        // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+        async function sendOneSignalPush(msg) {
+            let cleanPhone = ownerPhone.replace(/\D/g, '');
+            if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) {
+                cleanPhone = cleanPhone.slice(-10);
+            }
+
+            const sha256Id  = await getSecureId(cleanPhone);          // format 1
+            const phoneId   = cleanPhone;                              // format 2
+            const phone91Id = '91' + cleanPhone;                       // format 3
+
+            const externalIdFormats = [sha256Id, phoneId, phone91Id];
+
+            const basePayload = {
+                app_id: "bba5806a-bf29-4604-a8ca-9f796d828513",
+                headings:  { "en": "🚨 Tagown Alert: " + regNoFromDb },
+                contents:  { "en": msg },
+                data:      { "vehicle_reg_no": regNoFromDb },
+                app_url:   "tagown://notifications",
+                existing_android_channel_id: "tagown_urgent_alerts",
+                priority:           10,
+                android_visibility: 1,
+                android_sound:      "tagown_siren",
+                small_icon:         "ic_notification_stat"
+            };
+
+            for (const extId of externalIdFormats) {
+                // Try new aliases API format first
+                const resultA = await callWorker(Object.assign({}, basePayload, {
+                    target_channel:   "push",
+                    include_aliases:  { external_id: [extId] }
+                }));
+                if (resultA) return true;
+
+                // Fallback: old include_external_user_ids format
+                const resultB = await callWorker(Object.assign({}, basePayload, {
+                    channel_for_external_user_ids: "push",
+                    include_external_user_ids:     [extId]
+                }));
+                if (resultB) return true;
+            }
+
+            console.warn("OneSignal: all 6 delivery attempts failed.");
+            return false;
+        }
+
+        async function callWorker(payload) {
+            try {
+                const controller = new AbortController();
+                const tid = setTimeout(() => controller.abort(), 8000);
 
                 const response = await fetch("https://tagown-server.baddalmeherdev.workers.dev", {
-                    method: "POST", headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", target_channel: "push",
-                        include_aliases: { external_id: [safeId] },
-                        headings: {"en": "🚨 Tagown Alert: " + regNoFromDb}, contents: {"en": msg},
-                        data: { "trigger_exotel_sms": !isAppActive, "vehicle_reg_no": regNoFromDb },
-                        app_url: "tagown://notifications", existing_android_channel_id: "tagown_urgent_alerts", 
-                        priority: 10, android_visibility: 1,
-                        android_sound: "tagown_siren",  /* ✅ CHANGE: Custom siren sound */
-                        small_icon: "ic_notification_stat"
-                    })
+                    method:  "POST",
+                    headers: { "Content-Type": "application/json" },
+                    signal:  controller.signal,
+                    body:    JSON.stringify(payload)
                 });
+                clearTimeout(tid);
 
-                if(response.ok) {
-                    btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
-                    isMessageSent = true;
-
-                    // ✅ NEW: Increment rate limit counter after successful send
-                    const limitHit = await incrementRateLimit();
-                    if (limitHit) {
-                        showToast("Alert limit reached. Please try again after 1 hour.", "error");
-                    }
-                    
-                    if(!ownerCallsDisabled) {
-                        const callBtnText = document.querySelector('.call-btn span');
-                        if(callBtnText) callBtnText.innerText = "Call Owner\n(Unlocked)";
-                    }
-                    setTimeout(() => { 
-                        closeAll(); 
-                        btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; 
-                        if (!limitHit) showToast("Alert Sent Securely!", "success");
-                    }, 1500);
-                } else {
-                    const errText = await response.text(); throw new Error(errText); 
+                if (!response.ok) {
+                    const errText = await response.text();
+                    console.warn("Worker returned error:", response.status, errText);
+                    return false;
                 }
-            } catch (error) {
-                btn.innerText = "FAILED! TRY AGAIN"; btn.style.background = "#dc2626";
-                showToast("Server issue. Please try again.", "error");
-                setTimeout(() => { btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; }, 3000);
+
+                // Parse OneSignal response: success = recipients > 0 OR id present
+                try {
+                    const data = await response.json();
+                    console.log("OneSignal response:", data);
+                    if (data.id && (data.recipients === undefined || data.recipients > 0)) {
+                        return true;
+                    }
+                    if (data.recipients > 0) return true;
+                    console.warn("OneSignal: 0 recipients for payload:", payload.include_aliases || payload.include_external_user_ids);
+                    return false;
+                } catch(parseErr) {
+                    // If response isn't JSON but status was ok, treat as success
+                    return true;
+                }
+            } catch(fetchErr) {
+                console.warn("callWorker fetch error:", fetchErr.message);
+                return false;
             }
         }
 
