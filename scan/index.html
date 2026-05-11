@@ -143,7 +143,7 @@
         .toast.error { background: #dc2626; }
         .toast.success { background: #16a34a; }
         
-        /* Typography enhancement for legal text */
+        /* Legal Typography */
         .legal-text { font-size: 13px; color: #475569; line-height: 1.7; margin-bottom: 15px; text-align: left; }
         .legal-bold { font-weight: 700; color: #1e293b; }
     </style>
@@ -277,7 +277,7 @@
                 <div class="btn-row" id="action-btn-row">
                     <button onclick="attemptAction('call')" class="action-btn call-btn">
                         <i class="fa-solid fa-phone" style="color:#f59e0b;"></i>
-                        <span style="color: #64748b;">Call Helpline</span>
+                        <span style="color: #64748b;" class="call-btn-span">Call Owner</span>
                     </button>
 
                     <button onclick="attemptAction('msg')" class="action-btn msg-btn">
@@ -329,9 +329,9 @@
                     <h3 style="color: #dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Action Plan</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <a href="tel:6372980014" class="em-item" style="background: #f59e0b;">
-                    <div class="em-icon"><i class="fa-solid fa-headset"></i></div>
-                    <div class="em-text-box"><span class="em-title">Tagown Support Helpline</span><span class="em-desc">Call Tagown in an emergency</span></div>
+                <a href="#" id="em-family-btn" class="em-item" style="background: #f59e0b;">
+                    <div class="em-icon"><i class="fa-solid fa-users"></i></div>
+                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly</span></div>
                 </a>
                 <a href="tel:112" class="em-item" style="background: #1d4ed8;">
                     <div class="em-icon"><i class="fa-solid fa-building-shield"></i></div>
@@ -341,17 +341,36 @@
                     <div class="em-icon"><i class="fa-solid fa-truck-medical"></i></div>
                     <div class="em-text-box"><span class="em-title">Ambulance (108)</span><span class="em-desc">Call for immediate medical assistance</span></div>
                 </a>
+                <a href="tel:101" class="em-item" style="background: #dc2626;">
+                    <div class="em-icon"><i class="fa-solid fa-fire-extinguisher"></i></div>
+                    <div class="em-text-box"><span class="em-title">Fire Brigade (101)</span><span class="em-desc">Call for immediate fire assistance</span></div>
+                </a>
+                <a href="tel:1091" class="em-item" style="background: #e06666;">
+                    <div class="em-icon"><i class="fa-solid fa-person-dress"></i></div>
+                    <div class="em-text-box"><span class="em-title">Women Helpline (1091)</span><span class="em-desc">Call for immediate women assistance</span></div>
+                </a>
+                <a href="tel:1033" class="em-item" style="background: #4f81bd;">
+                    <div class="em-icon"><i class="fa-solid fa-road"></i></div>
+                    <div class="em-text-box"><span class="em-title">Traffic & Highway Help (1033)</span><span class="em-desc">Call for immediate traffic assistance</span></div>
+                </a>
             </div>
 
-            <div id="call-helpline-modal" class="center-modal">
+            <div id="call-lock-modal" class="center-modal">
+                <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-shield-halved" style="font-size: 40px; color: #f59e0b;"></i></div>
+                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Safety Check 🛡️</h3>
+                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">For the owner's privacy, please send an alert message detailing the issue first. Calling will be automatically enabled after sending.</p>
+                <button onclick="closeAll(); openMessageSheet();" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer;">SEND MESSAGE NOW</button>
+            </div>
+
+            <div id="call-warning-modal" class="center-modal">
                 <div class="sheet-header" style="justify-content: center; margin-bottom: 10px;">
-                    <h3 style="color: #1565C0;">Tagown Helpline 📞</h3>
+                    <h3 style="color: #1565C0;">Important Instruction 📞</h3>
                 </div>
                 <p style="font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 20px; text-align: center;">
-                    In case of an emergency, wrong parking, or urgent issue, you can speak directly to the Tagown Company Helpline.<br><br>
-                    We will take your message and securely forward the information to the vehicle owner immediately.
+                    Your phone dialer will now open with the Tagown Helpline number.<br><br>
+                    Just press the Call button directly to connect with the Tagown team for emergencies.
                 </p>
-                <button onclick="executeHelplineCall()" class="app-primary-btn" style="background: #2563eb; margin-bottom: 10px;">CALL TAGOWN HELPLINE</button>
+                <button onclick="executeCall()" class="app-primary-btn" style="background: #16a34a; margin-bottom: 10px;">I UNDERSTAND, CALL NOW</button>
                 <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
             </div>
 
@@ -385,14 +404,20 @@
         let regNoFromDb = "";
         let isAppActive = false; 
 
+        // 🚀 NEW SECURITY VARIABLES
+        let isMessageSent = false;
         let isInvalidTag = false;
         let isVerified = false;
         let pendingAction = null;
         let ownerCallsDisabled = false;
         let ownerTagPaused = false;
         
+        // RATE LIMITER (1 HOUR = 3600000 ms)
         const RATE_LIMIT_MS = 3600000;
         const MAX_NOTIFICATIONS = 5;
+
+        // 🔥 HELPLINE NUMBER INSTEAD OF EXOTEL
+        const TAGOWN_HELPLINE = "6372980014";
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -458,6 +483,9 @@
             }
         }
 
+        // =======================================================
+        // 🚀 MASTER SECURITY INTERCEPTOR (ORIGINAL FLOW PRESERVED)
+        // =======================================================
         function attemptAction(action) {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
             if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
@@ -472,7 +500,11 @@
                 document.getElementById('verify-input').value = "";
                 openModal('verify-modal');
             } else {
-                if(action === 'call') openModal('call-helpline-modal'); 
+                // If already verified, do original flow
+                if(action === 'call') {
+                    if(!isMessageSent) openModal('call-lock-modal'); 
+                    else openModal('call-warning-modal'); 
+                }
                 if(action === 'msg') openMessageSheet();
             }
         }
@@ -492,22 +524,36 @@
             if(isVerified) {
                 closeAll();
                 
-                // 🚀 UNMASK AND SHOW FULL REG NUMBER!
+                // 🚀 UNMASK AND SHOW FULL REG NUMBER
                 document.getElementById('display-reg-no').innerText = regNoFromDb; 
                 document.getElementById('display-reg-no').style.color = "#1e293b";
                 showToast("Verified! Full Vehicle Number Revealed.", "success");
                 
-                if(pendingAction === 'call') openModal('call-helpline-modal'); 
+                // Proceed to original flow
+                if(pendingAction === 'call') {
+                    if(!isMessageSent) openModal('call-lock-modal'); 
+                    else openModal('call-warning-modal'); 
+                }
                 if(pendingAction === 'msg') openMessageSheet();
+                
                 pendingAction = null;
             } else {
                 showToast("Incorrect digits. Please check the number plate again.", "error");
             }
         }
 
-        function executeHelplineCall() {
-            recordNotificationSent();
-            window.location.href = "tel:6372980014"; 
+        // 🔥 EXOTEL REPLACED WITH HELPLINE
+        function executeCall() {
+            database.ref('ActiveCallSessions/helpline').set(Date.now())
+            .then(() => { window.location.href = "tel:" + TAGOWN_HELPLINE; })
+            .catch(() => { window.location.href = "tel:" + TAGOWN_HELPLINE; });
+        }
+
+        function updateEmergencyLinks() {
+            document.getElementById('em-family-btn').onclick = function(e) {
+                e.preventDefault(); 
+                executeCall();
+            };
         }
 
         function fetchVehicleOwner(qrId) {
@@ -581,6 +627,7 @@
         }
 
         function finalizeOwnerData() {
+            updateEmergencyLinks();
             checkAppStatus(ownerPhone);
             applyPrivacyUI();
         }
@@ -588,7 +635,7 @@
         // 🔥 INITIAL MASKING APPLIED HERE
         function applyPrivacyUI() {
             const plate = document.getElementById('display-reg-no');
-            const callBtnSpan = document.querySelector('.call-btn span');
+            const callBtnSpan = document.querySelector('.call-btn-span');
             const callBtnIcon = document.querySelector('.call-btn i');
 
             if(ownerTagPaused) {
@@ -613,6 +660,8 @@
                     callBtnSpan.innerText = "Calls Disabled";
                     callBtnSpan.style.color = "#94a3b8";
                     callBtnIcon.style.color = "#94a3b8";
+                } else {
+                    callBtnSpan.innerText = "Call Owner";
                 }
             }
         }
@@ -662,6 +711,12 @@
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
+                    isMessageSent = true; 
+                    
+                    if(!ownerCallsDisabled) {
+                        const callBtnText = document.querySelector('.call-btn-span');
+                        if(callBtnText) callBtnText.innerText = "Call Owner\n(Unlocked)";
+                    }
                     
                     recordNotificationSent(); 
 
@@ -681,6 +736,14 @@
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgUint8);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function enforcePrivacyLock() { window.location.replace(window.location.pathname); }
+
+        if (window.location.search.includes('id=')) {
+            document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') enforcePrivacyLock(); });
+            window.addEventListener("blur", function() { enforcePrivacyLock(); });
+            window.addEventListener("pagehide", function() { enforcePrivacyLock(); });
         }
     </script>
 </body>
