@@ -142,6 +142,10 @@
         .toast.show { transform: translateX(-50%) translateY(0); }
         .toast.error { background: #dc2626; }
         .toast.success { background: #16a34a; }
+        
+        /* Typography enhancement for legal text */
+        .legal-text { font-size: 13px; color: #475569; line-height: 1.7; margin-bottom: 15px; text-align: left; }
+        .legal-bold { font-weight: 700; color: #1e293b; }
     </style>
     
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-YWJP0MX98Q"></script>
@@ -221,15 +225,19 @@
                 <h3 style="color: #1e3a8a;"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h3>
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">We only collect necessary data to provide vehicle security services.</p>
+            <p class="legal-text"><span class="legal-bold">1. Data Masking & Security:</span> At Tagown, we prioritize user anonymity. When a QR code is scanned, the vehicle owner's identity, phone number, and location remain strictly confidential and encrypted.</p>
+            <p class="legal-text"><span class="legal-bold">2. Anti-Spam Measures:</span> To protect our users from harassment, we employ strict rate-limiting (max 5 alerts per hour) and physical vehicle verification (number plate digit matching).</p>
+            <p class="legal-text"><span class="legal-bold">3. No Data Selling:</span> We do not sell, trade, or expose your personal data to third-party marketing agencies. Data is strictly used to facilitate peer-to-peer communication.</p>
         </div>
 
         <div id="terms-modal" class="center-modal" style="max-height: 80vh; overflow-y: auto;">
             <div class="sheet-header" style="margin-bottom: 10px;">
-                <h3 style="color: #1e3a8a;"><i class="fa-solid fa-file-contract"></i> Terms of Service</h3>
+                <h3 style="color: #1e3a8a;"><i class="fa-solid fa-file-contract"></i> Terms of Service & Disclaimer</h3>
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to the following...</p>
+            <p class="legal-text"><span class="legal-bold">1. Service Scope:</span> Tagown is strictly a communication bridge designed to facilitate contact between the public and a vehicle owner. We are NOT a security agency or an anti-theft tracking service.</p>
+            <p class="legal-text"><span class="legal-bold">2. No Liability for Damages:</span> Tagown, its founder, and parent entity (Meherwebstudio) hold ZERO legal or financial liability for any physical damage, theft, accident, parking fines, or loss of property relating to any vehicle carrying a Tagown QR code.</p>
+            <p class="legal-text"><span class="legal-bold">3. Emergency Situations:</span> In life-threatening medical or legal emergencies, users must contact National Authorities (Police, Ambulance) directly. Tagown notifications do not replace government emergency services.</p>
         </div>
 
         <div id="contact-modal" class="center-modal" style="text-align: center;">
@@ -269,7 +277,7 @@
                 <div class="btn-row" id="action-btn-row">
                     <button onclick="attemptAction('call')" class="action-btn call-btn">
                         <i class="fa-solid fa-phone" style="color:#f59e0b;"></i>
-                        <span style="color: #64748b;">Call Owner</span>
+                        <span style="color: #64748b;">Call Helpline</span>
                     </button>
 
                     <button onclick="attemptAction('msg')" class="action-btn msg-btn">
@@ -288,10 +296,10 @@
 
             <div id="verify-modal" class="center-modal">
                 <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-lock" style="font-size: 40px; color: #2563eb;"></i></div>
-                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Security Verification</h3>
-                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">To prevent spam, please prove you are with the vehicle by entering the <b>last 3 characters</b> of the number plate.</p>
-                <input type="text" id="verify-input" class="input-field" placeholder="Last 3 chars (e.g., 234)" maxlength="3">
-                <button onclick="checkVerification()" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 10px;">VERIFY & UNLOCK</button>
+                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Security Verification 🛡️</h3>
+                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">To prevent misuse, please enter the <b>LAST 3 DIGITS</b> of the vehicle's number plate you are looking at.</p>
+                <input type="text" id="verify-input" class="input-field" placeholder="e.g. 117" maxlength="3">
+                <button onclick="checkVerification()" style="width: 100%; background: #16a34a; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 10px;">VERIFY & PROCEED</button>
                 <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
             </div>
 
@@ -321,9 +329,9 @@
                     <h3 style="color: #dc2626;"><i class="fa-solid fa-triangle-exclamation"></i> Emergency Action Plan</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <a href="#" id="em-family-btn" class="em-item" style="background: #f59e0b;">
-                    <div class="em-icon"><i class="fa-solid fa-users"></i></div>
-                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly</span></div>
+                <a href="tel:6372980014" class="em-item" style="background: #f59e0b;">
+                    <div class="em-icon"><i class="fa-solid fa-headset"></i></div>
+                    <div class="em-text-box"><span class="em-title">Tagown Support Helpline</span><span class="em-desc">Call Tagown in an emergency</span></div>
                 </a>
                 <a href="tel:112" class="em-item" style="background: #1d4ed8;">
                     <div class="em-icon"><i class="fa-solid fa-building-shield"></i></div>
@@ -335,33 +343,26 @@
                 </a>
             </div>
 
-            <div id="call-warning-modal" class="center-modal">
+            <div id="call-helpline-modal" class="center-modal">
                 <div class="sheet-header" style="justify-content: center; margin-bottom: 10px;">
-                    <h3 style="color: #1565C0;">Important Instruction 📞</h3>
+                    <h3 style="color: #1565C0;">Tagown Helpline 📞</h3>
                 </div>
                 <p style="font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 20px; text-align: center;">
-                    Your phone dialer will now open with a special secure number.<br><br>
-                    <strong>⚠️ PLEASE DO NOT EDIT OR DELETE ANY NUMBERS OR COMMAS (,).</strong><br><br>
-                    Just press the Call button directly to connect with the owner.
+                    In case of an emergency, wrong parking, or urgent issue, you can speak directly to the Tagown Company Helpline.<br><br>
+                    We will take your message and securely forward the information to the vehicle owner immediately.
                 </p>
-                <button onclick="executeCall()" class="app-primary-btn" style="background: #16a34a; margin-bottom: 10px;">I UNDERSTAND, CALL NOW</button>
+                <button onclick="executeHelplineCall()" class="app-primary-btn" style="background: #2563eb; margin-bottom: 10px;">CALL TAGOWN HELPLINE</button>
                 <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
             </div>
 
-            <div id="call-lock-modal" class="center-modal">
-                <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-shield-halved" style="font-size: 40px; color: #f59e0b;"></i></div>
-                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Safety Check 🛡️</h3>
-                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">For the owner's privacy, please send an alert message detailing the issue first. Calling will be automatically enabled after sending.</p>
-                <button onclick="closeAll(); openMessageSheet();" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer;">SEND MESSAGE NOW</button>
-            </div>
-
-            <div id="info-modal" class="center-modal">
+            <div id="info-modal" class="center-modal" style="text-align: left;">
                 <div class="sheet-header" style="margin-bottom: 10px;">
-                    <h3 style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> Safe & Secure</h3>
+                    <h3 style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> Safety & Privacy 🛡️</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 15px;"><strong>Tagown Privacy Guarantee:</strong><br>Tagown acts as a highly secure communication bridge. The vehicle owner's personal details and phone number are completely hidden and encrypted.</p>
-                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is provided for communication assistance only.</p>
+                <p class="legal-text"><span class="legal-bold">Privacy Guarantee:</span> Your identity and contact numbers remain completely hidden and encrypted when using Tagown.</p>
+                <p class="legal-text"><span class="legal-bold">Anti-Spam Policy:</span> To prevent misuse, notifications are rate-limited, and users must physically verify the vehicle number plate.</p>
+                <p class="legal-text" style="font-size: 11px; color: #64748b; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> Tagown strictly serves as a communication facilitator. We are not a security agency and hold no liability for physical vehicle theft, damage, or loss. Use emergency services for immediate help.</p>
             </div>
         </div>
     </div>
@@ -382,16 +383,16 @@
         let ownerPhone = "";
         let qrIdFromUrl = "";
         let regNoFromDb = "";
-        let callingPinFromDb = ""; 
         let isAppActive = false; 
 
-        // 🚀 NEW SECURITY VARIABLES
-        let isMessageSent = false;
         let isInvalidTag = false;
         let isVerified = false;
         let pendingAction = null;
         let ownerCallsDisabled = false;
         let ownerTagPaused = false;
+        
+        const RATE_LIMIT_MS = 3600000;
+        const MAX_NOTIFICATIONS = 5;
 
         window.onload = function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -430,79 +431,83 @@
         function openModal(id) { document.getElementById('main-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('main-overlay').classList.remove('active'); document.querySelectorAll('.bottom-sheet, .center-modal').forEach(el => el.classList.remove('active')); }
         function openMessageSheet() { openModal('msg-sheet'); }
+        function openEmergencySheet() { openModal('emergency-sheet'); }
 
-        // =======================================================
-        // 🚀 MASTER SECURITY INTERCEPTOR
-        // =======================================================
+        function canSendNotification() {
+            let data = localStorage.getItem('tagown_rate_limit');
+            if(!data) return true;
+            
+            try {
+                let parsed = JSON.parse(data);
+                if(Date.now() - parsed.firstTime >= RATE_LIMIT_MS) {
+                    localStorage.removeItem('tagown_rate_limit');
+                    return true;
+                }
+                return parsed.count < MAX_NOTIFICATIONS;
+            } catch(e) { return true; }
+        }
+
+        function recordNotificationSent() {
+            let data = localStorage.getItem('tagown_rate_limit');
+            if(!data) {
+                localStorage.setItem('tagown_rate_limit', JSON.stringify({ count: 1, firstTime: Date.now() }));
+            } else {
+                let parsed = JSON.parse(data);
+                parsed.count += 1;
+                localStorage.setItem('tagown_rate_limit', JSON.stringify(parsed));
+            }
+        }
+
         function attemptAction(action) {
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
             if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
             
-            // 1. Check if Tag is completely Paused by owner
-            if(ownerTagPaused) { 
-                showToast("The owner is currently unavailable.", "error"); 
-                return; 
-            }
-
-            // 2. Check if Calls are Disabled by owner
-            if(action === 'call' && ownerCallsDisabled) { 
-                showToast("Owner has disabled voice calls. Please notify instead.", "error"); 
-                return; 
-            }
+            if(ownerTagPaused) { showToast("The owner is currently unavailable.", "error"); return; }
+            if(action === 'call' && ownerCallsDisabled) { showToast("Owner has disabled calls. Please notify instead.", "error"); return; }
             
-            // 3. Spammer Verification (Last 3 Digits)
+            if(!canSendNotification()) { showToast("Limit Reached: Max 5 alerts per hour allowed.", "error"); return; }
+            
             if(!isVerified) {
                 pendingAction = action;
-                document.getElementById('verify-input').value = ""; // clear old input
+                document.getElementById('verify-input').value = "";
                 openModal('verify-modal');
             } else {
-                // If already verified, execute directly
-                if(action === 'call') {
-                    if(!isMessageSent) openModal('call-lock-modal'); 
-                    else openModal('call-warning-modal'); 
-                }
+                if(action === 'call') openModal('call-helpline-modal'); 
                 if(action === 'msg') openMessageSheet();
             }
         }
 
+        // 🔥 REVEAL FULL NUMBER ON VERIFICATION SUCCESS
         function checkVerification() {
             const input = document.getElementById('verify-input').value.trim().toUpperCase();
-            const actualLast3 = regNoFromDb.trim().slice(-3).toUpperCase();
-            
-            if(input === actualLast3) {
+            if(!regNoFromDb || regNoFromDb.length <= 3) {
                 isVerified = true;
+            } else {
+                const actualLast3 = regNoFromDb.trim().slice(-3).toUpperCase();
+                if(input === actualLast3) {
+                    isVerified = true;
+                }
+            }
+            
+            if(isVerified) {
                 closeAll();
                 
-                // Unlock UI & Reveal full number plate
+                // 🚀 UNMASK AND SHOW FULL REG NUMBER!
                 document.getElementById('display-reg-no').innerText = regNoFromDb; 
                 document.getElementById('display-reg-no').style.color = "#1e293b";
-                showToast("Verified Successfully! Unlocked.", "success");
+                showToast("Verified! Full Vehicle Number Revealed.", "success");
                 
-                // Automatically execute the action they clicked
-                if(pendingAction === 'call') {
-                    if(!isMessageSent) openModal('call-lock-modal'); 
-                    else openModal('call-warning-modal'); 
-                }
+                if(pendingAction === 'call') openModal('call-helpline-modal'); 
                 if(pendingAction === 'msg') openMessageSheet();
-                
                 pendingAction = null;
             } else {
                 showToast("Incorrect digits. Please check the number plate again.", "error");
             }
         }
 
-        function executeCall() {
-            database.ref('ActiveCallSessions/' + callingPinFromDb).set(Date.now())
-            .then(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; })
-            .catch(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; });
-        }
-
-        function updateEmergencyLinks() {
-            if(callingPinFromDb) {
-                document.getElementById('em-family-btn').onclick = function(e) {
-                    e.preventDefault(); executeCall();
-                };
-            }
+        function executeHelplineCall() {
+            recordNotificationSent();
+            window.location.href = "tel:6372980014"; 
         }
 
         function fetchVehicleOwner(qrId) {
@@ -525,12 +530,8 @@
                         const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
                         if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                             ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
-                            callingPinFromDb = phoneNode.child('callingPIN').val();
-                            
-                            // Get Privacy Settings
                             ownerCallsDisabled = phoneNode.child('callsDisabled').val() || false;
                             ownerTagPaused = phoneNode.child('tagPaused').val() || false;
-                            
                             found = true; 
                         }
                     } else {
@@ -538,11 +539,8 @@
                             const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
                             if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                 ownerPhone = vNode.child('ownerPhone').val() || phone; 
-                                callingPinFromDb = vNode.child('callingPIN').val();
-                                
                                 ownerCallsDisabled = vNode.child('callsDisabled').val() || false;
                                 ownerTagPaused = vNode.child('tagPaused').val() || false;
-                                
                                 found = true; 
                             }
                         });
@@ -550,7 +548,6 @@
                 });
                 
                 if (!found) {
-                    // Fallback for MyVehicles legacy
                     database.ref('MyVehicles').once('value').then((mySnap) => {
                          mySnap.forEach((phoneNode) => {
                             if (found) return;
@@ -559,11 +556,8 @@
                                 const dbReg = phoneNode.child('registrationNumber').val() || phoneNode.child('regNo').val();
                                 if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                     ownerPhone = phoneNode.child('ownerPhone').val() || phone; 
-                                    callingPinFromDb = phoneNode.child('callingPIN').val();
-                                    
                                     ownerCallsDisabled = phoneNode.child('callsDisabled').val() || false;
                                     ownerTagPaused = phoneNode.child('tagPaused').val() || false;
-                                    
                                     found = true; 
                                 }
                             } else {
@@ -571,11 +565,8 @@
                                     const dbReg = vNode.child('registrationNumber').val() || vNode.child('regNo').val();
                                     if(dbReg && dbReg.replace(/ /g, "").toUpperCase() === searchReg) { 
                                         ownerPhone = vNode.child('ownerPhone').val() || phone; 
-                                        callingPinFromDb = vNode.child('callingPIN').val();
-                                        
                                         ownerCallsDisabled = vNode.child('callsDisabled').val() || false;
                                         ownerTagPaused = vNode.child('tagPaused').val() || false;
-                                        
                                         found = true; 
                                     }
                                 });
@@ -590,12 +581,11 @@
         }
 
         function finalizeOwnerData() {
-            updateEmergencyLinks();
             checkAppStatus(ownerPhone);
             applyPrivacyUI();
         }
 
-        // 🚀 APPLIES MASKING AND PRIVACY STATES ON LOAD
+        // 🔥 INITIAL MASKING APPLIED HERE
         function applyPrivacyUI() {
             const plate = document.getElementById('display-reg-no');
             const callBtnSpan = document.querySelector('.call-btn span');
@@ -608,10 +598,14 @@
                 plate.style.color = "#dc2626";
                 plate.style.fontSize = "22px";
             } else {
-                // Initial Masking -> OD 17 AB 7***
-                let cleanReg = regNoFromDb.trim();
-                let maskedReg = cleanReg.substring(0, cleanReg.length - 3) + "***";
-                plate.innerText = maskedReg;
+                // APPLY MASK: OD 17 AB ***
+                if(regNoFromDb && regNoFromDb.length > 3) {
+                    let cleanReg = regNoFromDb.trim();
+                    let maskedReg = cleanReg.substring(0, cleanReg.length - 3) + "***";
+                    plate.innerText = maskedReg;
+                } else {
+                    plate.innerText = regNoFromDb;
+                }
                 plate.style.color = "#1e293b";
                 
                 if(ownerCallsDisabled) {
@@ -649,6 +643,7 @@
                 if (cleanPhone.length > 10 && cleanPhone.startsWith('91')) { cleanPhone = cleanPhone.slice(-10); }
                 const safeId = await getSecureId(cleanPhone);
 
+                // 🚀 TRIGGERING PUSH NOTIFICATION WITH "tagown_siren" SOUND
                 const response = await fetch("https://tagown-server.baddalmeherdev.workers.dev", {
                     method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -656,19 +651,20 @@
                         include_aliases: { external_id: [safeId] },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb}, contents: {"en": msg},
                         data: { "trigger_exotel_sms": !isAppActive, "vehicle_reg_no": regNoFromDb },
-                        app_url: "tagown://notifications", existing_android_channel_id: "tagown_urgent_alerts", 
-                        priority: 10, android_visibility: 1, android_sound: "default", small_icon: "ic_notification_stat"
+                        app_url: "tagown://notifications", 
+                        android_channel_id: "tagown_siren_alerts", 
+                        priority: 10, 
+                        android_visibility: 1, 
+                        android_sound: "tagown_siren", // MATCHES ANDROID APP SOUND
+                        small_icon: "ic_notification_stat"
                     })
                 });
 
                 if(response.ok) {
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
-                    isMessageSent = true;
                     
-                    if(!ownerCallsDisabled) {
-                        const callBtnText = document.querySelector('.call-btn span');
-                        if(callBtnText) callBtnText.innerText = "Call Owner\n(Unlocked)";
-                    }
+                    recordNotificationSent(); 
+
                     setTimeout(() => { closeAll(); btn.innerText = "SEND NOW"; btn.disabled = false; btn.style.background = "#16a34a"; showToast("Alert Sent Securely!", "success"); }, 1500);
                 } else {
                     const errText = await response.text(); throw new Error(errText); 
@@ -686,14 +682,6 @@
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
         }
-
-        function enforcePrivacyLock() { window.location.replace(window.location.pathname); }
-
-        if (window.location.search.includes('id=')) {
-            document.addEventListener("visibilitychange", function() { if (document.visibilityState === 'hidden') enforcePrivacyLock(); });
-            window.addEventListener("blur", function() { enforcePrivacyLock(); });
-            window.addEventListener("pagehide", function() { enforcePrivacyLock(); });
-        }
     </script>
 </body>
-                        </html>
+</html>
