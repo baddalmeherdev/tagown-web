@@ -6,18 +6,18 @@
     
     <title>Tagown - Smart Vehicle Security</title>
     <meta name="title" content="Tagown - Smart Vehicle Security">
-    <meta name="description" content="Stick the Tagown QR on your vehicle. Anyone can scan it to alert you during parking issues or emergencies without ever seeing your phone number.">
+    <meta name="description" content="Attach the Tagown QR code to your vehicle. It enables anyone to securely notify you about parking issues or emergencies without ever exposing your personal phone number or private details.">
 
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tagown.online/">
     <meta property="og:title" content="Tagown - Smart Vehicle Security">
-    <meta property="og:description" content="100% Anonymous Vehicle Alerts. Get notified instantly via push notifications.">
+    <meta property="og:description" content="Seamless Vehicle Connectivity. Complete Privacy. Get notified instantly via push notifications.">
     <meta property="og:image" content="https://tagown.online/priview.png">
 
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://tagown.online/">
     <meta property="twitter:title" content="Tagown - Smart Vehicle Security">
-    <meta property="twitter:description" content="100% Anonymous Vehicle Alerts. Get notified instantly via push notifications.">
+    <meta property="twitter:description" content="Seamless Vehicle Connectivity. Complete Privacy. Get notified instantly via push notifications.">
     <meta property="twitter:image" content="https://tagown.online/priview.png">
     
     <link rel="icon" type="image/png" sizes="192x192" href="favicon2.png">
@@ -170,8 +170,8 @@
 
         <div class="hero">
             <div class="lp-container">
-                <h1>Smart Vehicle Security.<br><span class="gradient-text">Complete Privacy.</span></h1>
-                <p>Stick the Tagown QR on your vehicle. Anyone can scan it to alert you during parking issues or emergencies without ever seeing your phone number.</p>
+                <h1>Seamless Vehicle Connectivity.<br><span class="gradient-text">Complete Privacy.</span></h1>
+                <p>Attach the Tagown QR code to your vehicle. It enables anyone to securely notify you about parking issues or emergencies without ever exposing your personal phone number or private details.</p>
                 <div class="hero-btns">
                     <a href="https://play.google.com/store/apps/details?id=com.tagown.app" class="btn-primary"><i class="fa-brands fa-google-play"></i> Download App</a>
                 </div>
@@ -184,18 +184,18 @@
                 <div class="grid">
                     <div class="card">
                         <div class="card-icon"><i class="fa-solid fa-user-secret"></i></div>
-                        <h3>100% Anonymous</h3>
-                        <p>Your phone number is completely hidden. Connect via secure toll-free calls and smart push notifications.</p>
+                        <h3>Total Anonymity</h3>
+                        <p>Your phone number remains entirely private. We facilitate connection via secure notifications and masked calling to ensure your safety.</p>
                     </div>
                     <div class="card">
                         <div class="card-icon" style="color:#dc2626; background:#fee2e2;"><i class="fa-solid fa-bell-concierge"></i></div>
-                        <h3>Instant Emergency Alerts</h3>
-                        <p>Anyone can scan it and contact you instantly without knowing your phone number. Your number always remains private.</p>
+                        <h3>Immediate Alerts</h3>
+                        <p>Get instantly notified by anyone who scans your tag, ensuring you're always informed about your vehicle's status in critical moments.</p>
                     </div>
                     <div class="card">
                         <div class="card-icon" style="color:#16a34a; background:#dcfce3;"><i class="fa-solid fa-file-shield"></i></div>
-                        <h3>Digital Document Vault</h3>
-                        <p>Store your RC, Insurance, and DL securely inside the app, protected by Biometric Lock.</p>
+                        <h3>Secure Document Vault</h3>
+                        <p>Safely store essential documents like your RC, Insurance, and Driving License, secured strictly by biometric authentication.</p>
                     </div>
                 </div>
             </div>
@@ -221,7 +221,7 @@
                 <h3 style="color: #1e3a8a;"><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h3>
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">We only collect necessary data to provide vehicle security services.</p>
+            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">We are committed to protecting your privacy. Tagown only collects the minimum data required to facilitate secure communication. Your personal phone number is encrypted and never shared with users who scan your QR code.</p>
         </div>
 
         <div id="terms-modal" class="center-modal" style="max-height: 80vh; overflow-y: auto;">
@@ -229,7 +229,7 @@
                 <h3 style="color: #1e3a8a;"><i class="fa-solid fa-file-contract"></i> Terms of Service</h3>
                 <button onclick="closeLpModals()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to the following...</p>
+            <p style="font-size: 13px; color: #475569; line-height: 1.6; margin-bottom: 10px;">By using Tagown, you agree to utilize our service responsibly. Tagown is a communication facilitation platform and does not guarantee immediate responses. We are not liable for any vehicle damage, theft, or missed communications. Users are solely responsible for ensuring their vehicle's safety.</p>
         </div>
 
         <div id="contact-modal" class="center-modal" style="text-align: center;">
@@ -289,9 +289,17 @@
             <div id="verify-modal" class="center-modal">
                 <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-lock" style="font-size: 40px; color: #2563eb;"></i></div>
                 <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Security Verification</h3>
-                <p style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;">To prevent spam, please prove you are with the vehicle by entering the <b>last 3 characters</b> of the number plate.</p>
+                <p id="verify-msg-text" style="text-align: center; font-size: 13px; color: #475569; margin-bottom: 20px; line-height: 1.5;"></p>
                 <input type="text" id="verify-input" class="input-field" placeholder="Last 3 chars (e.g., 234)" maxlength="3">
                 <button onclick="checkVerification()" style="width: 100%; background: #2563eb; color: white; padding: 14px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; margin-bottom: 10px;">VERIFY & UNLOCK</button>
+                <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
+            </div>
+
+            <div id="unlinked-modal" class="center-modal">
+                <div style="text-align: center; margin-bottom: 15px;"><i class="fa-solid fa-qrcode" style="font-size: 40px; color: #64748b;"></i></div>
+                <h3 style="text-align: center; font-size: 18px; font-weight: 800; margin-bottom: 10px;">Unregistered Tag</h3>
+                <p style="text-align: center; font-size: 14px; color: #475569; margin-bottom: 20px; line-height: 1.5;">This QR code is new and is not currently connected to any vehicle.</p>
+                <button onclick="window.location.href='https://tagown.online/vehicles.html'" class="app-primary-btn" style="margin-bottom: 10px;">Connect This QR Code</button>
                 <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
             </div>
 
@@ -322,8 +330,8 @@
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
                 <a href="#" id="em-family-btn" class="em-item" style="background: #f59e0b;">
-                    <div class="em-icon"><i class="fa-solid fa-users"></i></div>
-                    <div class="em-text-box"><span class="em-title">Tagown Support (Family Alert)</span><span class="em-desc">Notify owner's family or Tagown instantly</span></div>
+                    <div class="em-icon"><i class="fa-solid fa-headset"></i></div>
+                    <div class="em-text-box"><span class="em-title">Tagown Secure Connection</span><span class="em-desc">Contact the owner securely via 6372890014</span></div>
                 </a>
                 <a href="tel:112" class="em-item" style="background: #1d4ed8;">
                     <div class="em-icon"><i class="fa-solid fa-building-shield"></i></div>
@@ -337,12 +345,12 @@
 
             <div id="call-warning-modal" class="center-modal">
                 <div class="sheet-header" style="justify-content: center; margin-bottom: 10px;">
-                    <h3 style="color: #1565C0;">Important Instruction 📞</h3>
+                    <h3 style="color: #1565C0;">Secure Call Connection 📞</h3>
                 </div>
                 <p style="font-size: 14px; color: #334155; line-height: 1.6; margin-bottom: 20px; text-align: center;">
-                    Your phone dialer will now open with a special secure number.<br><br>
-                    <strong>⚠️ PLEASE DO NOT EDIT OR DELETE ANY NUMBERS OR COMMAS (,).</strong><br><br>
-                    Just press the Call button directly to connect with the owner.
+                    You will now be connected securely to the owner.<br><br>
+                    <strong>Secure Number: 6372890014</strong><br><br>
+                    Press Call to connect anonymously.
                 </p>
                 <button onclick="executeCall()" class="app-primary-btn" style="background: #16a34a; margin-bottom: 10px;">I UNDERSTAND, CALL NOW</button>
                 <button onclick="closeAll()" style="width: 100%; background: transparent; color: #64748b; padding: 12px; border: none; font-weight: bold; cursor: pointer;">Cancel</button>
@@ -360,8 +368,8 @@
                     <h3 style="color: #16a34a;"><i class="fa-solid fa-circle-check"></i> Safe & Secure</h3>
                     <button onclick="closeAll()" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
                 </div>
-                <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 15px;"><strong>Tagown Privacy Guarantee:</strong><br>Tagown acts as a highly secure communication bridge. The vehicle owner's personal details and phone number are completely hidden and encrypted.</p>
-                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is provided for communication assistance only.</p>
+                <p style="font-size: 13px; color: #334155; line-height: 1.6; margin-bottom: 15px;"><strong>Tagown Privacy Guarantee:</strong><br>Tagown serves as a highly secure communication bridge. The vehicle owner's personal details and phone number are completely hidden and encrypted at all times.</p>
+                <p style="font-size: 11px; color: #64748b; line-height: 1.5; background: #f8fafc; padding: 10px; border-radius: 8px;"><strong>Disclaimer:</strong> This system is strictly provided for communication assistance. Tagown assumes no liability for vehicle safety, property damage, missed alerts, or emergencies. Please take appropriate safety precautions.</p>
             </div>
         </div>
     </div>
@@ -419,10 +427,11 @@
         function setInvalidTag() {
             isInvalidTag = true;
             const plate = document.getElementById('display-reg-no');
-            plate.innerText = "INVALID TAG";
+            plate.innerText = "NOT CONNECTED";
             plate.style.color = "#dc2626";
-            plate.style.fontSize = "26px";
-            document.querySelector('.title-text').innerText = "Tag Not Found";
+            plate.style.fontSize = "22px";
+            document.querySelector('.title-text').innerText = "Tag Not Connected";
+            openModal('unlinked-modal');
         }
 
         function openLpModal(id) { document.getElementById('lp-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
@@ -430,6 +439,33 @@
         function openModal(id) { document.getElementById('main-overlay').classList.add('active'); document.getElementById(id).classList.add('active'); }
         function closeAll() { document.getElementById('main-overlay').classList.remove('active'); document.querySelectorAll('.bottom-sheet, .center-modal').forEach(el => el.classList.remove('active')); }
         function openMessageSheet() { openModal('msg-sheet'); }
+        function openEmergencySheet() { openModal('emergency-sheet'); }
+
+        // =======================================================
+        // 🛡️ ABUSE PREVENTION / RATE LIMITING
+        // =======================================================
+        function checkRateLimit() {
+            let limitData = JSON.parse(localStorage.getItem('tagown_limits') || '{"count": 0, "timestamp": 0}');
+            if (Date.now() - limitData.timestamp > 3600000) {
+                limitData = { count: 0, timestamp: Date.now() };
+                localStorage.setItem('tagown_limits', JSON.stringify(limitData));
+            }
+            if (limitData.count >= 5) {
+                showToast("You have reached the maximum limit. Please try again after 1 hour.", "error");
+                return false;
+            }
+            return true;
+        }
+
+        function incrementRateLimit() {
+            let limitData = JSON.parse(localStorage.getItem('tagown_limits') || '{"count": 0, "timestamp": 0}');
+            if (Date.now() - limitData.timestamp > 3600000) {
+                limitData.count = 0;
+            }
+            limitData.count += 1;
+            limitData.timestamp = Date.now();
+            localStorage.setItem('tagown_limits', JSON.stringify(limitData));
+        }
 
         // =======================================================
         // 🚀 MASTER SECURITY INTERCEPTOR
@@ -438,6 +474,8 @@
             if(isInvalidTag) { showToast("This tag is not registered.", "error"); return; }
             if(!ownerPhone) { showToast("Loading owner securely...", "normal"); return; }
             
+            if(!checkRateLimit()) return;
+
             // 1. Check if Tag is completely Paused by owner
             if(ownerTagPaused) { 
                 showToast("The owner is currently unavailable.", "error"); 
@@ -453,6 +491,11 @@
             // 3. Spammer Verification (Last 3 Digits)
             if(!isVerified) {
                 pendingAction = action;
+                let msgText = action === 'msg' 
+                    ? "Please complete the security check before sending a notification." 
+                    : "Please complete the security check before making a call.";
+                    
+                document.getElementById('verify-msg-text').innerHTML = `${msgText}<br><br>To prevent spam, please prove you are with the vehicle by entering the <b>last 3 characters</b> of the number plate.`;
                 document.getElementById('verify-input').value = ""; // clear old input
                 openModal('verify-modal');
             } else {
@@ -492,17 +535,19 @@
         }
 
         function executeCall() {
-            database.ref('ActiveCallSessions/' + callingPinFromDb).set(Date.now())
-            .then(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; })
-            .catch(() => { window.location.href = "tel:08040265615,," + callingPinFromDb; });
+            if(!checkRateLimit()) return;
+            incrementRateLimit();
+            
+            let sessionKey = callingPinFromDb || ownerPhone || "default";
+            database.ref('ActiveCallSessions/' + sessionKey).set(Date.now())
+            .then(() => { window.location.href = "tel:6372890014"; })
+            .catch(() => { window.location.href = "tel:6372890014"; });
         }
 
         function updateEmergencyLinks() {
-            if(callingPinFromDb) {
-                document.getElementById('em-family-btn').onclick = function(e) {
-                    e.preventDefault(); executeCall();
-                };
-            }
+            document.getElementById('em-family-btn').onclick = function(e) {
+                e.preventDefault(); executeCall();
+            };
         }
 
         function fetchVehicleOwner(qrId) {
@@ -632,6 +677,8 @@
         }
 
         async function executeAlert() {
+            if(!checkRateLimit()) { closeAll(); return; }
+            
             const issueSelector = document.getElementById('issue-selector').value;
             const customMsg = document.getElementById('custom-msg').value;
             const msg = customMsg.trim() !== "" ? customMsg : issueSelector;
@@ -657,11 +704,12 @@
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb}, contents: {"en": msg},
                         data: { "trigger_exotel_sms": !isAppActive, "vehicle_reg_no": regNoFromDb },
                         app_url: "tagown://notifications", existing_android_channel_id: "tagown_urgent_alerts", 
-                        priority: 10, android_visibility: 1, android_sound: "default", small_icon: "ic_notification_stat"
+                        priority: 10, android_visibility: 1, android_sound: "tagown_siren.mp3", small_icon: "ic_notification_stat"
                     })
                 });
 
                 if(response.ok) {
+                    incrementRateLimit();
                     btn.innerText = "SENT! ✅"; btn.style.background = "#15803d";
                     isMessageSent = true;
                     
