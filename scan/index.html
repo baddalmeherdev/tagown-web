@@ -703,7 +703,7 @@
                         include_aliases: { external_id: [safeId] },
                         headings: {"en": "🚨 Tagown Alert: " + regNoFromDb}, contents: {"en": msg},
                         data: { "trigger_exotel_sms": !isAppActive, "vehicle_reg_no": regNoFromDb },
-                        app_url: "tagown://notifications", existing_android_channel_id: "tagown_urgent_alerts", 
+                        app_url: "tagown://notifications", existing_android_channel_id: "tagown_siren_alerts_v1", 
                         priority: 10, android_visibility: 1, android_sound: "tagown_siren", small_icon: "ic_notification_stat"
                     })
                 });
