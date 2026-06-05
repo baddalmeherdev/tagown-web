@@ -121,15 +121,50 @@
         /* 📦 Main Container */
         .container { padding: 15px; max-width: 500px; margin: 0 auto; }
 
-        /* 🖼️ Auto & Swipeable Slider Banner */
+        /* 🖼️ Auto & Swipeable Slider Banner (APP UI STYLE) */
         .slider-container {
-            width: 100%; height: 180px; border-radius: 20px; overflow: hidden;
-            position: relative; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            width: 100%; aspect-ratio: 16/9; min-height: 200px; border-radius: 20px; overflow: hidden;
+            position: relative; margin-bottom: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.08);
             touch-action: pan-y;
         }
         .slider-track { display: flex; width: 400%; height: 100%; transition: transform 0.5s ease-in-out; cursor: grab;}
         .slider-track:active { cursor: grabbing; }
         .slider-track img { width: 25%; height: 100%; object-fit: cover; pointer-events: none;}
+        
+        /* 🚀 App-Style Premium Overlay & Content */
+        .banner-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.44); /* Deep slate overlay #700F172A */
+            pointer-events: none; /* Allow swipe to pass through */
+        }
+        .banner-content {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+            padding: 16px; box-sizing: border-box; display: flex; flex-direction: column;
+            justify-content: flex-end; pointer-events: none;
+        }
+        .banner-text h2 {
+            margin: 0; color: #FFFFFF; font-size: 18px; font-weight: 900; letter-spacing: -0.5px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }
+        .banner-text p {
+            margin: 4px 0 12px 0; color: #F8FAFC; font-size: 11px; font-weight: 500;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+        }
+        .banner-actions { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .banner-icons { display: flex; gap: 6px; }
+        .glass-icon {
+            width: 26px; height: 26px; background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .glass-icon img { width: 14px; height: 14px; object-fit: contain; filter: brightness(0) invert(1); }
+        .glass-icon.text-icon { color: #FFFFFF; font-size: 10px; font-weight: bold; }
+        .btn-banner-action {
+            background: #FFFFFF; color: #0F172A; border: none; border-radius: 100px;
+            padding: 8px 16px; font-size: 11px; font-weight: bold; pointer-events: auto; /* Enable clicks */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2); cursor: pointer; transition: transform 0.2s;
+        }
+        .btn-banner-action:active { transform: scale(0.95); }
 
         /* 🚀 App Download & Dynamic Scrolling Announcement */
         .app-promo-container {
@@ -310,6 +345,23 @@
                     <img src="banner_home_privacy.webp" alt="Banner">
                     <img src="banner_home_vault.webp" alt="Banner">
                     <img src="banner_home_sos.webp" alt="Banner">
+                </div>
+                <!-- 🚀 App-Style Premium Overlay -->
+                <div class="banner-overlay"></div>
+                <div class="banner-content">
+                    <div class="banner-text">
+                        <h2>Smart Vehicle Protection</h2>
+                        <p>Instant alerts, complete privacy, absolute peace of mind.</p>
+                    </div>
+                    <div class="banner-actions">
+                        <div class="banner-icons">
+                            <div class="glass-icon"><img src="ic_scan_qr.webp" alt="Scan"></div>
+                            <div class="glass-icon"><img src="ic_vault.webp" alt="Vault"></div>
+                            <div class="glass-icon"><img src="ic_nav_sos.webp" alt="SOS"></div>
+                            <div class="glass-icon text-icon">+4</div>
+                        </div>
+                        <button class="btn-banner-action" onclick="window.location.href='shop.html'">Buy Sticker</button>
+                    </div>
                 </div>
             </div>
 
