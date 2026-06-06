@@ -15,54 +15,61 @@
         }
         
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); margin: 0; padding: 0; color: var(--text-dark); padding-bottom: 80px; }
-        .header { background: var(--primary); padding: 20px; text-align: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        .header { background: var(--primary); padding: 20px; text-align: center; color: white; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
         .header h1 { margin: 0; font-size: 22px; font-style: italic; }
         .header p { margin: 5px 0 0 0; font-size: 13px; opacity: 0.9; }
 
         .container { padding: 20px; max-width: 600px; margin: auto; }
-        .card { background: var(--card); border-radius: 16px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        /* Premium Rounded Cards */
+        .card { background: var(--card); border-radius: 24px; padding: 25px; box-shadow: 0 8px 24px rgba(0,0,0,0.06); margin-bottom: 20px; }
 
         /* Forms & Buttons */
         .form-label { font-size: 13px; font-weight: bold; color: var(--text-dark); margin-bottom: 8px; display: block; }
-        .form-input { width: 100%; padding: 15px; border: 1px solid #E2E8F0; border-radius: 12px; font-size: 15px; margin-bottom: 15px; box-sizing: border-box; background: #F8FAFC; }
-        .btn-primary { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase;}
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-danger { background: #D32F2F; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 12px; cursor: pointer; font-weight: bold; }
+        .form-input { width: 100%; padding: 15px; border: 1px solid #E2E8F0; border-radius: 14px; font-size: 15px; margin-bottom: 15px; box-sizing: border-box; background: #F8FAFC; transition: 0.3s;}
+        .form-input:focus { border-color: var(--primary); outline: none; background: #FFFFFF;}
+        
+        .btn-primary { background: var(--primary); color: white; width: 100%; padding: 16px; border: none; border-radius: 100px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.2s; text-transform: uppercase;}
+        .btn-primary:active { transform: scale(0.96); }
+        .btn-danger { background: #FFEBEB; color: #D32F2F; border: none; padding: 8px 14px; border-radius: 100px; font-size: 12px; cursor: pointer; font-weight: bold; }
 
-        /* Dashboard Stats */
+        /* Dashboard Stats Tabs */
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-        .stat-box { background: white; padding: 20px; border-radius: 16px; border: 1px solid #E2E8F0; text-align: center;}
-        .stat-val { font-size: 24px; font-weight: 900; color: var(--primary); margin: 10px 0 5px 0; }
-        .stat-title { font-size: 12px; color: var(--text-light); font-weight: bold; text-transform: uppercase; }
+        .stat-box { background: white; padding: 20px 15px; border-radius: 20px; border: 2px solid #E2E8F0; text-align: center; cursor: pointer; transition: 0.2s;}
+        .stat-box.active { border-color: var(--primary); background: #F0F4FA; box-shadow: 0 4px 12px rgba(13,71,161,0.1);}
+        .stat-val { font-size: 22px; font-weight: 900; color: var(--primary); margin: 8px 0 4px 0; }
+        .stat-title { font-size: 11px; color: var(--text-light); font-weight: bold; text-transform: uppercase; }
 
         .hidden { display: none !important; }
 
         /* Lists */
         .order-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #E2E8F0; }
-        .order-item:last-child { border-bottom: none; }
-        .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
-        .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .order-item:last-child { border-bottom: none; padding-bottom: 0;}
+        .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
+        .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
-        /* Social Platform Checkboxes */
-        .social-option { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-weight: bold; font-size: 14px; color: #333;}
-        .social-input { display: none; margin-top: 5px; margin-bottom: 15px; border-color: var(--primary);}
+        /* Premium Social UI */
+        .social-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;}
+        .social-chip { border: 1.5px solid #E2E8F0; padding: 10px 15px; border-radius: 100px; font-size: 13px; font-weight: bold; color: #64748B; cursor: pointer; background: white; display: flex; align-items: center; gap: 6px; transition: 0.2s;}
+        .social-chip.active { border-color: var(--primary); background: #E3F2FD; color: var(--primary); }
+        .social-input-box { display: none; margin-bottom: 15px; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-content { background: white; width: 85%; max-width: 400px; border-radius: 16px; padding: 25px; max-height: 80vh; overflow-y: auto; text-align: center;}
-        .btn-close { background: #E2E8F0; color: #333; width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; margin-top: 15px; cursor: pointer;}
-        
+        .modal-content { background: white; width: 85%; max-width: 400px; border-radius: 24px; padding: 30px 25px; max-height: 80vh; overflow-y: auto; text-align: center;}
+        .btn-close { background: #F1F5F9; color: #333; width: 100%; padding: 14px; border: none; border-radius: 100px; font-weight: bold; margin-top: 15px; cursor: pointer;}
+
+        /* Welcome Register Screen */
+        .welcome-box { text-align: center; padding: 20px 10px; }
+        .welcome-icon { font-size: 60px; margin-bottom: 15px; }
+
         /* WhatsApp Floating */
         .wa-float { position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: #FFF; border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; text-decoration: none; transition: 0.3s; }
         .wa-float:active { transform: scale(0.9); }
         
         .footer-links { text-align: center; margin-top: 20px; }
         .footer-links a { color: var(--text-light); font-size: 13px; text-decoration: underline; cursor: pointer; font-weight: bold;}
-
-        /* Auth Required Screen */
-        .auth-required-box { text-align: center; padding: 40px 20px; }
-        .auth-required-box h2 { color: #B71C1C; margin-top: 15px; }
-        .auth-required-box p { color: var(--text-light); font-size: 14px; margin-bottom: 25px; }
     </style>
 </head>
 <body>
@@ -75,75 +82,95 @@
     <div class="container">
         
         <div id="sectionAuthRequired" class="card hidden">
-            <div class="auth-required-box">
-                <div style="font-size: 50px;">🔒</div>
-                <h2>Authentication Required</h2>
-                <p>Please login or sign up with your registered mobile number to access the Influencer Partner Portal.</p>
-                <button class="btn-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP NOW</button>
+            <div class="welcome-box">
+                <div class="welcome-icon">🔒</div>
+                <h2 style="color: #B71C1C; margin-top: 0;">Login Required</h2>
+                <p style="color: var(--text-light); font-size: 14px; margin-bottom: 25px;">Please login with your Tagown account to access the Partner Portal.</p>
+                <button class="btn-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
+            </div>
+        </div>
+
+        <div id="sectionWelcome" class="card hidden">
+            <div class="welcome-box">
+                <div class="welcome-icon">🤝</div>
+                <h2 style="color: var(--primary); margin-top: 0;">Become a Partner</h2>
+                <p style="color: var(--text-light); font-size: 14px; margin-bottom: 25px; line-height: 1.5;">Join the Tagown Influencer Program. Generate promo codes, share with your audience, and earn direct commissions directly to your bank account.</p>
+                <button class="btn-primary" onclick="showSection('sectionSetup')">REGISTER AS INFLUENCER</button>
             </div>
         </div>
 
         <div id="sectionSetup" class="card hidden">
             <h2 style="margin-top: 0; color: var(--primary);">Social Media Setup</h2>
-            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">Select your active platforms where you will promote Tagown.</p>
+            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">Select platforms where you have an audience.</p>
 
-            <div id="socialCheckboxes">
-                <div class="social-option"><input type="checkbox" value="Instagram" onchange="toggleSocialInput(this)"> 📸 Instagram</div>
-                <input type="text" id="input_Instagram" class="form-input social-input" placeholder="Instagram Username (e.g. @tagown)">
-
-                <div class="social-option"><input type="checkbox" value="YouTube" onchange="toggleSocialInput(this)"> ▶️ YouTube</div>
-                <input type="text" id="input_YouTube" class="form-input social-input" placeholder="YouTube Channel Link or Name">
-
-                <div class="social-option"><input type="checkbox" value="Facebook" onchange="toggleSocialInput(this)"> 📘 Facebook</div>
-                <input type="text" id="input_Facebook" class="form-input social-input" placeholder="Facebook Page Link">
-
-                <div class="social-option"><input type="checkbox" value="X (Twitter)" onchange="toggleSocialInput(this)"> 🐦 X (Twitter)</div>
-                <input type="text" id="input_X" class="form-input social-input" placeholder="X Username">
-
-                <div class="social-option"><input type="checkbox" value="Other" onchange="toggleSocialInput(this)"> 🌐 Website/Blog</div>
-                <input type="text" id="input_Other" class="form-input social-input" placeholder="Website URL">
+            <label class="form-label">Select Platforms</label>
+            <div class="social-grid">
+                <div class="social-chip" id="chip_ig" onclick="toggleSocial('ig', 'Instagram')">📸 Instagram</div>
+                <div class="social-chip" id="chip_yt" onclick="toggleSocial('yt', 'YouTube')">▶️ YouTube</div>
+                <div class="social-chip" id="chip_fb" onclick="toggleSocial('fb', 'Facebook')">📘 Facebook</div>
+                <div class="social-chip" id="chip_x" onclick="toggleSocial('x', 'X (Twitter)')">𝕏 X (Twitter)</div>
+                <div class="social-chip" id="chip_tg" onclick="toggleSocial('tg', 'Telegram')">✈️ Telegram</div>
+                <div class="social-chip" id="chip_oth" onclick="toggleSocial('oth', 'Other')">🔗 Other</div>
             </div>
 
-            <label style="font-size: 13px; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-top: 20px;">
+            <div id="inputsContainer">
+                <div class="social-input-box" id="box_ig"><input type="text" id="val_ig" class="form-input" placeholder="Instagram Username (e.g. @tagown)"></div>
+                <div class="social-input-box" id="box_yt"><input type="text" id="val_yt" class="form-input" placeholder="YouTube Channel Link"></div>
+                <div class="social-input-box" id="box_fb"><input type="text" id="val_fb" class="form-input" placeholder="Facebook Page Link"></div>
+                <div class="social-input-box" id="box_x"><input type="text" id="val_x" class="form-input" placeholder="X (Twitter) Username"></div>
+                <div class="social-input-box" id="box_tg"><input type="text" id="val_tg" class="form-input" placeholder="Telegram Channel Link"></div>
+                <div class="social-input-box" id="box_oth"><input type="text" id="val_oth" class="form-input" placeholder="Paste your Link here"></div>
+            </div>
+
+            <label style="font-size: 13px; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                 <input type="checkbox" id="chkAgree" style="width: 20px; height: 20px;"> I accept the Privacy Policy
             </label>
 
-            <button class="btn-primary" style="margin-top: 15px;" onclick="saveSocialSetup()">ACTIVATE DASHBOARD</button>
+            <button class="btn-primary" style="margin-top: 20px;" onclick="saveInfluencerProfile()">COMPLETE REGISTRATION</button>
         </div>
 
         <div id="sectionDashboard" class="hidden">
             
+            <p style="margin: 0 0 10px 5px; font-weight: bold; font-size: 16px; color: var(--primary);">Welcome, <span id="dashName">Partner</span>!</p>
+
             <div class="stats-grid">
-                <div class="stat-box">
+                <div class="stat-box active" id="tabPending" onclick="switchTxTab('pending')">
                     <div class="stat-title">Pending Earnings</div>
                     <div class="stat-val" style="color: #F57C00;">₹<span id="statPending">0</span></div>
-                    <div style="font-size: 10px; color: #888;">Awaiting Delivery</div>
+                    <div style="font-size: 10px; color: #888;">Click to view list</div>
                 </div>
-                <div class="stat-box">
+                <div class="stat-box" id="tabAvailable" onclick="switchTxTab('available')">
                     <div class="stat-title">Available Payout</div>
                     <div class="stat-val" style="color: #00C853;">₹<span id="statAvailable">0</span></div>
-                    <div style="font-size: 10px; color: #888;">Ready to Withdraw</div>
+                    <div style="font-size: 10px; color: #888;">Click to withdraw</div>
                 </div>
             </div>
 
-            <button class="btn-primary" style="background: var(--green); margin-bottom: 20px;" onclick="openWithdrawModal()">WITHDRAW FUNDS</button>
+            <button class="btn-primary" id="btnWithdraw" style="background: var(--green); margin-bottom: 20px;" onclick="openWithdrawModal()">WITHDRAW FUNDS</button>
+
+            <div class="card">
+                <h3 id="txTitle" style="margin-top: 0; font-size: 16px; color: var(--primary);">Pending Transactions</h3>
+                
+                <div id="listPending">
+                    <p style="text-align: center; color: #888; font-size: 13px;">No pending orders.</p>
+                </div>
+                
+                <div id="listAvailable" class="hidden">
+                    <p style="text-align: center; color: #888; font-size: 13px;">No completed orders or withdrawals yet.</p>
+                </div>
+            </div>
 
             <div class="card">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 style="margin: 0; font-size: 16px;">Your Promo Codes</h3>
-                    <button style="background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 11px;" onclick="openCreatePromo()">+ NEW</button>
+                    <button style="background: #1565C0; color: white; border: none; padding: 8px 16px; border-radius: 100px; font-weight: bold; cursor: pointer; font-size: 11px;" onclick="openCreatePromo()">+ CREATE NEW</button>
                 </div>
                 <div id="promoList"><p style="text-align: center; color: #888; font-size: 13px;">Loading your codes...</p></div>
             </div>
 
-            <div class="card">
-                <h3 style="margin-top: 0; font-size: 16px;">Recent Transactions</h3>
-                <div id="transactionList"><p style="text-align: center; color: #888; font-size: 13px;">No transactions yet.</p></div>
-            </div>
-
             <button class="btn-primary" style="background: #E2E8F0; color: #333;" onclick="logout()">LOGOUT</button>
             <div class="footer-links">
-                <a onclick="document.getElementById('privacyModal').style.display='flex'">View Privacy Policy & Terms</a>
+                <a onclick="document.getElementById('privacyModal').style.display='flex'">View Privacy Policy & Legal Terms</a>
             </div>
         </div>
     </div>
@@ -166,7 +193,7 @@
     <div id="withdrawModal" class="modal-overlay">
         <div class="modal-content">
             <h3 style="color: var(--green); margin-top: 0;">Withdraw Funds</h3>
-            <p style="font-size: 13px; color: #555;">Available Balance: <b style="color:var(--green); font-size: 16px;">₹<span id="withdrawAvailBal">0</span></b></p>
+            <p style="font-size: 13px; color: #555;">Available Balance: <b style="color:var(--green); font-size: 18px;">₹<span id="withdrawAvailBal">0</span></b></p>
             
             <div style="text-align: left;">
                 <label class="form-label">Withdrawal Amount (₹)</label>
@@ -181,18 +208,31 @@
         </div>
     </div>
 
+    <div id="successModal" class="modal-overlay">
+        <div class="modal-content">
+            <div style="font-size: 50px; margin-bottom: 10px;">✅</div>
+            <h3 style="color: var(--green); margin-top: 0;">Withdrawal Requested!</h3>
+            <p style="font-size: 14px; color: #444; font-weight: 500;">Your payout request has been successfully submitted to Tagown Admin.</p>
+            <div style="background: #FFF8E1; border: 1px solid #FFE082; padding: 15px; border-radius: 12px; margin: 15px 0;">
+                <p style="margin: 0; font-size: 13px; color: #E65100; font-weight: bold;">The amount will be securely credited to your UPI account within 10 Minutes to 24 Hours.</p>
+            </div>
+            <button class="btn-primary" onclick="document.getElementById('successModal').style.display='none'">OKAY, GOT IT</button>
+        </div>
+    </div>
+
     <div id="privacyModal" class="modal-overlay">
         <div class="modal-content" style="text-align: left;">
-            <h3 style="text-align: center;">📜 Privacy Policy & Terms</h3>
-            <p><b>1. Payout Timeline:</b> Once a withdrawal is requested, the amount will be securely credited to your linked UPI account within <b>10 Minutes to 24 Hours</b>.</p>
-            <p><b>2. Promo Policy:</b> Customers using your generated promo code will automatically receive a <b>20% Discount</b> on their checkout. You will receive your fixed commission on successful delivery.</p>
-            <p><b>3. DPDP Act Compliance:</b> Extracting, copying, or misusing partial customer data visible on this portal is strictly prohibited and carries severe legal action under Indian Cyber Law.</p>
-            <button class="btn-primary" style="margin-top: 15px;" onclick="document.getElementById('privacyModal').style.display='none'">I UNDERSTAND</button>
+            <h3 style="text-align: center; color: var(--primary);">📜 Privacy Policy & Legal Terms</h3>
+            <p><b>1. Authentic Representations:</b> As a Tagown Partner, you agree to make real and authentic claims about our products. No fake or exaggerated promises should be made to customers.</p>
+            <p><b>2. Payout Timeline:</b> Once a withdrawal is requested, the amount will be processed and credited to your linked account within <b>10 Minutes to 24 Hours</b>.</p>
+            <p><b>3. Promo Structure:</b> Customers using your generated promo code will securely receive a <b>20% Discount</b>. Your fixed commission is credited strictly upon successful delivery of the product.</p>
+            <p><b>4. DPDP Act Compliance:</b> We respect customer privacy. Extracting, saving, or misusing any partial customer data visible on this portal is strictly prohibited and legally binding.</p>
+            <button class="btn-primary" style="margin-top: 15px;" onclick="document.getElementById('privacyModal').style.display='none'">I AGREE & UNDERSTAND</button>
         </div>
     </div>
 
     <script>
-        // FIREBASE CONFIGURATION (Matches main website)
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -202,14 +242,13 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // SINGLE SIGN-ON LOGIC (Sync with index.html)
         let loggedInPhone = localStorage.getItem("tagownUserPhone");
         let availableTotalBalance = 0;
         let influencerNameGlob = "Partner";
         let activePromoCount = 0;
+        let currentTab = 'pending';
 
         window.onload = function() {
-            // Check if user is logged in via main website
             if(loggedInPhone) { 
                 checkInfluencerStatus(loggedInPhone); 
             } else {
@@ -219,57 +258,67 @@
 
         function showSection(id) {
             document.getElementById('sectionAuthRequired').classList.add('hidden');
+            document.getElementById('sectionWelcome').classList.add('hidden');
             document.getElementById('sectionSetup').classList.add('hidden');
             document.getElementById('sectionDashboard').classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
         }
 
         // ==========================================
-        // 1. CHECK INFLUENCER STATUS
+        // 1. CHECK STATUS (Influencer or Normal User)
         // ==========================================
         function checkInfluencerStatus(phone) {
+            // Admin reads from InfluencerProfiles
             db.ref('InfluencerProfiles/' + phone).once('value', snap => {
                 if(snap.exists()) {
                     influencerNameGlob = snap.val().name || "Partner";
                     loadDashboard(phone);
                 } else {
-                    // Logged in but not setup as influencer yet
-                    showSection('sectionSetup');
+                    // Show Welcome "Register" Button Screen
+                    showSection('sectionWelcome');
                 }
             });
         }
 
         // ==========================================
-        // 2. ONE TIME SETUP (SOCIAL MEDIA)
+        // 2. SOCIAL MEDIA SETUP
         // ==========================================
-        function toggleSocialInput(checkbox) {
-            const platform = checkbox.value;
-            let idMap = {"Instagram": "input_Instagram", "YouTube": "input_YouTube", "Facebook": "input_Facebook", "X (Twitter)": "input_X", "Other": "input_Other"};
-            const inputField = document.getElementById(idMap[platform]);
-            if(checkbox.checked) { inputField.style.display = 'block'; } 
-            else { inputField.style.display = 'none'; inputField.value = ''; }
+        let selectedPlatforms = {};
+
+        function toggleSocial(key, name) {
+            const chip = document.getElementById('chip_' + key);
+            const box = document.getElementById('box_' + key);
+            
+            if(chip.classList.contains('active')) {
+                chip.classList.remove('active');
+                box.style.display = 'none';
+                delete selectedPlatforms[name];
+            } else {
+                chip.classList.add('active');
+                box.style.display = 'block';
+                selectedPlatforms[name] = 'val_' + key;
+            }
         }
 
-        function saveSocialSetup() {
-            if(!document.getElementById('chkAgree').checked) { alert("Please accept the Privacy Policy to proceed."); return; }
+        function saveInfluencerProfile() {
+            if(!document.getElementById('chkAgree').checked) { alert("Please accept the Privacy Policy."); return; }
             
             let socialData = {};
             let hasOne = false;
-            document.querySelectorAll('.social-option input[type="checkbox"]').forEach(cb => {
-                if(cb.checked) {
-                    let idMap = {"Instagram": "input_Instagram", "YouTube": "input_YouTube", "Facebook": "input_Facebook", "X (Twitter)": "input_X", "Other": "input_Other"};
-                    let val = document.getElementById(idMap[cb.value]).value.trim();
-                    if(val) { socialData[cb.value] = val; hasOne = true; }
-                }
-            });
 
-            if(!hasOne) { alert("Please provide at least one active Social Media handle."); return; }
+            for (let [platform, inputId] of Object.entries(selectedPlatforms)) {
+                let val = document.getElementById(inputId).value.trim();
+                if(val) { socialData[platform] = val; hasOne = true; }
+            }
 
-            // Fetch name from Users DB to keep it synced
+            if(!hasOne) { alert("Please provide link/handle for at least one selected platform."); return; }
+
+            // Save to InfluencerProfiles (Exact node Admin uses)
             db.ref('Users/' + loggedInPhone).once('value').then(snap => {
-                let name = snap.exists() ? snap.val().name : "Partner";
+                let name = snap.exists() ? snap.val().name : "Tagown Partner";
                 db.ref('InfluencerProfiles/' + loggedInPhone).set({
                     name: name,
+                    phone: loggedInPhone,
                     socialHandles: socialData,
                     timestamp: new Date().toLocaleString()
                 }).then(() => {
@@ -280,19 +329,38 @@
         }
 
         // ==========================================
-        // 3. DASHBOARD & PROMO MANAGEMENT
+        // 3. DASHBOARD, TABS & PROMOS
         // ==========================================
+        function switchTxTab(tab) {
+            currentTab = tab;
+            document.getElementById('tabPending').classList.remove('active');
+            document.getElementById('tabAvailable').classList.remove('active');
+            document.getElementById('listPending').classList.add('hidden');
+            document.getElementById('listAvailable').classList.add('hidden');
+
+            if(tab === 'pending') {
+                document.getElementById('tabPending').classList.add('active');
+                document.getElementById('listPending').classList.remove('hidden');
+                document.getElementById('txTitle').innerText = "Pending Transactions";
+                document.getElementById('txTitle').style.color = "#F57C00";
+            } else {
+                document.getElementById('tabAvailable').classList.add('active');
+                document.getElementById('listAvailable').classList.remove('hidden');
+                document.getElementById('txTitle').innerText = "Completed & Withdrawals";
+                document.getElementById('txTitle').style.color = "#00C853";
+            }
+        }
+
         function loadDashboard(phone) {
             showSection('sectionDashboard');
+            document.getElementById('dashName').innerText = influencerNameGlob;
             
-            // Fetch Promo Codes (Max 5)
+            // Promos
             db.ref('PromoCodes').orderByChild('influencerPhone').equalTo(phone).on('value', snapshot => {
-                let html = '';
-                activePromoCount = 0;
+                let html = ''; activePromoCount = 0;
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
-                        activePromoCount++;
-                        let code = child.key;
+                        activePromoCount++; let code = child.key;
                         html += `
                             <div class="order-item">
                                 <div><b style="color:var(--primary); font-size:16px;">${code}</b><br><span style="font-size:11px; color:#888;">20% Customer Discount</span></div>
@@ -300,82 +368,84 @@
                             </div>
                         `;
                     });
-                } else {
-                    html = `<p style="text-align:center; color:#888; font-size:13px;">No promo codes generated yet.</p>`;
-                }
+                } else { html = `<p style="text-align:center; color:#888; font-size:13px;">No promo codes generated yet.</p>`; }
                 document.getElementById('promoList').innerHTML = html;
             });
 
-            // Calculate Earnings
+            // Commission & Transactions
             db.ref('InfluencerCommissions/' + phone).on('value', snapshot => {
-                let pendingTotal = 0; 
-                let grossAvailable = 0;
-                let withdrawnAmount = 0;
-                let txHtml = '';
+                let pendingTotal = 0; let grossAvailable = 0; let withdrawnAmount = 0;
+                let htmlPending = ''; let htmlAvailable = '';
 
                 if(snapshot.hasChild("Pending")) {
                     snapshot.child("Pending").forEach(child => {
-                        let data = child.val();
-                        let amt = parseInt(data.commissionAmount);
-                        if(data.status === "Pending") { pendingTotal += amt; }
-                        else if(data.status === "Completed") { grossAvailable += amt; }
-                        
-                        let badgeClass = data.status === "Pending" ? "badge-pending" : "badge-completed";
+                        let data = child.val(); let amt = parseInt(data.commissionAmount);
                         let safeName = data.customerName ? data.customerName.substring(0,3) + "***" : "Customer"; 
-                        txHtml += `
+                        
+                        let itemHtml = `
                             <div class="order-item">
                                 <div><div style="font-size: 14px; font-weight: bold;">Order: ${data.orderId}</div><div style="font-size: 11px; color: #888;">${data.orderDate} | ${safeName}</div></div>
-                                <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: var(--primary);">₹${amt}</div><div class="${badgeClass}" style="margin-top: 5px;">${data.status}</div></div>
-                            </div>
+                                <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: var(--primary);">₹${amt}</div>
                         `;
+
+                        if(data.status === "Pending") { 
+                            pendingTotal += amt; 
+                            htmlPending += itemHtml + `<div class="badge-pending" style="margin-top: 5px;">Pending</div></div></div>`;
+                        } else if(data.status === "Completed") { 
+                            grossAvailable += amt; 
+                            htmlAvailable += itemHtml + `<div class="badge-completed" style="margin-top: 5px;">Completed</div></div></div>`;
+                        }
                     });
                 }
 
                 if(snapshot.hasChild("Withdrawals")) {
                     snapshot.child("Withdrawals").forEach(child => {
-                        withdrawnAmount += parseInt(child.val().amount);
+                        let data = child.val(); let amt = parseInt(data.amount);
+                        withdrawnAmount += amt;
+                        let statColor = data.status === "Processing" ? "#F57C00" : "#2E7D32";
+                        htmlAvailable += `
+                            <div class="order-item" style="background: #FAFAFA; padding: 10px; border-radius: 12px; margin-top:10px;">
+                                <div><div style="font-size: 14px; font-weight: bold; color:#D32F2F;">Withdrawal Request</div><div style="font-size: 11px; color: #888;">${data.timestamp} | ${data.upi}</div></div>
+                                <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: #D32F2F;">- ₹${amt}</div><div style="margin-top: 5px; font-size:10px; font-weight:bold; color:${statColor};">${data.status}</div></div>
+                            </div>
+                        `;
                     });
                 }
 
+                // Auto Deduction Logic: Available = Gross Completed - Total Withdrawn
                 availableTotalBalance = grossAvailable - withdrawnAmount;
+                if(availableTotalBalance < 0) availableTotalBalance = 0;
+
                 document.getElementById('statPending').innerText = pendingTotal;
                 document.getElementById('statAvailable').innerText = availableTotalBalance;
                 document.getElementById('withdrawAvailBal').innerText = availableTotalBalance;
-                document.getElementById('transactionList').innerHTML = txHtml || `<p style="text-align: center; color: #888; font-size: 13px;">No transactions yet.</p>`;
+                
+                document.getElementById('listPending').innerHTML = htmlPending || `<p style="text-align: center; color: #888; font-size: 13px;">No pending orders.</p>`;
+                document.getElementById('listAvailable').innerHTML = htmlAvailable || `<p style="text-align: center; color: #888; font-size: 13px;">No completed orders or withdrawals yet.</p>`;
             });
 
-            // Fetch Saved UPI
             db.ref('InfluencerProfiles/' + phone + '/savedUpi').once('value').then(s => {
                 if(s.exists()) document.getElementById('withdrawUpi').value = s.val();
             });
         }
 
-        // PROMO CODE LOGIC
+        // PROMO CODES
         function openCreatePromo() {
-            if(activePromoCount >= 5) {
-                alert("You have reached the maximum limit of 5 Promo Codes. Delete an old one to create a new one.");
-                return;
-            }
+            if(activePromoCount >= 5) { alert("Max limit: 5 Promo Codes. Delete an old one first."); return; }
             document.getElementById('createPromoModal').style.display = 'flex';
         }
 
         function createNewPromo() {
             let code = document.getElementById('newPromoInput').value.trim().toUpperCase();
-            
-            if(code.length < 6 || code.length > 7) { alert("Promo Code must be exactly 6 or 7 characters long."); return; }
-            if(!/^[A-Z0-9]+$/.test(code)) { alert("Promo Code can only contain Letters and Numbers."); return; }
+            if(code.length < 6 || code.length > 7) { alert("Code must be 6 or 7 characters long."); return; }
+            if(!/^[A-Z0-9]+$/.test(code)) { alert("Only Letters and Numbers allowed."); return; }
 
             db.ref('PromoCodes/' + code).once('value', snap => {
-                if(snap.exists()) {
-                    alert("This code is already in use globally. Try a unique one (e.g. adding numbers).");
-                } else {
+                if(snap.exists()) { alert("Code already in use. Try a different one."); } 
+                else {
                     db.ref('PromoCodes/' + code).set({
-                        influencerPhone: loggedInPhone,
-                        influencerName: influencerNameGlob,
-                        discountType: "percentage",
-                        discountValue: "20",
-                        commission: 50, // Default base commission (Admin can change)
-                        status: "Active"
+                        influencerPhone: loggedInPhone, influencerName: influencerNameGlob,
+                        discountType: "percentage", discountValue: "20", commission: 50, status: "Active"
                     }).then(() => {
                         document.getElementById('createPromoModal').style.display = 'none';
                         document.getElementById('newPromoInput').value = '';
@@ -385,11 +455,9 @@
         }
 
         function deletePromo(code) {
-            if(confirm("Are you sure you want to permanently delete '" + code + "'?")) {
+            if(confirm("Permanently delete '" + code + "'?")) {
                 db.ref('PromoCodes/' + code).once('value', s => {
-                    if(s.exists() && s.val().influencerPhone === loggedInPhone) {
-                        db.ref('PromoCodes/' + code).remove();
-                    } else { alert("Unauthorized action."); }
+                    if(s.exists() && s.val().influencerPhone === loggedInPhone) { db.ref('PromoCodes/' + code).remove(); }
                 });
             }
         }
@@ -406,32 +474,27 @@
             let amt = parseInt(document.getElementById('withdrawAmount').value);
             let upi = document.getElementById('withdrawUpi').value.trim();
 
-            if(!amt || amt <= 0 || amt > availableTotalBalance) { alert("Invalid amount. Check available balance."); return; }
+            if(!amt || amt <= 0 || amt > availableTotalBalance) { alert("Invalid amount. Cannot exceed available balance."); return; }
             if(!upi) { alert("Please enter your UPI ID."); return; }
 
             let reqId = "WD-" + Date.now();
             let updates = {};
             
+            // Save request
             updates['InfluencerCommissions/' + loggedInPhone + '/Withdrawals/' + reqId] = {
-                amount: amt,
-                upi: upi,
-                timestamp: new Date().toLocaleString(),
-                status: "Processing"
+                amount: amt, upi: upi, timestamp: new Date().toLocaleString(), status: "Processing"
             };
-            
             updates['InfluencerProfiles/' + loggedInPhone + '/savedUpi'] = upi;
 
             db.ref().update(updates).then(() => {
-                alert("Withdrawal requested successfully! Amount will be credited to " + upi + " within 10 minutes to 24 hours.");
                 document.getElementById('withdrawModal').style.display = 'none';
                 document.getElementById('withdrawAmount').value = '';
+                // 🚀 SHOW PREMIUM SUCCESS POPUP
+                document.getElementById('successModal').style.display = 'flex';
             });
         }
 
-        function logout() { 
-            localStorage.removeItem("tagownUserPhone"); // Logs out from main website too
-            location.reload(); 
-        }
+        function logout() { localStorage.removeItem("tagownUserPhone"); location.reload(); }
     </script>
 </body>
 </html>
