@@ -102,18 +102,10 @@
         
         /* 📝 3. CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
-        
-        .promo-box { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 20px;}
-        .promo-input-row { display: flex; gap: 10px; }
-        .promo-btn { background: var(--primary-blue); color: white; border: none; border-radius: 8px; padding: 0 20px; font-weight: bold; cursor: pointer; font-style: italic; }
-        .promo-btn-remove { background: #E53935; color: white; border: none; border-radius: 8px; padding: 0 15px; font-weight: bold; cursor: pointer; display: none;}
-        
-        .order-summary { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 20px;}
-        .summary-title { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin: 0 0 8px 0;}
+        .order-summary { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px;}
+        .summary-title { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin: 0 0 5px 0;}
         .summary-item { font-size: 14px; font-weight: bold; font-style: italic; color: #333; margin: 0 0 10px 0;}
-        
-        .summary-row { display: flex; justify-content: space-between; font-size: 13px; color: #555; margin-bottom: 5px;}
-        .summary-total { font-size: 14px; font-weight: bold; font-style: italic; color: #333; display: flex; justify-content: space-between; border-top: 1px dashed #ccc; padding-top: 10px; margin-top: 5px;}
+        .summary-total { font-size: 14px; font-weight: bold; font-style: italic; color: #333; display: flex; justify-content: space-between;}
         .total-price { color: var(--primary-green); font-size: 18px;}
 
         .form-heading { font-size: 18px; font-weight: bold; font-style: italic; color: #222; margin-bottom: 15px;}
@@ -130,11 +122,8 @@
         .order-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
         .order-date { font-size: 11px; color: #888; font-weight: bold; font-style: italic;}
-        
-        .status-badge { font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
-        .status-pending { background: #FFF8E1; color: #F57F17; }
-        .status-shipped { background: #E8F5E9; color: #2E7D32; }
-        .status-completed { background: #E3F2FD; color: #1565C0; }
+        .order-status-processing { background: #FFF8E1; color: #F57F17; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
+        .order-status-shipped { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
         
         .order-title { font-size: 15px; font-weight: bold; color: #222; margin: 0 0 4px 0; font-style: italic;}
         .order-vehicle { font-size: 12px; color: #555; margin: 0 0 10px 0; font-style: italic;}
@@ -146,7 +135,6 @@
         .tracking-text { font-size: 12px; color: #444; font-weight: bold;}
         .btn-copy { background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; font-style: italic;}
 
-        /* Bottom Nav */
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
         .nav-item:active { transform: scale(0.9); }
@@ -160,7 +148,7 @@
         .nav-sos span { font-size: 10px; font-weight: bold; color: var(--sos-red); margin-top: 2px; }
         .hide-nav { display: none !important; }
 
-        /* Overlays & Modals */
+        /* 🚨 PREMIUM POPUP MODALS & ALERTS */
         .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
         
         .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
@@ -185,6 +173,7 @@
         .support-call { background: #E3F2FD; border-radius: 16px; padding: 15px; display: flex; align-items: center; gap: 15px; text-decoration: none; border: 1px solid #BBDEFB;}
         .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
 
+        /* Generic Central Modal */
         .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
@@ -207,8 +196,12 @@
     </div>
 
     <div id="viewList" class="view-section active-view">
-        <div class="cod-banner">🚚 Cash on Delivery Available! Pay only when you receive the product.</div>
+        <div class="cod-banner">
+            🚚 Cash on Delivery Available! Pay only when you receive the product.
+        </div>
         <div class="shop-grid" id="shopGrid">
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
+            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
         </div>
@@ -246,7 +239,9 @@
             <div class="selection-label">Product Details & Specifications</div>
             <div class="desc-text" id="detDesc">Description goes here...</div>
         </div>
+
         <div style="height: 90px;"></div>
+
         <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
             <button class="btn-buy-blue" onclick="proceedToCheckout()">BUY NOW (CASH ON DELIVERY)</button>
         </div>
@@ -254,34 +249,32 @@
 
     <div id="viewCheckout" class="view-section">
         <div class="checkout-container">
-            
-            <div class="promo-box">
-                <p class="summary-title" style="margin-bottom: 10px;">Apply Influencer / Promo Code</p>
-                <div class="promo-input-row">
-                    <input type="text" id="chkPromoCode" class="form-input" style="margin-bottom: 0;" placeholder="Enter Promo Code">
-                    <button class="promo-btn" id="btnApplyPromo" onclick="applyPromoCode()">APPLY</button>
-                    <button class="promo-btn-remove" id="btnRemovePromo" onclick="removePromoCode()">✖</button>
-                </div>
-                <p id="promoMessage" style="font-size: 12px; margin-top: 10px; font-weight: bold; margin-bottom: 0;"></p>
-            </div>
-
             <div class="order-summary">
                 <p class="summary-title">Order Summary</p>
                 <p class="summary-item" id="chkProductName">Product Name (For: Bike)</p>
                 
-                <div class="summary-row">
+                <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666; margin-bottom: 5px;">
                     <span>Original Price:</span>
-                    <span id="chkOriginalPrice" style="font-weight: bold;">₹0</span>
+                    <span id="chkOriginalPrice">₹0</span>
                 </div>
-                <div class="summary-row" id="discountRow" style="display: none; color: #E53935;">
+                <div class="summary-total" id="discountRow" style="display: none; font-weight: normal; font-size: 13px; color: #00C853; margin-bottom: 5px;">
                     <span>Discount Applied:</span>
-                    <span id="chkDiscountAmount" style="font-weight: bold;">-₹0</span>
+                    <span id="chkDiscount">-₹0</span>
                 </div>
-                
+
                 <div class="summary-total">
                     <span>Amount to Pay (COD):</span>
-                    <span class="total-price" id="chkFinalPrice">₹0</span>
+                    <span class="total-price" id="chkPrice">₹0</span>
                 </div>
+            </div>
+
+            <div style="background: white; border-radius: 12px; padding: 15px; border: 1px dashed #1565C0; margin-bottom: 20px;">
+                <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
+                    <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
+                </div>
+                <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
             </div>
 
             <h3 class="form-heading">Add Delivery Address</h3>
@@ -335,27 +328,115 @@
     </div>
 
     <div class="bottom-nav" id="bottomNav">
-        <div class="nav-item" onclick="window.location.href='index.html'"><img src="ic_nav_home.webp" alt="Home"><span>Home</span></div>
-        <div class="nav-item active" onclick="window.location.href='shop.html'"><img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span></div>
-        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'"><img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span></div>
-        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'"><img src="ic_nav_call_support.webp" alt="Support"><span>Support</span></div>
-        <div class="nav-item" onclick="window.location.href='settings.html'"><img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span></div>
+        <div class="nav-item" onclick="window.location.href='index.html'">
+            <img src="ic_nav_home.webp" alt="Home"><span>Home</span>
+        </div>
+        <div class="nav-item active" onclick="window.location.href='shop.html'">
+            <img src="ic_nav_shop.webp" alt="Shop"><span>Shop</span>
+        </div>
+        <div class="nav-sos" onclick="document.getElementById('sosSheet').style.display='flex'">
+            <img src="ic_nav_sos.webp" alt="SOS"><span>SOS</span>
+        </div>
+        <div class="nav-item" onclick="document.getElementById('supportSheet').style.display='flex'">
+            <img src="ic_nav_call_support.webp" alt="Support"><span>Support</span>
+        </div>
+        <div class="nav-item" onclick="window.location.href='settings.html'">
+            <img src="ic_nav_settings.webp" alt="Settings"><span>Settings</span>
+        </div>
     </div>
 
-    <div id="sosSheet" class="overlay"><div class="bottom-sheet" style="background: #F8F9FA;"><div class="drag-handle"></div><button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button><h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2><p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p><div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">⚠️ You can also dial 112 for any emergency</div><a href="tel:112" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div><div style="color:#4CAF50; font-size:18px;">▼</div></a></div></div>
-    <div id="supportSheet" class="overlay"><div class="bottom-sheet" style="background: #FFFFFF;"><div class="drag-handle"></div><button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button><h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2><p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p><a href="https://wa.me/916372980014" target="_blank" class="support-wa"><div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div><div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div></a></div></div>
+    <div id="sosSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #F8F9FA;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
+            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
+            
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
+            
+            <a href="tel:112" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1033" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1073" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:100" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:108" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:101" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+            <a href="tel:1091" class="list-item">
+                <div class="list-icon" style="background:#FFEBEE;">📞</div>
+                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
+                <div style="color:#4CAF50; font-size:18px;">▼</div>
+            </a>
+        </div>
+    </div>
+
+    <div id="supportSheet" class="overlay">
+        <div class="bottom-sheet" style="background: #FFFFFF;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
+            <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
+            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
+            
+            <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
+                <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
+                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
+            </a>
+
+            <a href="tel:180093486290" class="support-call">
+                <div class="support-call-icon">📞</div>
+                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
+            </a>
+        </div>
+    </div>
 
     <div id="loginRequiredModal" class="overlay" style="align-items: center;">
         <div class="modal-box">
-            <div class="modal-header-red"><div style="font-size: 35px; margin-bottom: 5px;">🔒</div><h3>Not Logged In!</h3><p>Login now to place orders and track history.</p></div>
-            <div class="modal-body"><button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button><button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button></div>
+            <div class="modal-header-red">
+                <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
+                <h3>Not Logged In!</h3>
+                <p>Login now to place orders and track history.</p>
+            </div>
+            <div class="modal-body">
+                <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
+                <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
+            </div>
         </div>
     </div>
 
     <div id="alertModal" class="overlay" style="align-items: center; z-index: 3000;">
         <div class="modal-box">
-            <div class="modal-header-red" id="alertHeader" style="background: #FF9800;"><div style="font-size: 35px; margin-bottom: 5px;" id="alertIcon">⚠️</div><h3 id="alertTitle">Alert</h3></div>
-            <div class="modal-body"><p id="alertMessage" style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 15px; line-height: 1.4;"></p><button class="btn-modal-primary" id="alertBtn" style="background: #FF9800; color: #000;" onclick="document.getElementById('alertModal').style.display='none'">OKAY</button></div>
+            <div class="modal-header-red" id="alertHeader" style="background: #FF9800;">
+                <div style="font-size: 35px; margin-bottom: 5px;" id="alertIcon">⚠️</div>
+                <h3 id="alertTitle">Alert</h3>
+            </div>
+            <div class="modal-body">
+                <p id="alertMessage" style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 15px; line-height: 1.4;"></p>
+                <button class="btn-modal-primary" id="alertBtn" style="background: #FF9800; color: #000;" onclick="document.getElementById('alertModal').style.display='none'">OKAY</button>
+            </div>
         </div>
     </div>
 
@@ -374,9 +455,10 @@
         let selectedVehicleType = null;
         let sliderInterval;
 
-        // Commission & Promo Tracking Variables
-        let appliedPromoData = null;
-        let currentOrderFinalPrice = 0;
+        // NEW: Promo Code State Variables
+        let appliedPromoCode = null;
+        let appliedDiscount = 0;
+        let influencerData = null;
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(currentUserPhone) {
@@ -387,21 +469,32 @@
         }
 
         function showPremiumAlert(title, message, type) {
-            document.getElementById('alertTitle').innerText = title; document.getElementById('alertMessage').innerText = message;
-            let header = document.getElementById('alertHeader'); let btn = document.getElementById('alertBtn'); let icon = document.getElementById('alertIcon');
-            if(type === 'error') { header.style.background = '#D32F2F'; btn.style.background = '#D32F2F'; btn.style.color = 'white'; icon.innerText = '⚠️'; } 
-            else if(type === 'success') { header.style.background = '#00C853'; btn.style.background = '#00C853'; btn.style.color = 'white'; icon.innerText = '✅'; } 
-            else { header.style.background = '#FFB300'; btn.style.background = '#FFB300'; btn.style.color = '#000'; icon.innerText = 'ℹ️'; }
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            
+            let header = document.getElementById('alertHeader');
+            let btn = document.getElementById('alertBtn');
+            let icon = document.getElementById('alertIcon');
+
+            if(type === 'error') {
+                header.style.background = '#D32F2F'; btn.style.background = '#D32F2F'; btn.style.color = 'white'; icon.innerText = '⚠️';
+            } else if(type === 'success') {
+                header.style.background = '#00C853'; btn.style.background = '#00C853'; btn.style.color = 'white'; icon.innerText = '✅';
+            } else {
+                header.style.background = '#FFB300'; btn.style.background = '#FFB300'; btn.style.color = '#000'; icon.innerText = 'ℹ️';
+            }
             document.getElementById('alertModal').style.display = 'flex';
         }
 
         db.ref('ShopProducts').on('value', (snapshot) => {
             const grid = document.getElementById('shopGrid');
             if (snapshot.exists()) {
-                grid.innerHTML = ''; currentProducts = snapshot.val(); 
+                grid.innerHTML = ''; 
+                currentProducts = snapshot.val(); 
                 snapshot.forEach((child) => {
                     const id = child.key; const data = child.val();
                     let badgeHtml = data.badge ? `<div class="product-badge">${data.badge}</div>` : '';
+                    
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
@@ -416,7 +509,9 @@
                         </div>
                     `;
                 });
-            } else { grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #888; font-style: italic; font-weight: bold; padding: 30px;">Store is empty right now.</div>'; }
+            } else { 
+                grid.innerHTML = '<div style="grid-column: span 2; text-align: center; color: #888; font-style: italic; font-weight: bold; padding: 30px;">Store is empty right now.</div>'; 
+            }
         });
 
         function openProductDetail(id) {
@@ -429,15 +524,22 @@
             if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
             else { document.getElementById('detBadge').style.display = "none"; }
 
-            const slider = document.getElementById('detSlider'); let imgs = [];
+            const slider = document.getElementById('detSlider'); 
+            let imgs = [];
             if(data.imgUrl1 && data.imgUrl1.trim() !== "") imgs.push(data.imgUrl1);
             if(data.imgUrl2 && data.imgUrl2.trim() !== "") imgs.push(data.imgUrl2);
             if(data.imgUrl3 && data.imgUrl3.trim() !== "") imgs.push(data.imgUrl3);
+            
             if(imgs.length === 0) imgs = ["banner_home_tag.webp", "banner_home_privacy.webp", "banner_home_vault.webp"];
             if(imgs.length === 1) imgs.push(imgs[0], imgs[0]);
             if(imgs.length === 2) imgs.push(imgs[0]);
 
-            slider.innerHTML = `<div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'"></div><div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'"></div><div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'"></div>`;
+            slider.innerHTML = `
+                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'"></div>
+                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'"></div>
+                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'"></div>
+            `;
+            
             clearInterval(sliderInterval); let slideIndex = 0;
             sliderInterval = setInterval(() => { slideIndex = (slideIndex + 1) % 3; slider.style.transform = `translateX(-${slideIndex * 100}%)`; }, 2500);
 
@@ -448,7 +550,11 @@
         }
 
         function openVehicleSheet() { document.getElementById('vehicleSheet').style.display = 'flex'; }
-        window.onclick = function(event) { const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal']; modals.forEach(id => { const modal = document.getElementById(id); if (event.target == modal) modal.style.display = "none"; }); }
+        
+        window.onclick = function(event) {
+            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal'];
+            modals.forEach(id => { const modal = document.getElementById(id); if (event.target == modal) modal.style.display = "none"; });
+        }
         
         function selectType(type) {
             selectedVehicleType = type;
@@ -456,81 +562,71 @@
             document.getElementById('selectedVehicleText').style.color = "#111";
             document.getElementById('vehicleSheet').style.display = 'none';
         }
-
-        /* ----- PROMO CODE & COMMISSION LOGIC ----- */
-        function applyPromoCode() {
-            const codeInput = document.getElementById('chkPromoCode').value.trim().toUpperCase();
-            const msgEl = document.getElementById('promoMessage');
-
-            if(!codeInput) { showPremiumAlert('Error', 'Please enter a valid promo code.', 'error'); return; }
-
-            // Searching the PromoCodes node for influencer details
-            db.ref('PromoCodes/' + codeInput).once('value').then(snap => {
-                if(snap.exists()) {
-                    const promoData = snap.val();
-                    const product = currentProducts[selectedProductId];
-                    
-                    // Allow both percentage or flat discount mapped from DB
-                    let discountVal = parseInt(promoData.discountValue || 0);
-                    
-                    appliedPromoData = {
-                        code: codeInput,
-                        influencerName: promoData.influencerName || promoData.name || "Unknown",
-                        influencerPhone: promoData.influencerPhone || promoData.phone || "Unknown",
-                        discountAmount: discountVal,
-                        commissionPending: parseInt(promoData.commissionValue || 0)
-                    };
-
-                    currentOrderFinalPrice = product.price - discountVal;
-                    if(currentOrderFinalPrice < 0) currentOrderFinalPrice = 0;
-
-                    // Update UI for Live Discount Calculation
-                    document.getElementById('discountRow').style.display = 'flex';
-                    document.getElementById('chkDiscountAmount').innerText = "-₹" + discountVal;
-                    document.getElementById('chkFinalPrice').innerText = "₹" + currentOrderFinalPrice;
-                    
-                    document.getElementById('chkPromoCode').readOnly = true;
-                    document.getElementById('btnApplyPromo').style.display = 'none';
-                    document.getElementById('btnRemovePromo').style.display = 'block';
-
-                    msgEl.innerText = "✅ Influencer code applied!";
-                    msgEl.style.color = "var(--primary-green)";
-                } else {
-                    msgEl.innerText = "❌ Invalid Code!";
-                    msgEl.style.color = "var(--sos-red)";
-                    removePromoCode();
-                }
-            }).catch(err => showPremiumAlert('Error', err.message, 'error'));
-        }
-
-        function removePromoCode() {
-            appliedPromoData = null;
-            const product = currentProducts[selectedProductId];
-            currentOrderFinalPrice = product.price;
-
-            // Reset UI
-            document.getElementById('discountRow').style.display = 'none';
-            document.getElementById('chkFinalPrice').innerText = "₹" + currentOrderFinalPrice;
-            document.getElementById('chkPromoCode').readOnly = false;
-            document.getElementById('chkPromoCode').value = '';
-            document.getElementById('btnApplyPromo').style.display = 'block';
-            document.getElementById('btnRemovePromo').style.display = 'none';
-            document.getElementById('promoMessage').innerText = '';
-        }
         
         function proceedToCheckout() {
             if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
             
             const data = currentProducts[selectedProductId];
-            currentOrderFinalPrice = data.price; // Set base price before promo checks
-            removePromoCode(); // Clear any previous promo code session
-            
             document.getElementById('pageTitle').innerText = "Checkout";
             document.getElementById('chkProductName').innerText = `${data.title} (For: ${selectedVehicleType})`;
+            
+            // Reset Promo Code State upon entering checkout
+            appliedPromoCode = null;
+            appliedDiscount = 0;
+            influencerData = null;
+            document.getElementById('chkPromoCode').value = '';
+            document.getElementById('promoMessage').innerText = '';
+            document.getElementById('discountRow').style.display = 'none';
             document.getElementById('chkOriginalPrice').innerText = "₹" + data.price;
-            document.getElementById('chkFinalPrice').innerText = "₹" + currentOrderFinalPrice;
+            document.getElementById('chkPrice').innerText = "₹" + data.price;
+
             switchView('viewCheckout');
+        }
+
+        // NEW: Promo Code Verification Logic
+        function applyPromoCode() {
+            const code = document.getElementById('chkPromoCode').value.trim().toUpperCase();
+            const msg = document.getElementById('promoMessage');
+            
+            if(!code) {
+                msg.innerText = "Please enter a promo code."; msg.style.color = "#D32F2F"; return;
+            }
+
+            msg.innerText = "Checking..."; msg.style.color = "#1565C0";
+
+            db.ref('PromoCodes/' + code).once('value').then(snap => {
+                if(snap.exists()) {
+                    const data = snap.val();
+                    appliedPromoCode = code;
+                    appliedDiscount = parseInt(data.discount || 0);
+                    influencerData = {
+                        phone: data.influencerPhone || "",
+                        name: data.influencerName || "",
+                        commission: parseInt(data.commission || 0)
+                    };
+
+                    const product = currentProducts[selectedProductId];
+                    const originalPrice = parseInt(product.price);
+                    const finalPrice = Math.max(originalPrice - appliedDiscount, 0);
+
+                    document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
+                    document.getElementById('discountRow').style.display = "flex";
+                    document.getElementById('chkPrice').innerText = "₹" + finalPrice;
+
+                    msg.innerText = "Promo code applied successfully! ✅"; msg.style.color = "#00C853";
+                } else {
+                    appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
+                    const product = currentProducts[selectedProductId];
+                    
+                    document.getElementById('discountRow').style.display = "none";
+                    document.getElementById('chkPrice').innerText = "₹" + product.price;
+
+                    msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
+                }
+            }).catch(err => {
+                msg.innerText = "Error checking code."; msg.style.color = "#D32F2F";
+            });
         }
 
         function placeOrder() {
@@ -538,80 +634,86 @@
             const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincode').value.trim();
             const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
 
-            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; }
-            
+            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+                showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
+            }
             const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
+
             const product = currentProducts[selectedProductId];
+            const originalPrice = parseInt(product.price);
+            const finalPrice = Math.max(originalPrice - appliedDiscount, 0);
+
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
+            const date = new Date().toLocaleString();
             const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
 
             const orderData = {
-                orderId: orderId, 
-                productTitle: product.title, 
-                originalPrice: product.price,
-                price: currentOrderFinalPrice, // The final COD amount 
+                orderId: orderId, productTitle: product.title, 
+                originalPrice: originalPrice, discountApplied: appliedDiscount, price: finalPrice, 
                 vehicleType: selectedVehicleType,
-                customerName: name, 
-                customerPhone: phone, 
-                deliveryAddress: fullAddress, 
-                orderStatus: "Pending", // 🚀 Updated to proper Workflow Standard
-                timestamp: new Date().toLocaleString(), 
-                trackingId: ""
+                customerName: name, customerPhone: phone, deliveryAddress: fullAddress, 
+                orderStatus: "New Order (COD)", timestamp: date, trackingId: "",
+                // New Influencer Trackers
+                promoCode: appliedPromoCode || "",
+                influencerPhone: influencerData ? influencerData.phone : "",
+                influencerName: influencerData ? influencerData.name : "",
+                influencerCommission: influencerData ? influencerData.commission : 0,
+                commissionStatus: influencerData ? "Pending" : "N/A"
             };
 
-            // Attach Influencer Info for Database & Admin Tracking if promo was used
-            if(appliedPromoData) {
-                orderData.promoCode = appliedPromoData.code;
-                orderData.discountApplied = appliedPromoData.discountAmount;
-                orderData.influencerName = appliedPromoData.influencerName;
-                orderData.influencerPhone = appliedPromoData.influencerPhone;
-                orderData.pendingCommission = appliedPromoData.commissionPending;
-                // Note: The Admin app will read 'pendingCommission' and credit it when status changes to 'Completed'.
+            let updates = {};
+            updates['UserOrders/' + currentUserPhone + '/' + orderId] = orderData;
+            updates['Orders/' + orderId] = orderData;
+            
+            // Generate Pending Commission Record for Influencer App
+            if(influencerData && influencerData.phone) {
+                updates['InfluencerCommissions/' + influencerData.phone + '/Pending/' + orderId] = {
+                    orderId: orderId,
+                    customerName: name,
+                    orderDate: date,
+                    commissionAmount: influencerData.commission,
+                    status: "Pending" 
+                };
             }
 
-            db.ref('UserOrders/' + currentUserPhone + '/' + orderId).set(orderData).then(() => {
-                db.ref('Orders/' + orderId).set(orderData);
-
-                let waPromoText = appliedPromoData ? `\n*Promo Applied:* ${appliedPromoData.code} (-₹${appliedPromoData.discountAmount})` : "";
-                const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}${waPromoText}\n*Final Amount to Pay:* ₹${currentOrderFinalPrice}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
+            db.ref().update(updates).then(() => {
+                
+                const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}\n*Total Price:* ₹${originalPrice}\n*Discount:* ₹${appliedDiscount}\n*Amount to Pay:* ₹${finalPrice}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
                 const waLink = `https://wa.me/916372980014?text=${encodeURIComponent(waMessage)}`;
                 
                 showPremiumAlert('Order Placed!', 'Your COD order is saved. Redirecting to WhatsApp to confirm...', 'success');
                 setTimeout(() => { window.open(waLink, '_blank'); }, 1500);
                 
                 goBackToHome(); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
-            }).catch(err => { showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false; });
+            }).catch(err => {
+                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+            });
         }
 
-        /* ----- ORDER STATUS WORKFLOW TRACKING ----- */
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
             document.getElementById('pageTitle').innerText = "My Orders";
-            switchView('viewOrders'); loadOrders();
+            switchView('viewOrders');
+            loadOrders();
         }
 
         function loadOrders() {
             const container = document.getElementById('ordersContainer');
+            
             db.ref('UserOrders/' + currentUserPhone).on('value', (snapshot) => {
                 let html = ''; let orders = [];
-                if(snapshot.exists()){ snapshot.forEach(child => { orders.push(child.val()); }); }
+                if(snapshot.exists()){
+                    snapshot.forEach(child => { orders.push(child.val()); });
+                }
                 orders.reverse(); 
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
-                        let statusText = data.orderStatus || "Pending";
-                        let statusHtml = `<span class="status-badge status-pending">Pending ⏳</span>`;
-                        
-                        if(statusText === "Shipped") {
-                            statusHtml = `<span class="status-badge status-shipped">Shipped 🚚</span>`;
-                        } else if(statusText === "Completed") {
-                            statusHtml = `<span class="status-badge status-completed">Completed ✅</span>`;
-                        } else if(statusText !== "Pending") {
-                            statusHtml = `<span class="status-badge status-pending">${statusText} ⏳</span>`; // Fallback for old states
-                        }
-
+                        let statusHtml = `<span class="order-status-processing">Processing ⏳</span>`;
                         let trackingHtml = "";
+                        
                         if(data.trackingId && data.trackingId.trim() !== "") {
+                            statusHtml = `<span class="order-status-shipped">Shipped 🚚</span>`;
                             trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
                         }
 
@@ -632,12 +734,23 @@
                     });
                     container.innerHTML = html;
                 } else {
-                    container.innerHTML = `<div style="text-align:center; padding:50px 20px;"><div style="font-size:50px; margin-bottom:10px;">📦</div><h3 style="color:#555; margin:0; font-style:italic;">No Orders Yet</h3><p style="color:#888; font-size:13px; font-style:italic;">You haven't placed any orders.</p><button onclick="goBackToHome()" style="margin-top:15px; background:var(--primary-blue); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:bold; font-style:italic; cursor:pointer;">Start Shopping</button></div>`;
+                    container.innerHTML = `
+                        <div style="text-align:center; padding:50px 20px;">
+                            <div style="font-size:50px; margin-bottom:10px;">📦</div>
+                            <h3 style="color:#555; margin:0; font-style:italic;">No Orders Yet</h3>
+                            <p style="color:#888; font-size:13px; font-style:italic;">You haven't placed any orders.</p>
+                            <button onclick="goBackToHome()" style="margin-top:15px; background:var(--primary-blue); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:bold; font-style:italic; cursor:pointer;">Start Shopping</button>
+                        </div>
+                    `;
                 }
             });
         }
 
-        function copyTracking(id) { navigator.clipboard.writeText(id).then(() => { showPremiumAlert('Copied!', 'Tracking ID: ' + id, 'success'); }); }
+        function copyTracking(id) { 
+            navigator.clipboard.writeText(id).then(() => { 
+                showPremiumAlert('Copied!', 'Tracking ID: ' + id, 'success'); 
+            }); 
+        }
 
         function switchView(viewId) {
             document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
@@ -645,16 +758,28 @@
             window.scrollTo(0,0);
             
             if(viewId !== 'viewList') {
-                document.getElementById('bottomNav').classList.add('hide-nav'); document.getElementById('btnBack').style.display = 'block'; document.getElementById('cartIcon').style.display = 'none';
-                if(viewId === 'viewDetail') document.getElementById('fixedBuyBtn').style.display = 'block'; else document.getElementById('fixedBuyBtn').style.display = 'none';
+                document.getElementById('bottomNav').classList.add('hide-nav');
+                document.getElementById('btnBack').style.display = 'block';
+                document.getElementById('cartIcon').style.display = 'none';
+                if(viewId === 'viewDetail') document.getElementById('fixedBuyBtn').style.display = 'block';
+                else document.getElementById('fixedBuyBtn').style.display = 'none';
             } else {
-                document.getElementById('bottomNav').classList.remove('hide-nav'); document.getElementById('btnBack').style.display = 'none'; document.getElementById('cartIcon').style.display = 'block'; document.getElementById('fixedBuyBtn').style.display = 'none'; document.getElementById('pageTitle').innerText = "Tagown Official Store"; clearInterval(sliderInterval);
+                document.getElementById('bottomNav').classList.remove('hide-nav');
+                document.getElementById('btnBack').style.display = 'none';
+                document.getElementById('cartIcon').style.display = 'block';
+                document.getElementById('fixedBuyBtn').style.display = 'none';
+                document.getElementById('pageTitle').innerText = "Tagown Official Store";
+                clearInterval(sliderInterval);
             }
         }
 
         function goBack() {
-            if(document.getElementById('viewCheckout').classList.contains('active-view')) { document.getElementById('pageTitle').innerText = "Product Details"; switchView('viewDetail'); } 
-            else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view')) { goBackToHome(); }
+            if(document.getElementById('viewCheckout').classList.contains('active-view')) {
+                document.getElementById('pageTitle').innerText = "Product Details";
+                switchView('viewDetail');
+            } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view')) {
+                goBackToHome();
+            }
         }
         function goBackToHome() { switchView('viewList'); }
 
