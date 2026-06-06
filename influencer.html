@@ -35,7 +35,7 @@
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .stat-box { background: white; padding: 20px 15px; border-radius: 20px; border: 2px solid #E2E8F0; text-align: center; cursor: pointer; transition: 0.2s;}
         .stat-box.active { border-color: var(--primary); background: #F0F4FA; box-shadow: 0 4px 12px rgba(13,71,161,0.1);}
-        .stat-val { font-size: 22px; font-weight: 900; color: var(--primary); margin: 8px 0 4px 0; }
+        .stat-val { font-size: 22px; font-weight: 900; color: var(--primary); margin: 8px 0 4px 0; min-height: 28px;}
         .stat-title { font-size: 11px; color: var(--text-light); font-weight: bold; text-transform: uppercase; }
 
         .hidden { display: none !important; }
@@ -46,33 +46,48 @@
         .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
         .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
-        /* Premium Social UI with SVG Icons */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        .skeleton {
+            background: #e2e8f0;
+            background: linear-gradient(110deg, #e2e8f0 8%, #f1f5f9 18%, #e2e8f0 33%);
+            border-radius: 8px; background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
+        @keyframes shine { to { background-position-x: -200%; } }
+        .skel-box { height: 60px; border-radius: 12px; width: 100%; margin-bottom: 10px;}
+
+        /* Colorful Social UI */
         .social-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;}
         .social-chip { border: 1.5px solid #E2E8F0; padding: 10px 15px; border-radius: 100px; font-size: 13px; font-weight: bold; color: #64748B; cursor: pointer; background: white; display: flex; align-items: center; gap: 8px; transition: 0.2s;}
-        .social-chip svg { width: 18px; height: 18px; fill: currentColor; }
-        .social-chip.active { border-color: var(--primary); background: #E3F2FD; color: var(--primary); }
+        .social-chip svg { width: 18px; height: 18px; }
+        
+        #chip_ig.active { border-color: #E1306C; background: #FFF0F5; color: #E1306C; }
+        #chip_yt.active { border-color: #FF0000; background: #FFEBEB; color: #FF0000; }
+        #chip_fb.active { border-color: #1877F2; background: #E3F2FD; color: #1877F2; }
+        #chip_x.active { border-color: #000000; background: #F0F0F0; color: #000000; }
+        #chip_tg.active { border-color: #0088cc; background: #E1F5FE; color: #0088cc; }
+        #chip_oth.active { border-color: var(--primary); background: #E3F2FD; color: var(--primary); }
+
         .social-input-box { display: none; margin-bottom: 15px; animation: fadeIn 0.3s; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
 
-        /* Promo Generator UI */
+        /* Promo Generator & Copy */
         .promo-suggestion { border: 2px solid #E2E8F0; padding: 15px; border-radius: 16px; margin-bottom: 10px; font-size: 16px; font-weight: bold; text-align: center; cursor: pointer; transition: 0.2s; color: #333; letter-spacing: 2px;}
         .promo-suggestion.selected { border-color: var(--primary); background: #E3F2FD; color: var(--primary); }
-
-        /* Copy Box UI */
+        
         .copy-box { background: #F8FAFC; border: 2px dashed var(--primary); border-radius: 16px; padding: 20px; text-align: center; margin-bottom: 20px;}
-        .copy-box h3 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: 3px; color: var(--primary);}
+        .copy-box h3 { margin: 0 0 10px 0; font-size: 28px; letter-spacing: 3px; color: var(--primary); min-height: 33px;}
 
         /* Modals */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content { background: white; width: 85%; max-width: 400px; border-radius: 24px; padding: 30px 25px; max-height: 80vh; overflow-y: auto; text-align: center;}
         .btn-close { background: #F1F5F9; color: #333; width: 100%; padding: 14px; border: none; border-radius: 100px; font-weight: bold; margin-top: 15px; cursor: pointer;}
-
+        
         .welcome-box { text-align: center; padding: 20px 10px; }
         .welcome-icon { font-size: 60px; margin-bottom: 15px; }
 
         .wa-float { position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: #FFF; border-radius: 50%; width: 55px; height: 55px; display: flex; justify-content: center; align-items: center; font-size: 28px; box-shadow: 2px 2px 10px rgba(0,0,0,0.2); z-index: 100; text-decoration: none; transition: 0.3s; }
         .wa-float:active { transform: scale(0.9); }
-        
         .footer-links { text-align: center; margin-top: 20px; }
         .footer-links a { color: var(--text-light); font-size: 13px; text-decoration: underline; cursor: pointer; font-weight: bold;}
     </style>
@@ -111,47 +126,45 @@
             <label class="form-label">Select Platforms</label>
             <div class="social-grid">
                 <div class="social-chip" id="chip_ig" onclick="toggleSocial('ig', 'Instagram')">
-                    <svg viewBox="0 0 24 24"><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm4.75-2.75a1 1 0 110 2 1 1 0 010-2z"/></svg> Instagram
+                    <svg viewBox="0 0 24 24" fill="url(#ig-grad)"><defs><linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#F58529"/><stop offset="50%" stop-color="#DD2A7B"/><stop offset="100%" stop-color="#8134AF"/></linearGradient></defs><path d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm4.75-2.75a1 1 0 110 2 1 1 0 010-2z"/></svg> Instagram
                 </div>
                 <div class="social-chip" id="chip_yt" onclick="toggleSocial('yt', 'YouTube')">
-                    <svg viewBox="0 0 24 24"><path d="M21.58 6.56a2.71 2.71 0 00-1.9-1.92C18 4.14 12 4.14 12 4.14s-6 0-7.68.5A2.71 2.71 0 002.42 6.56C2 8.25 2 12 2 12s0 3.75.42 5.44a2.71 2.71 0 001.9 1.92c1.68.5 7.68.5 7.68.5s6 0 7.68-.5a2.71 2.71 0 001.9-1.92C22 15.75 22 12 22 12s0-3.75-.42-5.44zM9.99 15.28V8.72L15.68 12l-5.69 3.28z"/></svg> YouTube
+                    <svg viewBox="0 0 24 24" fill="#FF0000"><path d="M21.58 6.56a2.71 2.71 0 00-1.9-1.92C18 4.14 12 4.14 12 4.14s-6 0-7.68.5A2.71 2.71 0 002.42 6.56C2 8.25 2 12 2 12s0 3.75.42 5.44a2.71 2.71 0 001.9 1.92c1.68.5 7.68.5 7.68.5s6 0 7.68-.5a2.71 2.71 0 001.9-1.92C22 15.75 22 12 22 12s0-3.75-.42-5.44zM9.99 15.28V8.72L15.68 12l-5.69 3.28z"/></svg> YouTube
                 </div>
                 <div class="social-chip" id="chip_fb" onclick="toggleSocial('fb', 'Facebook')">
-                    <svg viewBox="0 0 24 24"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3l-1 3h-2v6.8c4.56-.93 8-4.96 8-9.8z"/></svg> Facebook
+                    <svg viewBox="0 0 24 24" fill="#1877F2"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H7.5v-3H10V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3l-1 3h-2v6.8c4.56-.93 8-4.96 8-9.8z"/></svg> Facebook
                 </div>
                 <div class="social-chip" id="chip_x" onclick="toggleSocial('x', 'X (Twitter)')">
-                    <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X (Twitter)
+                    <svg viewBox="0 0 24 24" fill="#000000"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X (Twitter)
                 </div>
                 <div class="social-chip" id="chip_tg" onclick="toggleSocial('tg', 'Telegram')">
-                    <svg viewBox="0 0 24 24"><path d="M11.944 20.106L9.67 13.53l9.006-8.312-11.28 7.02-4.526-1.42 18.918-7.29-4.844 16.578z"/></svg> Telegram
+                    <svg viewBox="0 0 24 24" fill="#0088cc"><path d="M11.944 20.106L9.67 13.53l9.006-8.312-11.28 7.02-4.526-1.42 18.918-7.29-4.844 16.578z"/></svg> Telegram
                 </div>
                 <div class="social-chip" id="chip_oth" onclick="toggleSocial('oth', 'Other')">
-                    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Other
+                    <svg viewBox="0 0 24 24" fill="#64748B"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg> Other
                 </div>
             </div>
 
             <div id="inputsContainer">
-                <div class="social-input-box" id="box_ig"><input type="text" id="val_ig" class="form-input" placeholder="Instagram Username (e.g. @tagown)"></div>
-                <div class="social-input-box" id="box_yt"><input type="text" id="val_yt" class="form-input" placeholder="YouTube Channel Link"></div>
-                <div class="social-input-box" id="box_fb"><input type="text" id="val_fb" class="form-input" placeholder="Facebook Page Link"></div>
-                <div class="social-input-box" id="box_x"><input type="text" id="val_x" class="form-input" placeholder="X (Twitter) Username"></div>
-                <div class="social-input-box" id="box_tg"><input type="text" id="val_tg" class="form-input" placeholder="Telegram Channel Link"></div>
-                <div class="social-input-box" id="box_oth"><input type="text" id="val_oth" class="form-input" placeholder="Paste your Link here"></div>
+                <div class="social-input-box" id="box_ig"><label class="form-label" style="color:#E1306C;">Instagram Profile</label><input type="text" id="val_ig" class="form-input" placeholder="Enter Username & Link (e.g. @tagown)"></div>
+                <div class="social-input-box" id="box_yt"><label class="form-label" style="color:#FF0000;">YouTube Channel</label><input type="text" id="val_yt" class="form-input" placeholder="Enter Channel Name & Link"></div>
+                <div class="social-input-box" id="box_fb"><label class="form-label" style="color:#1877F2;">Facebook Page/Profile</label><input type="text" id="val_fb" class="form-input" placeholder="Enter Name & Link"></div>
+                <div class="social-input-box" id="box_x"><label class="form-label" style="color:#000000;">X (Twitter) Profile</label><input type="text" id="val_x" class="form-input" placeholder="Enter Username & Link"></div>
+                <div class="social-input-box" id="box_tg"><label class="form-label" style="color:#0088cc;">Telegram Channel/Group</label><input type="text" id="val_tg" class="form-input" placeholder="Enter Channel Name & Link"></div>
+                <div class="social-input-box" id="box_oth"><label class="form-label" style="color:var(--primary);">Other Platform</label><input type="text" id="val_oth" class="form-input" placeholder="Paste your Link here"></div>
             </div>
 
             <label style="font-size: 13px; font-weight: bold; color: var(--primary); display: flex; align-items: center; gap: 10px; margin-top: 10px;">
                 <input type="checkbox" id="chkAgree" style="width: 20px; height: 20px;"> I accept the Privacy Policy
             </label>
-
             <button class="btn-primary" style="margin-top: 20px;" onclick="saveInfluencerProfile()">CONTINUE</button>
         </div>
 
         <div id="sectionGeneratePromo" class="card hidden">
             <h2 style="margin-top: 0; color: var(--primary);">Choose Your Promo Code</h2>
-            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">We have generated some unique codes based on your name. Select one or create your own.</p>
+            <p style="font-size: 14px; color: var(--text-light); margin-bottom: 20px;">Select a unique code or create your own. Customers get 20% discount on this.</p>
 
-            <div id="autoPromoOptions">
-                </div>
+            <div id="autoPromoOptions"></div>
 
             <div style="text-align: center; margin: 20px 0; font-weight: bold; color: #888;">OR</div>
 
@@ -168,20 +181,27 @@
 
             <div class="copy-box">
                 <p style="margin: 0 0 5px 0; font-size: 12px; color: #555; font-weight: bold; text-transform: uppercase;">Your Active Promo Code</p>
-                <h3 id="displayPromoCode">------</h3>
+                <h3 id="displayPromoCode">
+                    <div class="skeleton" style="height:28px; width:150px; margin: 0 auto;"></div>
+                </h3>
                 <p style="margin: 0 0 15px 0; font-size: 12px; color: #00C853; font-weight: bold;">(Customers get 20% Discount)</p>
+                <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--primary); font-weight: bold;">(Your Commission: ₹120 per order)</p>
                 <button class="btn-outline" id="btnCopyCode" onclick="copyPromoToClipboard()">COPY CODE</button>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-box active" id="tabPending" onclick="switchTxTab('pending')">
                     <div class="stat-title">Pending Earnings</div>
-                    <div class="stat-val" style="color: #F57C00;">₹<span id="statPending">0</span></div>
+                    <div class="stat-val" id="statPendingContainer">
+                        <div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>
+                    </div>
                     <div style="font-size: 10px; color: #888;">Click to view list</div>
                 </div>
                 <div class="stat-box" id="tabAvailable" onclick="switchTxTab('available')">
                     <div class="stat-title">Available Payout</div>
-                    <div class="stat-val" style="color: #00C853;">₹<span id="statAvailable">0</span></div>
+                    <div class="stat-val" id="statAvailableContainer">
+                        <div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>
+                    </div>
                     <div style="font-size: 10px; color: #888;">Click to withdraw</div>
                 </div>
             </div>
@@ -192,11 +212,17 @@
                 <h3 id="txTitle" style="margin-top: 0; font-size: 16px; color: var(--primary);">Pending Transactions</h3>
                 
                 <div id="listPending">
-                    <p style="text-align: center; color: #888; font-size: 13px;">No pending orders.</p>
+                    <div style="padding: 10px 0;">
+                        <div class="skeleton skel-box"></div>
+                        <div class="skeleton skel-box"></div>
+                    </div>
                 </div>
                 
                 <div id="listAvailable" class="hidden">
-                    <p style="text-align: center; color: #888; font-size: 13px;">No completed orders or withdrawals yet.</p>
+                    <div style="padding: 10px 0;">
+                        <div class="skeleton skel-box"></div>
+                        <div class="skeleton skel-box"></div>
+                    </div>
                 </div>
             </div>
 
@@ -210,6 +236,15 @@
     <a href="https://wa.me/916372980014" target="_blank" class="wa-float">
         <svg viewBox="0 0 32 32" width="30" height="30" fill="currentColor"><path d="M16 2.5A13.5 13.5 0 004.5 24l-2 6 6-2a13.5 13.5 0 107.5-25.5zm0 2.5a11 11 0 11-5.5 20.5l-3.5 1 1-3.5A11 11 0 0116 5zM12 9.5c-.5 0-1.5.5-1.5 1.5s1 2.5 1.5 3.5 2.5 5 4 6 2.5 1 3.5 1 2-.5 2-1.5-.5-1.5-2-2-1-2-1-1 1-1 2-.5-.5-1-1-1-1-2-2c-.5-.5-.5-1 .5-1s1-1.5 1-2-.5-2-2-2z"/></svg>
     </a>
+
+    <div id="customAlertModal" class="modal-overlay" style="z-index: 9999;">
+        <div class="modal-content">
+            <div id="alertIcon" style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <h3 id="alertTitle" style="color: #D32F2F; margin-top: 0;">Error</h3>
+            <p id="alertMessage" style="font-size: 14px; color: #444; font-weight: 500;"></p>
+            <button class="btn-primary" id="alertBtn" style="background: #D32F2F;" onclick="document.getElementById('customAlertModal').style.display='none'">OKAY</button>
+        </div>
+    </div>
 
     <div id="withdrawModal" class="modal-overlay">
         <div class="modal-content">
@@ -246,7 +281,7 @@
             <h3 style="text-align: center; color: var(--primary);">📜 Privacy Policy & Legal Terms</h3>
             <p><b>1. Authentic Representations:</b> As a Tagown Partner, you agree to make real and authentic claims about our products. No fake or exaggerated promises should be made to customers.</p>
             <p><b>2. Payout Timeline:</b> Once a withdrawal is requested, the amount will be processed and credited to your linked account within <b>10 Minutes to 24 Hours</b>.</p>
-            <p><b>3. Promo Structure:</b> Customers using your generated promo code will securely receive a <b>20% Discount</b>. Your fixed commission is credited strictly upon successful delivery of the product.</p>
+            <p><b>3. Promo Structure:</b> Customers using your generated promo code will securely receive a <b>20% Discount</b>. Your fixed commission (₹120) is credited strictly upon successful delivery of the product.</p>
             <p><b>4. DPDP Act Compliance:</b> We respect customer privacy. Extracting, saving, or misusing any partial customer data visible on this portal is strictly prohibited and legally binding.</p>
             <button class="btn-primary" style="margin-top: 15px;" onclick="document.getElementById('privacyModal').style.display='none'">I AGREE & UNDERSTAND</button>
         </div>
@@ -267,6 +302,7 @@
         let availableTotalBalance = 0;
         let influencerNameGlob = "Partner";
         let generatedPromoToSave = "";
+        let currentTab = 'pending';
 
         window.onload = function() {
             if(loggedInPhone) { 
@@ -285,6 +321,24 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
+        // 🚀 Premium Custom Alert Function
+        function showAlert(title, message, type = 'error') {
+            document.getElementById('alertTitle').innerText = title;
+            document.getElementById('alertMessage').innerText = message;
+            
+            if(type === 'error') {
+                document.getElementById('alertIcon').innerText = "⚠️";
+                document.getElementById('alertTitle').style.color = "#D32F2F";
+                document.getElementById('alertBtn').style.background = "#D32F2F";
+            } else if(type === 'success') {
+                document.getElementById('alertIcon').innerText = "✅";
+                document.getElementById('alertTitle').style.color = "#00C853";
+                document.getElementById('alertBtn').style.background = "#00C853";
+            }
+            
+            document.getElementById('customAlertModal').style.display = 'flex';
+        }
+
         // ==========================================
         // 1. CHECK STATUS
         // ==========================================
@@ -292,12 +346,10 @@
             db.ref('InfluencerProfiles/' + phone).once('value', snap => {
                 if(snap.exists()) {
                     influencerNameGlob = snap.val().name || "Partner";
-                    // Profile exists, now check if Promo exists
                     db.ref('PromoCodes').orderByChild('influencerPhone').equalTo(phone).once('value', promoSnap => {
                         if(promoSnap.exists()) {
                             loadDashboard(phone);
                         } else {
-                            // Profile exists but no promo generated yet
                             setupPromoGenerator(influencerNameGlob);
                         }
                     });
@@ -328,7 +380,7 @@
         }
 
         function saveInfluencerProfile() {
-            if(!document.getElementById('chkAgree').checked) { alert("Please accept the Privacy Policy."); return; }
+            if(!document.getElementById('chkAgree').checked) { showAlert("Action Required", "Please accept the Privacy Policy."); return; }
             
             let socialData = {}; let hasOne = false;
             for (let [platform, inputId] of Object.entries(selectedPlatforms)) {
@@ -336,10 +388,10 @@
                 if(val) { socialData[platform] = val; hasOne = true; }
             }
 
-            if(!hasOne) { alert("Please provide link/handle for at least one selected platform."); return; }
+            if(!hasOne) { showAlert("Information Missing", "Please provide link and username for at least one selected platform."); return; }
 
             db.ref('Users/' + loggedInPhone).once('value').then(snap => {
-                let name = snap.exists() ? snap.val().name : "Partner";
+                let name = snap.exists() ? snap.val().name : "Tagown Partner";
                 db.ref('InfluencerProfiles/' + loggedInPhone).set({
                     name: name, phone: loggedInPhone, socialHandles: socialData, timestamp: new Date().toLocaleString()
                 }).then(() => {
@@ -376,23 +428,27 @@
         function selectSuggestion(code, index) {
             document.querySelectorAll('.promo-suggestion').forEach(el => el.classList.remove('selected'));
             document.getElementById('sugg_' + index).classList.add('selected');
-            document.getElementById('customPromoInput').value = code; // Auto fill the custom box
+            document.getElementById('customPromoInput').value = code;
         }
 
         function finalizePromoCode() {
             let code = document.getElementById('customPromoInput').value.trim().toUpperCase();
             
-            if(code.length < 6 || code.length > 7) { alert("Promo Code must be exactly 6 or 7 characters long."); return; }
-            if(!/^[A-Z0-9]+$/.test(code)) { alert("Only Letters and Numbers allowed (No spaces)."); return; }
+            if(code.length < 6 || code.length > 7) { showAlert("Invalid Format", "Promo Code must be exactly 6 or 7 characters long."); return; }
+            if(!/^[A-Z0-9]+$/.test(code)) { showAlert("Invalid Characters", "Only Letters and Numbers allowed (No spaces)."); return; }
 
             db.ref('PromoCodes/' + code).once('value', snap => {
                 if(snap.exists()) {
-                    alert("Oops! This code is already taken. Try adding a number at the end.");
+                    showAlert("Already Taken", "Oops! This code is already taken. Try adding a number at the end.");
                 } else {
+                    // Explicitly 20% discount structure as required
                     db.ref('PromoCodes/' + code).set({
                         influencerPhone: loggedInPhone, influencerName: influencerNameGlob,
-                        discountType: "percentage", discountValue: "20", commission: 50, status: "Active"
+                        discountType: "percentage", discountValue: "20", commission: 120, status: "Active"
                     }).then(() => {
+                        // Reset shimmer manually before load
+                        document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
+                        document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         loadDashboard(loggedInPhone);
                     });
                 }
@@ -426,7 +482,6 @@
             showSection('sectionDashboard');
             document.getElementById('dashName').innerText = influencerNameGlob;
             
-            // Show Active Promo
             db.ref('PromoCodes').orderByChild('influencerPhone').equalTo(phone).once('value', snapshot => {
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
@@ -436,7 +491,6 @@
                 }
             });
 
-            // Commission & Transactions
             db.ref('InfluencerCommissions/' + phone).on('value', snapshot => {
                 let pendingTotal = 0; let grossAvailable = 0; let withdrawnAmount = 0;
                 let htmlPending = ''; let htmlAvailable = '';
@@ -479,8 +533,9 @@
                 availableTotalBalance = grossAvailable - withdrawnAmount;
                 if(availableTotalBalance < 0) availableTotalBalance = 0;
 
-                document.getElementById('statPending').innerText = pendingTotal;
-                document.getElementById('statAvailable').innerText = availableTotalBalance;
+                // Replace Shimmer with Actual Data
+                document.getElementById('statPendingContainer').innerHTML = `₹${pendingTotal}`;
+                document.getElementById('statAvailableContainer').innerHTML = `₹${availableTotalBalance}`;
                 document.getElementById('withdrawAvailBal').innerText = availableTotalBalance;
                 
                 document.getElementById('listPending').innerHTML = htmlPending || `<p style="text-align: center; color: #888; font-size: 13px;">No pending orders.</p>`;
@@ -512,7 +567,7 @@
         // 5. WITHDRAWAL LOGIC
         // ==========================================
         function openWithdrawModal() {
-            if(availableTotalBalance <= 0) { alert("You have ₹0 available to withdraw."); return; }
+            if(availableTotalBalance <= 0) { showAlert("Insufficient Funds", "You have ₹0 available to withdraw."); return; }
             document.getElementById('withdrawModal').style.display = 'flex';
         }
 
@@ -520,8 +575,8 @@
             let amt = parseInt(document.getElementById('withdrawAmount').value);
             let upi = document.getElementById('withdrawUpi').value.trim();
 
-            if(!amt || amt <= 0 || amt > availableTotalBalance) { alert("Invalid amount. Cannot exceed available balance."); return; }
-            if(!upi) { alert("Please enter your UPI ID."); return; }
+            if(!amt || amt <= 0 || amt > availableTotalBalance) { showAlert("Invalid Amount", "Please enter a valid amount within your available balance."); return; }
+            if(!upi) { showAlert("Missing UPI", "Please enter your UPI ID for payment."); return; }
 
             let reqId = "WD-" + Date.now();
             let updates = {};
