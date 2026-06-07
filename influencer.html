@@ -46,14 +46,18 @@
         .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
         .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
-        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT (Flash sweep) */
         .skeleton {
-            background: #e2e8f0;
-            background: linear-gradient(110deg, #e2e8f0 8%, #f8fafc 18%, #e2e8f0 33%);
-            border-radius: 8px; background-size: 200% 100%;
-            animation: 1.2s shine linear infinite;
+            background: #f6f7f8;
+            background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+            background-size: 800px 100%;
+            animation: shimmer 1.5s infinite linear;
+            border-radius: 8px;
         }
-        @keyframes shine { to { background-position-x: -200%; } }
+        @keyframes shimmer {
+            0% { background-position: -400px 0; }
+            100% { background-position: 400px 0; }
+        }
         .skel-box { height: 60px; border-radius: 12px; width: 100%; margin-bottom: 10px;}
         .skel-line { height: 16px; border-radius: 8px; width: 80%; margin-bottom: 10px; }
         .skel-btn { height: 50px; border-radius: 100px; width: 100%; margin-top: 20px;}
@@ -403,9 +407,6 @@
 
             if(!hasOne) { showAlert("Information Missing", "Please provide both Username and Link for at least one selected platform."); return; }
 
-            // 🚀 BHAIG LOGIC: Send Cloudflare Notification to Admin for New Setup
-            sendAdminNotification("New Influencer Joined! 🤝", "New application setup by " + loggedInPhone);
-
             db.ref('Users/' + loggedInPhone).once('value').then(snap => {
                 let name = snap.exists() ? snap.val().name : "Tagown Partner";
                 db.ref('InfluencerProfiles/' + loggedInPhone).set({
@@ -429,14 +430,16 @@
 
             let optionsHtml = '';
             let suggestions = [
-                base + "10",       // 4+2 = 6
-                base + "20",       // 4+2 = 6
-                base + "99",       // 4+2 = 6
-                base + Math.floor(10 + Math.random() * 89) // 4+2 = 6
+                base + "10",       
+                base + "20",       
+                base + "99",       
+                base + String(Math.floor(10 + Math.random() * 89)) 
             ];
 
             suggestions.forEach((code, index) => {
-                optionsHtml += `<div class="promo-suggestion" id="sugg_${index}" onclick="selectSuggestion('${code}', ${index})">${code}</div>`;
+                // Ensure strictly 6 chars by slicing
+                let cleanCode = code.substring(0, 6);
+                optionsHtml += `<div class="promo-suggestion" id="sugg_${index}" onclick="selectSuggestion('${cleanCode}', ${index})">${cleanCode}</div>`;
             });
             document.getElementById('autoPromoOptions').innerHTML = optionsHtml;
         }
@@ -448,7 +451,8 @@
         }
 
         function finalizePromoCode() {
-            let code = document.getElementById('customPromoInput').value.trim().toUpperCase();
+            // Strictly slicing to 6 chars just in case
+            let code = document.getElementById('customPromoInput').value.trim().toUpperCase().substring(0, 6);
             
             if(code.length !== 6) { showAlert("Invalid Format", "Promo Code must be exactly 6 characters long."); return; }
             if(!/^[A-Z0-9]+$/.test(code)) { showAlert("Invalid Characters", "Only Letters and Numbers allowed (No spaces)."); return; }
@@ -461,6 +465,9 @@
                         influencerPhone: loggedInPhone, influencerName: influencerNameGlob,
                         discount: "20", discountType: "percentage", discountValue: "20", commission: "120", status: "Active"
                     }).then(() => {
+                        // 🚀 Send notification ON SUCCESSFUL COMPLETION
+                        sendAdminNotification("New Influencer Joined! 🤝", "Partner " + influencerNameGlob + " created code: " + code);
+                        
                         document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         document.getElementById('listPending').innerHTML = '<div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>';
@@ -514,19 +521,25 @@
                     snapshot.child("Pending").forEach(child => {
                         let data = child.val(); let amt = parseInt(data.commissionAmount);
                         let safeName = data.customerName ? data.customerName.substring(0,3) + "***" : "Customer"; 
-                        
+                        // Bulletproof Status Check
+                        let isCompleted = (data.status && data.status.toLowerCase() === "completed");
+                        let displayStat = isCompleted ? "Completed" : "Pending";
+                        let statColor = isCompleted ? "#2E7D32" : "#F57C00";
+                        let badgeClass = isCompleted ? "badge-completed" : "badge-pending";
+
                         let itemHtml = `
                             <div class="order-item">
                                 <div><div style="font-size: 14px; font-weight: bold;">Order: ${data.orderId}</div><div style="font-size: 11px; color: #888;">${data.orderDate} | ${safeName}</div></div>
                                 <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: var(--primary);">₹${amt}</div>
+                                <div class="${badgeClass}" style="margin-top: 5px;">${displayStat}</div></div></div>
                         `;
 
-                        if(data.status === "Pending") { 
+                        if(!isCompleted) { 
                             pendingTotal += amt; 
-                            htmlPending += itemHtml + `<div class="badge-pending" style="margin-top: 5px;">Pending</div></div></div>`;
-                        } else if(data.status === "Completed") { 
+                            htmlPending += itemHtml;
+                        } else { 
                             grossAvailable += amt; 
-                            htmlAvailable += itemHtml + `<div class="badge-completed" style="margin-top: 5px;">Completed</div></div></div>`;
+                            htmlAvailable += itemHtml;
                         }
                     });
                 }
@@ -535,11 +548,14 @@
                     snapshot.child("Withdrawals").forEach(child => {
                         let data = child.val(); let amt = parseInt(data.amount);
                         withdrawnAmount += amt;
-                        let statColor = data.status === "Processing" ? "#F57C00" : "#2E7D32";
+                        let isCompleted = (data.status && data.status.toLowerCase() === "completed");
+                        let displayStat = isCompleted ? "Completed" : "Processing";
+                        let statColor = isCompleted ? "#2E7D32" : "#F57C00";
+                        
                         htmlAvailable += `
                             <div class="order-item" style="background: #FAFAFA; padding: 10px; border-radius: 12px; margin-top:10px;">
                                 <div><div style="font-size: 14px; font-weight: bold; color:#D32F2F;">Withdrawal Request</div><div style="font-size: 11px; color: #888;">${data.timestamp} | ${data.upi}</div></div>
-                                <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: #D32F2F;">- ₹${amt}</div><div style="margin-top: 5px; font-size:10px; font-weight:bold; color:${statColor};">${data.status}</div></div>
+                                <div style="text-align: right;"><div style="font-size: 15px; font-weight: bold; color: #D32F2F;">- ₹${amt}</div><div style="margin-top: 5px; font-size:10px; font-weight:bold; color:${statColor};">${displayStat}</div></div>
                             </div>
                         `;
                     });
@@ -548,7 +564,7 @@
                 availableTotalBalance = grossAvailable - withdrawnAmount;
                 if(availableTotalBalance < 0) availableTotalBalance = 0;
 
-                // Replace Shimmer with Actual Data
+                // Update UI instantly
                 document.getElementById('statPendingContainer').innerHTML = `₹${pendingTotal}`;
                 document.getElementById('statAvailableContainer').innerHTML = `₹${availableTotalBalance}`;
                 document.getElementById('withdrawAvailBal').innerText = availableTotalBalance;
@@ -579,7 +595,7 @@
         }
 
         // ==========================================
-        // 5. WITHDRAWAL LOGIC & CLOUDFLARE NOTIFICATION
+        // 5. WITHDRAWAL LOGIC & CLOUDFLARE
         // ==========================================
         function openWithdrawModal() {
             if(availableTotalBalance <= 0) { showAlert("Insufficient Funds", "You have ₹0 available to withdraw."); return; }
@@ -601,7 +617,6 @@
             };
             updates['InfluencerProfiles/' + loggedInPhone + '/savedUpi'] = upi;
 
-            // 🚀 BHAIG LOGIC: Send Cloudflare Notification to Admin 
             sendAdminNotification("Payout Requested 💸", `${influencerNameGlob} requested a withdrawal of ₹${amt} via UPI.`);
 
             db.ref().update(updates).then(() => {
@@ -618,7 +633,6 @@
         // ==========================================
         async function sendAdminNotification(title, message) {
             try {
-                // REPLACE THIS WITH YOUR NEW WORKER URL 👇
                 await fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
