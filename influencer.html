@@ -46,7 +46,7 @@
         .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
         .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
-        /* ✨ YOUTUBE STYLE SHIMMER EFFECT (Enhanced) */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
         .skeleton {
             background: #e2e8f0;
             background: linear-gradient(110deg, #e2e8f0 8%, #f8fafc 18%, #e2e8f0 33%);
@@ -330,7 +330,6 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
-        // 🚀 Premium Custom Alert Function
         function showAlert(title, message, type = 'error') {
             document.getElementById('alertTitle').innerText = title;
             document.getElementById('alertMessage').innerText = message;
@@ -404,6 +403,9 @@
 
             if(!hasOne) { showAlert("Information Missing", "Please provide both Username and Link for at least one selected platform."); return; }
 
+            // 🚀 BHAIG LOGIC: Send Cloudflare Notification to Admin for New Setup
+            sendAdminNotification("New Influencer Joined! 🤝", "New application setup by " + loggedInPhone);
+
             db.ref('Users/' + loggedInPhone).once('value').then(snap => {
                 let name = snap.exists() ? snap.val().name : "Tagown Partner";
                 db.ref('InfluencerProfiles/' + loggedInPhone).set({
@@ -421,7 +423,6 @@
         function setupPromoGenerator(name) {
             showSection('sectionGeneratePromo');
             
-            // Extract exactly 4 letters from name
             let base = name.replace(/[^A-Za-z]/g, '').toUpperCase();
             if(base.length < 4) { base = (base + "TAGO").substring(0, 4); } 
             else { base = base.substring(0, 4); }
@@ -456,12 +457,10 @@
                 if(snap.exists()) {
                     showAlert("Already Taken", "Oops! This code is already taken. Try a different combination.");
                 } else {
-                    // Explicitly saving pure integers/strings without symbols for backend compatibility
                     db.ref('PromoCodes/' + code).set({
                         influencerPhone: loggedInPhone, influencerName: influencerNameGlob,
                         discount: "20", discountType: "percentage", discountValue: "20", commission: "120", status: "Active"
                     }).then(() => {
-                        // Reset shimmer manually before load
                         document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         document.getElementById('listPending').innerHTML = '<div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>';
@@ -580,7 +579,7 @@
         }
 
         // ==========================================
-        // 5. WITHDRAWAL LOGIC
+        // 5. WITHDRAWAL LOGIC & CLOUDFLARE NOTIFICATION
         // ==========================================
         function openWithdrawModal() {
             if(availableTotalBalance <= 0) { showAlert("Insufficient Funds", "You have ₹0 available to withdraw."); return; }
@@ -602,6 +601,9 @@
             };
             updates['InfluencerProfiles/' + loggedInPhone + '/savedUpi'] = upi;
 
+            // 🚀 BHAIG LOGIC: Send Cloudflare Notification to Admin 
+            sendAdminNotification("Payout Requested 💸", `${influencerNameGlob} requested a withdrawal of ₹${amt} via UPI.`);
+
             db.ref().update(updates).then(() => {
                 document.getElementById('withdrawModal').style.display = 'none';
                 document.getElementById('withdrawAmount').value = '';
@@ -610,6 +612,31 @@
         }
 
         function logout() { localStorage.removeItem("tagownUserPhone"); location.reload(); }
+
+        // ==========================================
+        // 🚀 6. CLOUDFLARE SECURE PUSH NOTIFICATION 
+        // ==========================================
+        async function sendAdminNotification(title, message) {
+            try {
+                // REPLACE THIS WITH YOUR NEW WORKER URL 👇
+                await fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
+                        target_channel: "push",
+                        include_aliases: { external_id: ["TAGOWN-ADMIN-DEVICE"] },
+                        headings: {"en": title}, 
+                        contents: {"en": message},
+                        priority: 10, 
+                        android_visibility: 1, 
+                        small_icon: "ic_notification_stat"
+                    })
+                });
+            } catch (error) {
+                console.log("Admin notification failed silently.", error);
+            }
+        }
     </script>
 </body>
 </html>
