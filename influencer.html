@@ -46,15 +46,17 @@
         .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
         .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
-        /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        /* ✨ YOUTUBE STYLE SHIMMER EFFECT (Enhanced) */
         .skeleton {
             background: #e2e8f0;
-            background: linear-gradient(110deg, #e2e8f0 8%, #f1f5f9 18%, #e2e8f0 33%);
+            background: linear-gradient(110deg, #e2e8f0 8%, #f8fafc 18%, #e2e8f0 33%);
             border-radius: 8px; background-size: 200% 100%;
-            animation: 1.5s shine linear infinite;
+            animation: 1.2s shine linear infinite;
         }
         @keyframes shine { to { background-position-x: -200%; } }
         .skel-box { height: 60px; border-radius: 12px; width: 100%; margin-bottom: 10px;}
+        .skel-line { height: 16px; border-radius: 8px; width: 80%; margin-bottom: 10px; }
+        .skel-btn { height: 50px; border-radius: 100px; width: 100%; margin-top: 20px;}
 
         /* Colorful Social UI */
         .social-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;}
@@ -101,6 +103,15 @@
 
     <div class="container">
         
+        <div id="sectionLoading" class="card">
+            <div style="padding: 20px 10px; text-align: center;">
+                <div class="skeleton" style="height: 60px; width: 60px; border-radius: 50%; margin: 0 auto 20px auto;"></div>
+                <div class="skeleton skel-line" style="width: 50%; margin: 0 auto 10px auto;"></div>
+                <div class="skeleton skel-line" style="width: 80%; margin: 0 auto 30px auto;"></div>
+                <div class="skeleton skel-btn"></div>
+            </div>
+        </div>
+
         <div id="sectionAuthRequired" class="card hidden">
             <div class="welcome-box">
                 <div class="welcome-icon">🔒</div>
@@ -148,7 +159,7 @@
             <div id="inputsContainer">
                 <div class="social-input-box" id="box_ig"><label class="form-label" style="color:#E1306C;">Instagram Profile</label><input type="text" id="user_ig" class="form-input" placeholder="Enter Username (e.g. @tagown)"><input type="text" id="link_ig" class="form-input" placeholder="Paste Profile Link"></div>
                 <div class="social-input-box" id="box_yt"><label class="form-label" style="color:#FF0000;">YouTube Channel</label><input type="text" id="user_yt" class="form-input" placeholder="Enter Channel Name"><input type="text" id="link_yt" class="form-input" placeholder="Paste Channel Link"></div>
-                <div class="social-input-box" id="box_fb"><label class="form-label" style="color:#1877F2;">Facebook Page/Profile</label><input type="text" id="user_fb" class="form-input" placeholder="Enter Page Name"><input type="text" id="link_fb" class="form-input" placeholder="Paste Page/Profile Link"></div>
+                <div class="social-input-box" id="box_fb"><label class="form-label" style="color:#1877F2;">Facebook Page/Profile</label><input type="text" id="user_fb" class="form-input" placeholder="Enter Name"><input type="text" id="link_fb" class="form-input" placeholder="Paste Page/Profile Link"></div>
                 <div class="social-input-box" id="box_x"><label class="form-label" style="color:#000000;">X (Twitter) Profile</label><input type="text" id="user_x" class="form-input" placeholder="Enter Username"><input type="text" id="link_x" class="form-input" placeholder="Paste Profile Link"></div>
                 <div class="social-input-box" id="box_tg"><label class="form-label" style="color:#0088cc;">Telegram Channel/Group</label><input type="text" id="user_tg" class="form-input" placeholder="Enter Channel Name"><input type="text" id="link_tg" class="form-input" placeholder="Paste Channel Link"></div>
                 <div class="social-input-box" id="box_oth"><label class="form-label" style="color:var(--primary);">Other Platform</label><input type="text" id="user_oth" class="form-input" placeholder="Enter Name"><input type="text" id="link_oth" class="form-input" placeholder="Paste Link here"></div>
@@ -172,8 +183,8 @@
             <div style="text-align: center; margin: 20px 0; font-weight: bold; color: #888;">OR</div>
 
             <label class="form-label">Create Custom Code</label>
-            <input type="text" id="customPromoInput" class="form-input" placeholder="E.g. TAGOWN1" maxlength="7" style="text-transform: uppercase; text-align: center; font-size: 18px; letter-spacing: 2px;">
-            <p style="font-size: 11px; color: #888; margin-top: -10px; margin-bottom: 20px; text-align: center;">Must be exactly 6 or 7 characters (Letters & Numbers only).</p>
+            <input type="text" id="customPromoInput" class="form-input" placeholder="E.g. BADA10" maxlength="6" style="text-transform: uppercase; text-align: center; font-size: 18px; letter-spacing: 2px;">
+            <p style="font-size: 11px; color: #888; margin-top: -10px; margin-bottom: 20px; text-align: center;">Must be exactly 6 characters (Letters & Numbers only).</p>
 
             <button class="btn-primary" onclick="finalizePromoCode()">ACTIVATE PROMO CODE</button>
         </div>
@@ -185,7 +196,7 @@
             <div class="copy-box">
                 <p style="margin: 0 0 5px 0; font-size: 12px; color: #555; font-weight: bold; text-transform: uppercase;">Your Active Promo Code</p>
                 <h3 id="displayPromoCode">
-                    <div class="skeleton" style="height:28px; width:150px;"></div>
+                    <div class="skeleton" style="height:28px; width:150px; margin: 0 auto;"></div>
                 </h3>
                 <p style="margin: 0 0 15px 0; font-size: 12px; color: #00C853; font-weight: bold;">(Customers get 20% Discount)</p>
                 <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--primary); font-weight: bold;">(Your Commission: ₹120 per order)</p>
@@ -196,14 +207,14 @@
                 <div class="stat-box active" id="tabPending" onclick="switchTxTab('pending')">
                     <div class="stat-title">Pending Earnings</div>
                     <div class="stat-val" id="statPendingContainer">
-                        <div class="skeleton" style="height:25px; width:60px;"></div>
+                        <div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>
                     </div>
                     <div style="font-size: 10px; color: #888;">Click to view list</div>
                 </div>
                 <div class="stat-box" id="tabAvailable" onclick="switchTxTab('available')">
                     <div class="stat-title">Available Payout</div>
                     <div class="stat-val" id="statAvailableContainer">
-                        <div class="skeleton" style="height:25px; width:60px;"></div>
+                        <div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>
                     </div>
                     <div style="font-size: 10px; color: #888;">Click to withdraw</div>
                 </div>
@@ -310,6 +321,7 @@
         }
 
         function showSection(id) {
+            document.getElementById('sectionLoading').classList.add('hidden');
             document.getElementById('sectionAuthRequired').classList.add('hidden');
             document.getElementById('sectionWelcome').classList.add('hidden');
             document.getElementById('sectionSetup').classList.add('hidden');
@@ -318,6 +330,7 @@
             document.getElementById(id).classList.remove('hidden');
         }
 
+        // 🚀 Premium Custom Alert Function
         function showAlert(title, message, type = 'error') {
             document.getElementById('alertTitle').innerText = title;
             document.getElementById('alertMessage').innerText = message;
@@ -331,6 +344,7 @@
                 document.getElementById('alertTitle').style.color = "#00C853";
                 document.getElementById('alertBtn').style.background = "#00C853";
             }
+            
             document.getElementById('customAlertModal').style.display = 'flex';
         }
 
@@ -370,7 +384,7 @@
             } else {
                 chip.classList.add('active');
                 box.style.display = 'block';
-                selectedPlatforms[name] = 'val_' + key; // Link inputs to validation
+                selectedPlatforms[name] = 'val_' + key; 
             }
         }
 
@@ -402,22 +416,22 @@
         }
 
         // ==========================================
-        // 3. GENERATE PROMO CODE (6-7 Characters ONLY)
+        // 3. GENERATE PROMO CODE (STRICTLY 6 CHARACTERS)
         // ==========================================
         function setupPromoGenerator(name) {
             showSection('sectionGeneratePromo');
             
-            // Generate exact 4-letter base
+            // Extract exactly 4 letters from name
             let base = name.replace(/[^A-Za-z]/g, '').toUpperCase();
             if(base.length < 4) { base = (base + "TAGO").substring(0, 4); } 
             else { base = base.substring(0, 4); }
 
             let optionsHtml = '';
             let suggestions = [
-                base + "20",       // 6 chars
-                base + "VIP",      // 7 chars
-                base + "100",      // 7 chars
-                base + Math.floor(10 + Math.random() * 90) // 6 chars
+                base + "10",       // 4+2 = 6
+                base + "20",       // 4+2 = 6
+                base + "99",       // 4+2 = 6
+                base + Math.floor(10 + Math.random() * 89) // 4+2 = 6
             ];
 
             suggestions.forEach((code, index) => {
@@ -435,21 +449,22 @@
         function finalizePromoCode() {
             let code = document.getElementById('customPromoInput').value.trim().toUpperCase();
             
-            if(code.length < 6 || code.length > 7) { showAlert("Invalid Format", "Promo Code must be exactly 6 or 7 characters long."); return; }
+            if(code.length !== 6) { showAlert("Invalid Format", "Promo Code must be exactly 6 characters long."); return; }
             if(!/^[A-Z0-9]+$/.test(code)) { showAlert("Invalid Characters", "Only Letters and Numbers allowed (No spaces)."); return; }
 
             db.ref('PromoCodes/' + code).once('value', snap => {
                 if(snap.exists()) {
-                    showAlert("Already Taken", "Oops! This code is already taken. Try adding a number at the end.");
+                    showAlert("Already Taken", "Oops! This code is already taken. Try a different combination.");
                 } else {
-                    // Fix: discount is purely "20", commission is "120"
+                    // Explicitly saving pure integers/strings without symbols for backend compatibility
                     db.ref('PromoCodes/' + code).set({
                         influencerPhone: loggedInPhone, influencerName: influencerNameGlob,
                         discount: "20", discountType: "percentage", discountValue: "20", commission: "120", status: "Active"
                     }).then(() => {
-                        // Re-trigger shimmer manually to ensure smooth UI transition
-                        document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px;"></div>';
-                        document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px;"></div>';
+                        // Reset shimmer manually before load
+                        document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
+                        document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
+                        document.getElementById('listPending').innerHTML = '<div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>';
                         loadDashboard(loggedInPhone);
                     });
                 }
