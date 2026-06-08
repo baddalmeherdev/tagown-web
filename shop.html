@@ -584,7 +584,6 @@
             switchView('viewCheckout');
         }
 
-        // 🚀 BHAIG LOGIC: 20% Discount Calculation Sync
         function applyPromoCode() {
             const code = document.getElementById('chkPromoCode').value.trim().toUpperCase();
             const msg = document.getElementById('promoMessage');
@@ -602,7 +601,6 @@
                     const product = currentProducts[selectedProductId];
                     const originalPrice = parseInt(product.price);
 
-                    // 20% Math Calculation
                     let percentage = 20; 
                     appliedDiscount = Math.floor((originalPrice * percentage) / 100);
                     let finalPrice = Math.max(originalPrice - appliedDiscount, 0);
@@ -611,7 +609,7 @@
                     influencerData = {
                         phone: data.influencerPhone || "",
                         name: data.influencerName || "",
-                        commission: 120 // Force Fixed 120
+                        commission: 120 
                     };
 
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
@@ -655,7 +653,7 @@
             const orderData = {
                 orderId: orderId, 
                 productTitle: product.title, 
-                productName: product.title, // 🔥 Ensure name sync
+                productName: product.title,
                 originalPrice: String(originalPrice), 
                 discountApplied: String(appliedDiscount), 
                 price: String(finalPrice), 
@@ -712,7 +710,15 @@
                 if(snapshot.exists()){
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
-                orders.reverse(); 
+                
+                // 🚀 BHAIG LOGIC: Sorting by date (Newest First)
+                orders.sort((a, b) => {
+                    let d1 = new Date(a.timestamp);
+                    let d2 = new Date(b.timestamp);
+                    let timeA = isNaN(d1.getTime()) ? 0 : d1.getTime();
+                    let timeB = isNaN(d2.getTime()) ? 0 : d2.getTime();
+                    return timeB - timeA; 
+                });
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
@@ -720,7 +726,6 @@
                         let statusHtml = `<span class="order-status-processing">Processing ⏳</span>`;
                         let trackingHtml = "";
 
-                        // 🚀 COMPLETED STATUS COLOR FIX
                         if (statusText.toLowerCase() === "completed") {
                             statusHtml = `<span class="order-status-completed">Completed ✅</span>`;
                         } else if (statusText.toLowerCase() === "shipped" || (data.trackingId && data.trackingId.trim() !== "")) {
