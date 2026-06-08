@@ -442,6 +442,19 @@
         </div>
     </div>
 
+    <div id="successModal" class="overlay" style="align-items: center; z-index: 4000;">
+        <div class="modal-box">
+            <div class="modal-header-red" style="background: white; padding: 25px 20px 10px 20px;">
+                <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
+                <h3 style="color: #2E7D32;">Order Confirmed!</h3>
+            </div>
+            <div class="modal-body" style="padding-top: 0;">
+                <p style="font-size: 14px; color: #424242; margin-bottom: 20px; line-height: 1.4;">Your Tagown package will be shipped to your detailed address soon. Pay cash on delivery.</p>
+                <button class="btn-modal-primary" style="background: #0D47A1;" onclick="closeSuccessModal()">BACK TO SHOP</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
@@ -485,6 +498,11 @@
                 header.style.background = '#FFB300'; btn.style.background = '#FFB300'; btn.style.color = '#000'; icon.innerText = 'ℹ️';
             }
             document.getElementById('alertModal').style.display = 'flex';
+        }
+
+        function closeSuccessModal() {
+            document.getElementById('successModal').style.display = 'none';
+            goBackToHome();
         }
 
         db.ref('ShopProducts').on('value', (snapshot) => {
@@ -553,7 +571,7 @@
         function openVehicleSheet() { document.getElementById('vehicleSheet').style.display = 'flex'; }
         
         window.onclick = function(event) {
-            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal'];
+            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal', 'successModal'];
             modals.forEach(id => { const modal = document.getElementById(id); if (event.target == modal) modal.style.display = "none"; });
         }
         
@@ -683,13 +701,27 @@
             }
 
             db.ref().update(updates).then(() => {
-                const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}\n*Total Price:* ₹${originalPrice}\n*Discount:* ₹${appliedDiscount}\n*Amount to Pay:* ₹${finalPrice}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
-                const waLink = `https://wa.me/916372980014?text=${encodeURIComponent(waMessage)}`;
                 
-                showPremiumAlert('Order Placed!', 'Your COD order is saved. Redirecting to WhatsApp to confirm...', 'success');
-                setTimeout(() => { window.open(waLink, '_blank'); }, 1500);
+                // 🚀 BHAIG LOGIC: Call Cloudflare Worker to send OneSignal Notification to Admin
+                fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
+                        target_channel: "push",
+                        include_aliases: { external_id: ["TAGOWN-ADMIN-DEVICE"] },
+                        headings: {"en": "New Order Alert! 📦"}, 
+                        contents: {"en": name + " ordered " + product.title},
+                        priority: 10, 
+                        android_visibility: 1, 
+                        small_icon: "ic_notification_stat"
+                    })
+                }).catch(e => console.log(e));
                 
-                goBackToHome(); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                // Show App-like Success Modal instead of WhatsApp redirect
+                document.getElementById('successModal').style.display = 'flex';
+                btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                
             }).catch(err => {
                 showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
             });
