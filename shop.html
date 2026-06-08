@@ -602,7 +602,7 @@
             switchView('viewCheckout');
         }
 
-        // 🚀 BHAIG LOGIC: Null-Safe Promo Validation
+        // 🚀 BHAIG LOGIC: 100% Fixed JS Promo Code syntax check
         function applyPromoCode() {
             const code = document.getElementById('chkPromoCode').value.trim().toUpperCase();
             const msg = document.getElementById('promoMessage');
@@ -614,14 +614,9 @@
             msg.innerText = "Checking..."; msg.style.color = "#1565C0";
 
             db.ref('PromoCodes/' + code).once('value').then(snap => {
-                if(snap.exists()) {
+                // Fixed JavaScript safety check
+                if(snap.exists() && snap.child("status").val() && String(snap.child("status").val()).toLowerCase() === "active") {
                     const data = snap.val();
-                    
-                    // Allow if status is either 'Active' or simply exists but empty (safety net)
-                    if(data.status && data.status.toLowerCase() !== "active") {
-                        msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
-                        return;
-                    }
                     
                     const product = currentProducts[selectedProductId];
                     const originalPrice = parseInt(product.price);
@@ -654,6 +649,7 @@
                 }
             }).catch(err => {
                 msg.innerText = "Error checking code."; msg.style.color = "#D32F2F";
+                console.error(err);
             });
         }
 
@@ -709,7 +705,6 @@
 
             db.ref().update(updates).then(() => {
                 
-                // 🚀 Send Notification to Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
