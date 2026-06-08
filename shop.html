@@ -122,8 +122,10 @@
         .order-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
         .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
         .order-date { font-size: 11px; color: #888; font-weight: bold; font-style: italic;}
+        
         .order-status-processing { background: #FFF8E1; color: #F57F17; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
-        .order-status-shipped { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
+        .order-status-shipped { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
+        .order-status-completed { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
         
         .order-title { font-size: 15px; font-weight: bold; color: #222; margin: 0 0 4px 0; font-style: italic;}
         .order-vehicle { font-size: 12px; color: #555; margin: 0 0 10px 0; font-style: italic;}
@@ -455,7 +457,6 @@
         let selectedVehicleType = null;
         let sliderInterval;
 
-        // NEW: Promo Code State Variables
         let appliedPromoCode = null;
         let appliedDiscount = 0;
         let influencerData = null;
@@ -571,7 +572,6 @@
             document.getElementById('pageTitle').innerText = "Checkout";
             document.getElementById('chkProductName').innerText = `${data.title} (For: ${selectedVehicleType})`;
             
-            // Reset Promo Code State upon entering checkout
             appliedPromoCode = null;
             appliedDiscount = 0;
             influencerData = null;
@@ -584,7 +584,7 @@
             switchView('viewCheckout');
         }
 
-        // NEW: Promo Code Verification Logic
+        // 🚀 BHAIG LOGIC: 20% Discount Calculation Sync
         function applyPromoCode() {
             const code = document.getElementById('chkPromoCode').value.trim().toUpperCase();
             const msg = document.getElementById('promoMessage');
@@ -596,25 +596,30 @@
             msg.innerText = "Checking..."; msg.style.color = "#1565C0";
 
             db.ref('PromoCodes/' + code).once('value').then(snap => {
-                if(snap.exists()) {
+                if(snap.exists() && "Active".equalsIgnoreCase(snap.child("status").val())) {
                     const data = snap.val();
+                    
+                    const product = currentProducts[selectedProductId];
+                    const originalPrice = parseInt(product.price);
+
+                    // 20% Math Calculation
+                    let percentage = 20; 
+                    appliedDiscount = Math.floor((originalPrice * percentage) / 100);
+                    let finalPrice = Math.max(originalPrice - appliedDiscount, 0);
+
                     appliedPromoCode = code;
-                    appliedDiscount = parseInt(data.discount || 0);
                     influencerData = {
                         phone: data.influencerPhone || "",
                         name: data.influencerName || "",
-                        commission: parseInt(data.commission || 0)
+                        commission: 120 // Force Fixed 120
                     };
-
-                    const product = currentProducts[selectedProductId];
-                    const originalPrice = parseInt(product.price);
-                    const finalPrice = Math.max(originalPrice - appliedDiscount, 0);
 
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
 
-                    msg.innerText = "Promo code applied successfully! ✅"; msg.style.color = "#00C853";
+                    msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
+                    msg.style.color = "#00C853";
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
@@ -648,12 +653,16 @@
             const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
 
             const orderData = {
-                orderId: orderId, productTitle: product.title, 
-                originalPrice: originalPrice, discountApplied: appliedDiscount, price: finalPrice, 
+                orderId: orderId, 
+                productTitle: product.title, 
+                productName: product.title, // 🔥 Ensure name sync
+                originalPrice: String(originalPrice), 
+                discountApplied: String(appliedDiscount), 
+                price: String(finalPrice), 
+                amount: String(finalPrice),
                 vehicleType: selectedVehicleType,
-                customerName: name, customerPhone: phone, deliveryAddress: fullAddress, 
-                orderStatus: "New Order (COD)", timestamp: date, trackingId: "",
-                // New Influencer Trackers
+                customerName: name, customerPhone: phone, deliveryAddress: fullAddress, message: fullAddress,
+                orderStatus: "Pending", status: "Pending", timestamp: date, trackingId: "",
                 promoCode: appliedPromoCode || "",
                 influencerPhone: influencerData ? influencerData.phone : "",
                 influencerName: influencerData ? influencerData.name : "",
@@ -665,7 +674,6 @@
             updates['UserOrders/' + currentUserPhone + '/' + orderId] = orderData;
             updates['Orders/' + orderId] = orderData;
             
-            // Generate Pending Commission Record for Influencer App
             if(influencerData && influencerData.phone) {
                 updates['InfluencerCommissions/' + influencerData.phone + '/Pending/' + orderId] = {
                     orderId: orderId,
@@ -677,7 +685,6 @@
             }
 
             db.ref().update(updates).then(() => {
-                
                 const waMessage = `*New Order Placed (COD)* 🛍️\n\n*Order ID:* ${orderId}\n*Item:* ${product.title}\n*Vehicle:* ${selectedVehicleType}\n*Total Price:* ₹${originalPrice}\n*Discount:* ₹${appliedDiscount}\n*Amount to Pay:* ₹${finalPrice}\n\n*Delivery Details:*\nName: ${name}\nPhone: ${phone}\nAddress: ${fullAddress}\n\n_Please confirm my order._`;
                 const waLink = `https://wa.me/916372980014?text=${encodeURIComponent(waMessage)}`;
                 
@@ -709,16 +716,23 @@
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
+                        let statusText = data.status || data.orderStatus || "Pending";
                         let statusHtml = `<span class="order-status-processing">Processing ⏳</span>`;
                         let trackingHtml = "";
-                        
-                        if(data.trackingId && data.trackingId.trim() !== "") {
+
+                        // 🚀 COMPLETED STATUS COLOR FIX
+                        if (statusText.toLowerCase() === "completed") {
+                            statusHtml = `<span class="order-status-completed">Completed ✅</span>`;
+                        } else if (statusText.toLowerCase() === "shipped" || (data.trackingId && data.trackingId.trim() !== "")) {
                             statusHtml = `<span class="order-status-shipped">Shipped 🚚</span>`;
+                        }
+
+                        if(data.trackingId && data.trackingId.trim() !== "") {
                             trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
                         }
 
-                        const itemTitle = data.productTitle || "Tagown Security Product";
-                        const itemPrice = data.price || "299";
+                        const itemTitle = data.productName || data.productTitle || data.title || "Tagown Security Product";
+                        const itemPrice = data.amount || data.price || "299";
                         const itemVehicle = data.vehicleType || "Vehicle";
                         const itemId = data.orderId || "N/A";
 
