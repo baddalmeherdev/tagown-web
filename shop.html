@@ -271,27 +271,8 @@
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
         /* Zoom Container for Pinch */
-        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: auto;}
-        .zoom-container img { width: 100%; object-fit: contain; transition: transform 0.1s; transform-origin: center center; cursor: grab;}
-    
-        /* 🚀 Order Success Celebration (Image 2) */
-        .celebration-banner { background: #E8F5E9; border: 2px dashed #00C853; color: #2E7D32; padding: 15px; border-radius: 12px; margin-top: 15px; text-align: center; font-style: italic; animation: fadeInCelebration 0.8s ease; display: flex; align-items: center; justify-content: center; gap: 10px;}
-        @keyframes fadeInCelebration { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .celebration-emoji { font-size: 24px; animation: bounceEmoji 1s infinite alternate; }
-        @keyframes bounceEmoji { from { transform: translateY(0); } to { transform: translateY(-5px); } }
-
-        /* 🚀 iOS Style Premium Cancel Modal (Image 1) */
-        .ios-modal { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; width: 270px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; animation: iosScaleUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); margin: auto; border: 1px solid rgba(0,0,0,0.05); }
-        @keyframes iosScaleUp { from { transform: scale(1.1); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .ios-modal-body { padding: 20px; }
-        .ios-modal-title { font-size: 17px; font-weight: 600; color: #000; margin: 0 0 5px 0; }
-        .ios-modal-text { font-size: 13px; color: #000; margin: 0; line-height: 1.4; }
-        .ios-modal-footer { display: flex; flex-direction: column; border-top: 0.5px solid rgba(0,0,0,0.15); }
-        .ios-modal-btn { background: transparent; border: none; padding: 12px; font-size: 17px; cursor: pointer; color: #007AFF; font-family: inherit; border-bottom: 0.5px solid rgba(0,0,0,0.15); transition: background 0.2s; }
-        .ios-modal-btn:last-child { border-bottom: none; }
-        .ios-modal-btn:active { background: rgba(0,0,0,0.05); }
-        .ios-modal-btn.destruct { color: #FF3B30; font-weight: 400; }
-        .ios-modal-btn.primary { font-weight: 600; }
+        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
+        .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
     </style>
 </head>
 <body>
@@ -304,23 +285,19 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
-    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.9);">
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.95);">
         <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">&times;</span>
         <div class="zoom-container" id="zoomContainer">
             <img id="zoomedImg" src="">
         </div>
     </div>
 
-    <div id="cancelConfirmModal" class="overlay" style="align-items: center; z-index: 5500;">
-        <div class="ios-modal">
-            <div class="ios-modal-body">
-                <h4 class="ios-modal-title">Cancel Order?</h4>
-                <p class="ios-modal-text">Are you sure you want to cancel this order? This action cannot be undone.</p>
-            </div>
-            <div class="ios-modal-footer">
-                <button class="ios-modal-btn primary" onclick="closeCancelModal()">No, Keep Order</button>
-                <button class="ios-modal-btn destruct" id="finalCancelBtn">Yes, Cancel Order</button>
-            </div>
+    <div id="allReviewsModal" class="overlay" style="z-index: 4500;">
+        <div class="bottom-sheet" style="height: 85vh; padding: 20px;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('allReviewsModal').style.display='none'">×</button>
+            <h3 class="sheet-header" style="color: var(--primary-blue);">All Customer Reviews</h3>
+            <div id="allReviewsList" style="margin-top: 15px;"></div>
         </div>
     </div>
 
@@ -343,14 +320,23 @@
 
         <div class="detail-box">
             <div class="review-stars">
-                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">5.0</span></div>
-                <span class="review-text-info" id="realReviewCount">from 0 Reviews</span>
+                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">0.0</span></div>
+                <span class="review-text-info" id="realReviewCount">No Reviews Yet</span>
             </div>
             
             <h2 class="detail-title" id="detTitle">Product Title</h2>
             <div class="price-row">
                 <span class="price-current" id="detPrice">₹0</span>
                 <span class="price-old" id="detOldPrice"></span>
+            </div>
+        </div>
+
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
             </div>
         </div>
 
@@ -372,15 +358,6 @@
             </div>
         </div>
 
-        <div class="qty-box">
-            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
-            </div>
-        </div>
-
         <div class="trust-badges" onclick="document.getElementById('trustPolicyModal').style.display='flex'">
             <div class="trust-item"><img src="trust_cod.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2800/2800160.png'"><br>COD<br>Available</div>
             <div class="trust-item"><img src="trust_return.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2275/2275811.png'"><br>5 Days<br>Return</div>
@@ -391,6 +368,17 @@
         <div class="desc-box">
             <div class="selection-label">Product Details & Specifications</div>
             <div class="desc-text" id="detDesc">Description goes here...</div>
+        </div>
+
+        <div class="review-section">
+            <div class="selection-label" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                <span>Customer Reviews</span>
+                <span style="font-size: 12px; color: var(--primary-blue); cursor: pointer;" onclick="document.getElementById('allReviewsModal').style.display='flex'">View All</span>
+            </div>
+            <div id="recentReviewsContainer">
+                <p style="font-size: 12px; color: #888; font-style: italic;">Loading reviews...</p>
+            </div>
+            <button class="btn-write-review" onclick="openWriteReview()">Write a Review</button>
         </div>
 
         <div style="background:white; padding:15px; margin-top:10px;">
@@ -433,108 +421,145 @@
         <div class="checkout-container">
             
             <div class="checkout-step">
-                <div class="step-header"><span>1️⃣</span> Cart Review</div>
-                <div class="cart-review-item">
-                    <img id="chkProductImg" src="" class="cart-review-img">
-                    <div class="cart-review-details">
-                        <p class="summary-item" id="chkProductName">Product Name</p>
-                        <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
-                        <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
-                    </div>
+                <div class="step-header" id="step1Header" onclick="toggleStep(1)">
+                    <div><span class="step-num" id="step1Num">1</span> Cart Review</div>
+                    <span id="step1Icon">▼</span>
                 </div>
-                
-                <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
-                    <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
-                        <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
-                    </div>
-                    <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
-                </div>
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>2️⃣</span> Delivery Address</div>
-                
-                <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
-                    📍 Auto-Detect My Location
-                </button>
-
-                <label class="form-label">Full Name</label>
-                <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
-                
-                <label class="form-label">Mobile Number</label>
-                <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-                
-                <label class="form-label">Flat / House no.</label>
-                <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
-                
-                <label class="form-label">Area / Landmark</label>
-                <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
-                
-                <div class="row-2">
-                    <div class="form-group">
-                        <label class="form-label">Pincode</label>
-                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">City</label>
-                        <input type="text" id="chkCity" class="form-input" placeholder="City">
-                    </div>
-                </div>
-                
-                <label class="form-label">State</label>
-                <input type="text" id="chkState" class="form-input" placeholder="State">
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>3️⃣</span> Delivery Slot</div>
-                <div id="shiprocketUI" style="text-align: center; padding: 10px;">
-                    <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
-                    <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
-                        <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
-                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
-                        <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>4️⃣</span> Payment</div>
-                <div class="payment-box">
-                    <span style="font-size: 24px;">💵</span>
-                    <div>
-                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
-                        <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
-                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                        <span>MRP (Total Qty):</span>
-                        <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
-                    </div>
-                    <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
-                        <span>Selling Price:</span>
-                        <span id="chkSellingPrice">₹0</span>
-                    </div>
-                    <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
-                        <span>Promo Discount:</span>
-                        <span id="chkDiscount">-₹0</span>
-                    </div>
-                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                        <span>Delivery Fee:</span>
-                        <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                <div class="step-body active" id="step1Body">
+                    <div class="cart-review-item">
+                        <img id="chkProductImg" src="" class="cart-review-img">
+                        <div class="cart-review-details">
+                            <p class="summary-item" id="chkProductName">Product Name</p>
+                            <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
+                            <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
+                        </div>
                     </div>
                     
-                    <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
-                        <span>Amount to Pay:</span>
-                        <span class="total-price" id="chkPrice">₹0</span>
+                    <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
+                        <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
+                            <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
+                        </div>
+                        <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
                     </div>
+                    <button class="btn-continue" onclick="nextStep(2)">CONTINUE</button>
                 </div>
             </div>
 
-            <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">CONFIRM & PLACE ORDER</button>
+            <div class="checkout-step">
+                <div class="step-header" id="step2Header" onclick="toggleStep(2)">
+                    <div><span class="step-num" id="step2Num">2</span> Delivery Address</div>
+                    <span id="step2Icon">▶</span>
+                </div>
+                <div class="step-body" id="step2Body">
+                    <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
+                        📍 Auto-Detect My Location
+                    </button>
+
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
+                    
+                    <label class="form-label">Mobile Number</label>
+                    <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+                    
+                    <label class="form-label">Flat / House no.</label>
+                    <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
+                    
+                    <label class="form-label">Area / Landmark</label>
+                    <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
+                    
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label class="form-label">Pincode</label>
+                            <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <input type="text" id="chkCity" class="form-input" placeholder="City">
+                        </div>
+                    </div>
+                    
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label class="form-label">District</label>
+                            <input type="text" id="chkDistrict" class="form-input" placeholder="District">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <input type="text" id="chkState" class="form-input" placeholder="State">
+                        </div>
+                    </div>
+                    <button class="btn-continue" onclick="nextStep(3)">SAVE & CONTINUE</button>
+                </div>
+            </div>
+
+            <div class="checkout-step">
+                <div class="step-header" id="step3Header" onclick="toggleStep(3)">
+                    <div><span class="step-num" id="step3Num">3</span> Delivery Slot</div>
+                    <span id="step3Icon">▶</span>
+                </div>
+                <div class="step-body" id="step3Body">
+                    <div id="shiprocketUI" style="text-align: center; padding: 10px;">
+                        <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
+                        <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
+                            <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
+                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
+                            <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
+                        </div>
+                    </div>
+                    <button class="btn-continue" onclick="nextStep(4)">CONTINUE</button>
+                </div>
+            </div>
+
+            <div class="checkout-step">
+                <div class="step-header" id="step4Header" onclick="toggleStep(4)">
+                    <div><span class="step-num" id="step4Num">4</span> Payment Options</div>
+                    <span id="step4Icon">▶</span>
+                </div>
+                <div class="step-body" id="step4Body">
+                    <div class="payment-box">
+                        <span style="font-size: 24px;">💵</span>
+                        <div>
+                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
+                            <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                            <span>MRP (Total Qty):</span>
+                            <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
+                        </div>
+                        <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
+                            <span id="chkProductDiscountLabel">Product Discount:</span>
+                            <span id="chkProductDiscount">-₹0</span>
+                        </div>
+
+                        <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
+                            <span>Selling Price:</span>
+                            <span id="chkSellingPrice">₹0</span>
+                        </div>
+
+                        <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
+                            <span>Promo Discount:</span>
+                            <span id="chkDiscount">-₹0</span>
+                        </div>
+
+                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                            <span>Delivery Fee:</span>
+                            <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                        </div>
+                        
+                        <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
+                            <span>Amount to Pay:</span>
+                            <span class="total-price" id="chkPrice">₹0</span>
+                        </div>
+                    </div>
+                    <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()" style="margin-top: 20px;">CONFIRM & PLACE ORDER</button>
+                </div>
+            </div>
+
             <div style="height: 40px;"></div>
         </div>
     </div>
@@ -586,6 +611,18 @@
                         <p>Package delivered successfully.</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cancelOrderModal" class="overlay" style="align-items: center; z-index: 5000;">
+        <div class="modal-box" style="padding: 20px;">
+            <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
+            <h3 style="color: #333; margin-top: 0;">Cancel Order</h3>
+            <p style="font-size: 14px; color: #555; line-height: 1.4;">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-modal-cancel" style="background: #E0E0E0; color: #333; margin: 0; flex: 1; border-radius: 8px;" onclick="document.getElementById('cancelOrderModal').style.display='none'">Keep Order</button>
+                <button class="btn-modal-primary" style="background: #D32F2F; margin: 0; flex: 1;" onclick="processCancelOrder()">Yes, Cancel</button>
             </div>
         </div>
     </div>
@@ -683,27 +720,21 @@
         </div>
     </div>
 
-    <div id="successModal" class="overlay" style="align-items: center; z-index: 4000;">
-        <div class="modal-box" style="background: #F4F6F9;">
-            <div style="background: #00C853; padding: 30px 20px; color: white;">
-                <div style="font-size: 60px; margin-bottom: 10px;">✅</div>
+    <div id="successModal" class="overlay" style="align-items: center; z-index: 4000; background: rgba(0,0,0,0.85);">
+        <div class="modal-box" style="background: #F4F6F9; overflow: visible;">
+            <div style="background: #00C853; padding: 40px 20px; color: white; border-radius: 20px 20px 0 0; position: relative; margin-top: -30px;">
+                <div style="font-size: 60px; margin-bottom: 5px; background: white; width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; color: #00C853; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">✔️</div>
                 <h2 style="margin: 0; font-style: italic;">Order Placed!</h2>
             </div>
-            <div class="modal-body" style="background: white; text-align: left; padding: 20px;">
+            <div class="modal-body" style="background: white; text-align: left; padding: 20px; border-radius: 0 0 20px 20px;">
+                <p style="font-size: 12px; color: #888; margin: 0 0 2px 0; font-weight: bold;">Order ID</p>
+                <p style="font-size: 16px; font-weight: 900; color: #111; margin: 0 0 15px 0;" id="confOrderId">ORD-XXXXXX</p>
                 
-                <div class="celebration-banner">
-                    <span class="celebration-emoji">🎉</span>
-                    <span>Hooray! Time to celebrate! Your order is confirmed.</span>
-                </div>
-
-                <p style="font-size: 13px; color: #555; margin: 15px 0 5px 0;">Order ID</p>
-                <p style="font-size: 16px; font-weight: bold; color: #111; margin: 0 0 15px 0;" id="confOrderId">ORD-XXXXXX</p>
+                <p style="font-size: 12px; color: #888; margin: 0 0 2px 0; font-weight: bold;">Estimated Delivery</p>
+                <p style="font-size: 16px; font-weight: 900; color: #2E7D32; margin: 0 0 25px 0;" id="confEstDate">Fetching...</p>
                 
-                <p style="font-size: 13px; color: #555; margin: 0 0 5px 0;">Estimated Delivery</p>
-                <p style="font-size: 16px; font-weight: bold; color: #2E7D32; margin: 0 0 20px 0;" id="confEstDate">Fetching...</p>
-                
-                <button class="btn-modal-primary" style="background: #0D47A1; margin-bottom: 10px;" onclick="closeSuccessModal(true)">TRACK MY ORDER</button>
-                <button class="btn-modal-cancel" onclick="closeSuccessModal(false)">Continue Shopping</button>
+                <button class="btn-modal-primary" style="background: #0D47A1; margin-bottom: 10px; font-size: 14px;" onclick="closeSuccessModal(true)">TRACK MY ORDER</button>
+                <button class="btn-modal-cancel" style="color: #666; font-size: 13px;" onclick="closeSuccessModal(false)">Continue Shopping</button>
             </div>
         </div>
     </div>
@@ -744,6 +775,7 @@
         let appliedPromoCode = null;
         let appliedDiscount = 0;
         let influencerData = null;
+        let orderToCancel = null;
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(currentUserPhone) {
@@ -773,7 +805,6 @@
 
         function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
-            // Show Rating popup right after closing success modal
             setRating(5); 
             document.getElementById('reviewText').value = "";
             document.getElementById('postOrderRatingModal').style.display = 'flex';
@@ -788,7 +819,7 @@
             };
         }
 
-        // Image Zoom Logic (Pinch/Pan logic setup)
+        // 🚀 Pinch & Pan Image Zoom Logic
         let scale = 1, panning = false, pointX = 0, pointY = 0, start = { x: 0, y: 0 };
         const zoomCont = document.getElementById('zoomContainer');
         const zoomImg = document.getElementById('zoomedImg');
@@ -797,22 +828,32 @@
             zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
 
-        zoomCont.onmousedown = function (e) {
-            e.preventDefault(); start = { x: e.clientX - pointX, y: e.clientY - pointY }; panning = true;
-        }
-        zoomCont.onmouseup = function (e) { panning = false; }
-        zoomCont.onmousemove = function (e) {
-            e.preventDefault(); if (!panning) return;
-            pointX = (e.clientX - start.x); pointY = (e.clientY - start.y); setTransform();
-        }
-        zoomCont.onwheel = function (e) {
-            e.preventDefault(); let xs = (e.clientX - pointX) / scale, ys = (e.clientY - pointY) / scale;
-            let delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
-            (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
-            pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; setTransform();
-        }
+        let initialDistance = null;
+        zoomCont.addEventListener('touchstart', (e) => {
+            if(e.touches.length === 2) {
+                initialDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            } else if(e.touches.length === 1) {
+                panning = true;
+                start = { x: e.touches[0].clientX - pointX, y: e.touches[0].clientY - pointY };
+            }
+        });
+        
+        zoomCont.addEventListener('touchmove', (e) => {
+            if(e.touches.length === 2 && initialDistance) {
+                e.preventDefault();
+                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+                scale = Math.min(Math.max(1, currentDistance / initialDistance), 4); 
+                setTransform();
+            } else if (e.touches.length === 1 && panning) {
+                e.preventDefault();
+                pointX = e.touches[0].clientX - start.x;
+                pointY = e.touches[0].clientY - start.y;
+                setTransform();
+            }
+        }, {passive: false});
 
-        // Reset Zoom on close
+        zoomCont.addEventListener('touchend', () => { panning = false; initialDistance = null; });
+
         function closeZoom() {
             document.getElementById('imageZoomModal').style.display='none';
             scale = 1; pointX = 0; pointY = 0; setTransform();
@@ -824,7 +865,7 @@
             scale = 1; pointX = 0; pointY = 0; setTransform();
         }
 
-        // 🚀 Auto-Detect Location Logic
+        // 🚀 Auto-Detect & Auto-Fill Location Logic
         function autoDetectLocation() {
             const btn = document.getElementById('btnAutoDetect');
             btn.innerHTML = "⏳ Detecting...";
@@ -839,6 +880,7 @@
                         if(address) {
                             document.getElementById('chkPincodeCheckout').value = address.postcode || '';
                             document.getElementById('chkCity').value = address.city || address.town || address.state_district || '';
+                            document.getElementById('chkDistrict').value = address.state_district || '';
                             document.getElementById('chkState').value = address.state || '';
                             document.getElementById('chkAddress2').value = address.suburb || address.neighbourhood || '';
                             btn.innerHTML = "✅ Location Detected";
@@ -858,7 +900,26 @@
             }
         }
 
-        // Pincode Lookup API for Auto-fill City & State
+        function loadSavedAddress() {
+            const saved = localStorage.getItem('tagownSavedAddress');
+            if(saved) {
+                try {
+                    const addr = JSON.parse(saved);
+                    if(addr.name) document.getElementById('chkName').value = addr.name;
+                    if(addr.phone) document.getElementById('chkPhone').value = addr.phone;
+                    if(addr.addr1) document.getElementById('chkAddress1').value = addr.addr1;
+                    if(addr.addr2) document.getElementById('chkAddress2').value = addr.addr2;
+                    if(addr.pincode) {
+                        document.getElementById('chkPincodeCheckout').value = addr.pincode;
+                        checkPincodeAPI(addr.pincode, true); 
+                    }
+                    if(addr.city) document.getElementById('chkCity').value = addr.city;
+                    if(addr.district) document.getElementById('chkDistrict').value = addr.district;
+                    if(addr.state) document.getElementById('chkState').value = addr.state;
+                } catch(e){}
+            }
+        }
+
         function checkPincodeAPI(val, isCheckout = false) {
             if(val.length === 6) {
                 if(isCheckout) {
@@ -868,11 +929,6 @@
                     let estDate = d.toLocaleDateString('en-US', options);
                     document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
                     document.getElementById('shiprocketCheckoutResult').style.display = 'block';
-                } else {
-                    let d = new Date(); d.setDate(d.getDate() + 5);
-                    let options = { month: 'short', day: 'numeric' };
-                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
-                    document.getElementById('pinResult').style.display = 'block';
                 }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
@@ -881,8 +937,9 @@
                     if(data[0].Status === "Success") {
                         let details = data[0].PostOffice[0];
                         if(isCheckout) {
-                            document.getElementById('chkCity').value = details.District;
-                            document.getElementById('chkState').value = details.State;
+                            if(!document.getElementById('chkCity').value) document.getElementById('chkCity').value = details.District;
+                            if(!document.getElementById('chkDistrict').value) document.getElementById('chkDistrict').value = details.District;
+                            if(!document.getElementById('chkState').value) document.getElementById('chkState').value = details.State;
                         }
                     }
                 }).catch(e => console.log(e));
@@ -890,8 +947,6 @@
                 if(isCheckout) {
                     document.getElementById('shiprocketCheckoutResult').style.display = 'none';
                     document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
-                } else {
-                    document.getElementById('pinResult').style.display = 'none';
                 }
             }
         }
@@ -936,20 +991,78 @@
             setTimeout(() => container.innerHTML = '', 3000);
         }
 
-        // Real Rating Logic
+        // 🚀 Real Rating Logic
         function fetchReviews(productId) {
             db.ref('ProductReviews/' + productId).on('value', snap => {
+                let html = '';
                 if(snap.exists()) {
                     let total = 0; let count = 0;
-                    snap.forEach(child => { total += parseInt(child.val().rating); count++; });
+                    
+                    let reviewArray = [];
+                    snap.forEach(child => { 
+                        let r = child.val();
+                        total += parseInt(r.rating); 
+                        count++; 
+                        reviewArray.push(r);
+                    });
+                    
                     let avg = (total / count).toFixed(1);
                     document.getElementById('realRatingText').innerText = avg;
                     document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
+                    
+                    reviewArray.reverse().slice(0,3).forEach(r => {
+                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
+                        html += `
+                            <div class="review-card">
+                                <div class="review-card-header">
+                                    <span class="review-author">${safeName}</span>
+                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
+                                </div>
+                                <div class="review-card-stars">${stars}</div>
+                                <div class="review-card-text">"${r.text}"</div>
+                            </div>
+                        `;
+                    });
+                    
+                    let fullHtml = '';
+                    reviewArray.forEach(r => {
+                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
+                        fullHtml += `
+                            <div class="review-card" style="background: white; border: 1px solid #ccc;">
+                                <div class="review-card-header">
+                                    <span class="review-author">${safeName}</span>
+                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
+                                </div>
+                                <div class="review-card-stars">${stars}</div>
+                                <div class="review-card-text">"${r.text}"</div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('allReviewsList').innerHTML = fullHtml;
+
                 } else {
-                    document.getElementById('realRatingText').innerText = "5.0";
-                    document.getElementById('realReviewCount').innerText = "New Product";
+                    document.getElementById('realRatingText').innerText = "0.0";
+                    document.getElementById('realReviewCount').innerText = "No Reviews Yet";
+                    html = '<p style="font-size: 12px; color: #888; font-style: italic;">Be the first to review this product!</p>';
+                    document.getElementById('allReviewsList').innerHTML = html;
                 }
+                document.getElementById('recentReviewsContainer').innerHTML = html;
             });
+        }
+
+        function openWriteReview() {
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
+            setRating(5); document.getElementById('reviewText').value = "";
+            document.getElementById('postOrderRatingModal').style.display = 'flex';
+            
+            document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick = function() {
+                document.getElementById('postOrderRatingModal').style.display = 'none';
+            };
+            document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick = function() {
+                submitReview(false);
+            };
         }
 
         function setRating(stars) {
@@ -963,12 +1076,14 @@
         function submitReview(goToOrders) {
             if(!selectedProductId) return;
             let text = document.getElementById('reviewText').value.trim();
+            if(!text) text = "Great product!";
+            
             db.ref('ProductReviews/' + selectedProductId).push({
-                rating: userRating, text: text, phone: currentUserPhone || "Anonymous", timestamp: new Date().toLocaleString()
+                rating: userRating, text: text, phone: currentUserPhone || "Customer", timestamp: new Date().toLocaleString()
             }).then(() => {
                 document.getElementById('postOrderRatingModal').style.display = 'none';
                 showPremiumAlert("Thank You!", "Your review has been submitted.", "success");
-                setTimeout(() => { if(goToOrders) openOrderHistory(); else goBackToHome(); }, 1500);
+                if(goToOrders) setTimeout(() => { openOrderHistory(); }, 1500);
             });
         }
 
@@ -1088,6 +1203,41 @@
             document.getElementById('previewName').innerText = cleanType;
             document.getElementById('vehiclePreviewContainer').style.display = 'block';
         }
+
+        // 🚀 Multi-Step Checkout Navigation Logic
+        function toggleStep(step) {
+            for(let i=1; i<=4; i++) {
+                document.getElementById('step' + i + 'Body').classList.remove('active');
+                document.getElementById('step' + i + 'Header').classList.remove('active');
+                document.getElementById('step' + i + 'Icon').innerText = "▶";
+                document.getElementById('step' + i + 'Num').innerHTML = i; 
+            }
+            
+            document.getElementById('step' + step + 'Body').classList.add('active');
+            document.getElementById('step' + step + 'Header').classList.add('active');
+            document.getElementById('step' + step + 'Icon').innerText = "▼";
+
+            for(let j=1; j<step; j++) {
+                document.getElementById('step' + j + 'Num').innerHTML = "✓";
+            }
+        }
+
+        function nextStep(step) {
+            if (step === 3) {
+                const name = document.getElementById('chkName').value.trim(); 
+                const phone = document.getElementById('chkPhone').value.trim();
+                const addr1 = document.getElementById('chkAddress1').value.trim(); 
+                const pincode = document.getElementById('chkPincodeCheckout').value.trim();
+                const city = document.getElementById('chkCity').value.trim(); 
+                const district = document.getElementById('chkDistrict').value.trim();
+                const state = document.getElementById('chkState').value.trim();
+                
+                if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
+                    showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly to continue.', 'error'); return; 
+                }
+            }
+            toggleStep(step);
+        }
         
         function proceedToCheckout() {
             if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
@@ -1096,9 +1246,17 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
+            loadSavedAddress(); // Load auto-fill data
+            
             // Populating Step 1: Cart Review
+            let baseSellingPrice = parseInt(data.price) * selectedQty;
+            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
+            let initialProductDiscount = mrpPrice - baseSellingPrice;
+            let discountPercent = Math.round((initialProductDiscount / mrpPrice) * 100);
+            
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
+            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
@@ -1107,19 +1265,26 @@
             appliedDiscount = 0;
             influencerData = null;
             
-            let totalSellingPrice = parseInt(data.price) * selectedQty;
-            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
-            
-            document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
-            
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
+            
+            // Payment Summary Exact Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
-            document.getElementById('chkSellingPrice').innerText = "₹" + totalSellingPrice; 
-            document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
+            
+            if(initialProductDiscount > 0) {
+                document.getElementById('chkProductDiscountLabel').innerText = `Product Discount (${discountPercent}%):`;
+                document.getElementById('chkProductDiscount').innerText = "-₹" + initialProductDiscount;
+                document.getElementById('productDiscountRow').style.display = "flex";
+            } else {
+                document.getElementById('productDiscountRow').style.display = "none";
+            }
+
+            document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
+            document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
             switchView('viewCheckout');
+            toggleStep(1); 
         }
 
         function applyPromoCode() {
@@ -1152,6 +1317,8 @@
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
+                    
+                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${totalSellingPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
@@ -1164,6 +1331,7 @@
                     
                     document.getElementById('discountRow').style.display = "none";
                     document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
+                    document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -1173,15 +1341,27 @@
             });
         }
 
+        // 🚀 BUG FIXED HERE: Re-enabled proper address saving & async cloudflare call
         function placeOrder() {
-            const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout').value.trim();
-            const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
+            const name = document.getElementById('chkName').value.trim(); 
+            const phone = document.getElementById('chkPhone').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); 
+            const addr2 = document.getElementById('chkAddress2').value.trim(); 
+            const pincode = document.getElementById('chkPincodeCheckout').value.trim();
+            const city = document.getElementById('chkCity').value.trim(); 
+            const district = document.getElementById('chkDistrict').value.trim();
+            const state = document.getElementById('chkState').value.trim();
 
-            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
                 showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
             }
-            const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
+            
+            const btn = document.getElementById('btnPlaceOrder'); 
+            btn.innerText = "PROCESSING..."; btn.disabled = true;
+
+            // 🚀 Address Auto-Save
+            const savedAddress = { name: name, phone: phone, addr1: addr1, addr2: addr2, pincode: pincode, city: city, district: district, state: state };
+            localStorage.setItem('tagownSavedAddress', JSON.stringify(savedAddress));
 
             const product = currentProducts[selectedProductId];
             const totalSellingPrice = parseInt(product.price) * selectedQty;
@@ -1189,7 +1369,8 @@
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
-            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, ${city}, ${state} - ${pincode}`;
+            
+            const fullAddress = `${addr1}, ${addr2}, ${city}, ${district}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
 
@@ -1230,6 +1411,7 @@
 
             db.ref().update(updates).then(() => {
                 
+                // 🚀 Send Notification in Background (Fire and forget, doesn't block UI)
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1243,8 +1425,9 @@
                         android_visibility: 1, 
                         small_icon: "ic_notification_stat"
                     })
-                }).catch(e => console.log(e));
+                }).catch(e => console.log("Notification error:", e));
                 
+                // 🚀 Instant Success UI
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -1253,7 +1436,8 @@
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
             }).catch(err => {
-                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
+                showPremiumAlert('Database Error', err.message, 'error'); 
+                btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
 
@@ -1277,6 +1461,7 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
+                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
@@ -1308,7 +1493,7 @@
 
                         let actionButtons = '';
                         if(badgeClass === "badge-orange") {
-                            actionButtons += `<button class="btn-action btn-cancel" onclick="openCancelModal('${itemId}')">Cancel Order</button>`;
+                            actionButtons += `<button class="btn-action btn-cancel" onclick="confirmCancel('${itemId}')">Cancel Order</button>`;
                         } else if (badgeClass === "badge-green") {
                             actionButtons += `<button class="btn-action btn-reorder" onclick="reorderProduct('${data.productId}')">Buy Again</button>`;
                         }
@@ -1349,27 +1534,25 @@
             });
         }
 
-        // 🚀 Premium Cancel Modal Logic (Image 1)
-        function openCancelModal(orderId) {
-            const finalCancelBtn = document.getElementById('finalCancelBtn');
-            finalCancelBtn.onclick = function() { cancelOrder(orderId); };
-            document.getElementById('cancelConfirmModal').style.display = 'flex';
+        // Premium Cancel Custom Popup
+        function confirmCancel(orderId) {
+            orderToCancel = orderId;
+            document.getElementById('cancelOrderModal').style.display = 'flex';
         }
 
-        function closeCancelModal() {
-            document.getElementById('cancelConfirmModal').style.display = 'none';
-        }
-
-        function cancelOrder(orderId) {
-            closeCancelModal(); // Hide modal first
-            let updates = {};
-            updates['UserOrders/' + currentUserPhone + '/' + orderId + '/status'] = "Cancelled";
-            updates['UserOrders/' + currentUserPhone + '/' + orderId + '/orderStatus'] = "Cancelled";
-            updates['Orders/' + orderId + '/status'] = "Cancelled";
-            updates['Orders/' + orderId + '/orderStatus'] = "Cancelled";
-            db.ref().update(updates).then(() => {
-                showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
-            });
+        function processCancelOrder() {
+            if(orderToCancel) {
+                let updates = {};
+                updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/status'] = "Cancelled";
+                updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/orderStatus'] = "Cancelled";
+                updates['Orders/' + orderToCancel + '/status'] = "Cancelled";
+                updates['Orders/' + orderToCancel + '/orderStatus'] = "Cancelled";
+                db.ref().update(updates).then(() => {
+                    document.getElementById('cancelOrderModal').style.display = 'none';
+                    showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
+                    orderToCancel = null;
+                });
+            }
         }
 
         function reorderProduct(productId) {
