@@ -27,7 +27,6 @@
             margin: 0; padding: 0; color: var(--text-main); 
             padding-bottom: 120px; 
             overflow-x: hidden;
-            touch-action: pan-y;
         }
 
         /* 📱 Top Header */
@@ -110,6 +109,16 @@
         .qty-controls { display: flex; align-items: center; gap: 15px; border: 1px solid #ccc; border-radius: 8px; padding: 5px 15px; }
         .qty-btn { background: transparent; border: none; font-size: 20px; font-weight: bold; color: var(--primary-blue); cursor: pointer; padding: 5px 10px; }
 
+        /* Review Section */
+        .review-section { background: white; padding: 15px; margin-top: 10px; }
+        .review-card { padding: 12px; border: 1px solid #E5E5EA; border-radius: 8px; margin-bottom: 10px; background: #FAFAFA; }
+        .review-card-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .review-author { font-size: 12px; font-weight: bold; color: #333; }
+        .review-date { font-size: 10px; color: #888; }
+        .review-card-stars { color: #FFB300; font-size: 12px; margin-bottom: 5px; }
+        .review-card-text { font-size: 13px; color: #555; font-style: italic; line-height: 1.4; }
+        .btn-write-review { width: 100%; padding: 12px; border: 1px dashed var(--primary-blue); background: #E3F2FD; color: var(--primary-blue); font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+
         /* FAQ Section */
         .faq-item { margin-bottom: 15px; border-bottom: 1px solid #F0F0F0; padding-bottom: 10px;}
         .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
@@ -158,13 +167,12 @@
         .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-place-order:active { transform: scale(0.98); }
 
-        /* 📋 4. MY ORDERS HISTORY VIEW (UPGRADED UI) */
+        /* 📋 4. MY ORDERS HISTORY VIEW */
         .order-history-container { padding: 15px; }
         .history-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;}
         .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
         .order-date { font-size: 11px; color: #888; font-weight: bold;}
         
-        /* EXACT STATUS COLORS */
         .badge-orange { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
         .badge-blue { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
         .badge-purple { background: #F3E5F5; color: #6A1B9A; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
@@ -254,9 +262,9 @@
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 6000; animation: fall 3s linear forwards; }
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
-        /* Zoom Container for Pinch */
-        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: auto;}
-        .zoom-container img { width: 100%; object-fit: contain; transition: transform 0.1s; transform-origin: center center; cursor: grab;}
+        /* Zoom Container */
+        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
+        .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
     </style>
 </head>
 <body>
@@ -269,10 +277,19 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
-    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.9);">
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.95);">
         <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">&times;</span>
         <div class="zoom-container" id="zoomContainer">
             <img id="zoomedImg" src="">
+        </div>
+    </div>
+
+    <div id="allReviewsModal" class="overlay" style="z-index: 4500;">
+        <div class="bottom-sheet" style="height: 85vh; padding: 20px;">
+            <div class="drag-handle"></div>
+            <button class="close-btn" onclick="document.getElementById('allReviewsModal').style.display='none'">×</button>
+            <h3 class="sheet-header" style="color: var(--primary-blue);">All Customer Reviews</h3>
+            <div id="allReviewsList" style="margin-top: 15px;"></div>
         </div>
     </div>
 
@@ -295,14 +312,23 @@
 
         <div class="detail-box">
             <div class="review-stars">
-                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">5.0</span></div>
-                <span class="review-text-info" id="realReviewCount">from 0 Reviews</span>
+                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">0.0</span></div>
+                <span class="review-text-info" id="realReviewCount">No Reviews Yet</span>
             </div>
             
             <h2 class="detail-title" id="detTitle">Product Title</h2>
             <div class="price-row">
                 <span class="price-current" id="detPrice">₹0</span>
                 <span class="price-old" id="detOldPrice"></span>
+            </div>
+        </div>
+
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
             </div>
         </div>
 
@@ -324,15 +350,6 @@
             </div>
         </div>
 
-        <div class="qty-box">
-            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
-            </div>
-        </div>
-
         <div class="trust-badges" onclick="document.getElementById('trustPolicyModal').style.display='flex'">
             <div class="trust-item"><img src="trust_cod.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2800/2800160.png'"><br>COD<br>Available</div>
             <div class="trust-item"><img src="trust_return.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2275/2275811.png'"><br>5 Days<br>Return</div>
@@ -343,6 +360,17 @@
         <div class="desc-box">
             <div class="selection-label">Product Details & Specifications</div>
             <div class="desc-text" id="detDesc">Description goes here...</div>
+        </div>
+
+        <div class="review-section">
+            <div class="selection-label" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+                <span>Customer Reviews</span>
+                <span style="font-size: 12px; color: var(--primary-blue); cursor: pointer;" onclick="document.getElementById('allReviewsModal').style.display='flex'">View All</span>
+            </div>
+            <div id="recentReviewsContainer">
+                <p style="font-size: 12px; color: #888; font-style: italic;">Loading reviews...</p>
+            </div>
+            <button class="btn-write-review" onclick="openWriteReview()">Write a Review</button>
         </div>
 
         <div style="background:white; padding:15px; margin-top:10px;">
@@ -435,8 +463,16 @@
                     </div>
                 </div>
                 
-                <label class="form-label">State</label>
-                <input type="text" id="chkState" class="form-input" placeholder="State">
+                <div class="row-2">
+                    <div class="form-group">
+                        <label class="form-label">District</label>
+                        <input type="text" id="chkDistrict" class="form-input" placeholder="District">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">State</label>
+                        <input type="text" id="chkState" class="form-input" placeholder="State">
+                    </div>
+                </div>
             </div>
 
             <div class="checkout-step">
@@ -466,14 +502,21 @@
                         <span>MRP (Total Qty):</span>
                         <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
                     </div>
+                    <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
+                        <span id="chkProductDiscountLabel">Product Discount:</span>
+                        <span id="chkProductDiscount">-₹0</span>
+                    </div>
+
                     <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
                         <span>Selling Price:</span>
                         <span id="chkSellingPrice">₹0</span>
                     </div>
+
                     <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
                         <span>Promo Discount:</span>
                         <span id="chkDiscount">-₹0</span>
                     </div>
+
                     <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
                         <span>Delivery Fee:</span>
                         <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
@@ -719,7 +762,6 @@
 
         function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
-            // Show Rating popup right after closing success modal
             setRating(5); 
             document.getElementById('reviewText').value = "";
             document.getElementById('postOrderRatingModal').style.display = 'flex';
@@ -734,7 +776,7 @@
             };
         }
 
-        // Image Zoom Logic (Pinch/Pan logic setup)
+        // 🚀 Pinch & Pan Image Zoom Logic
         let scale = 1, panning = false, pointX = 0, pointY = 0, start = { x: 0, y: 0 };
         const zoomCont = document.getElementById('zoomContainer');
         const zoomImg = document.getElementById('zoomedImg');
@@ -743,22 +785,33 @@
             zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
 
-        zoomCont.onmousedown = function (e) {
-            e.preventDefault(); start = { x: e.clientX - pointX, y: e.clientY - pointY }; panning = true;
-        }
-        zoomCont.onmouseup = function (e) { panning = false; }
-        zoomCont.onmousemove = function (e) {
-            e.preventDefault(); if (!panning) return;
-            pointX = (e.clientX - start.x); pointY = (e.clientY - start.y); setTransform();
-        }
-        zoomCont.onwheel = function (e) {
-            e.preventDefault(); let xs = (e.clientX - pointX) / scale, ys = (e.clientY - pointY) / scale;
-            let delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
-            (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
-            pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; setTransform();
-        }
+        // Mobile Touch Events for Pinch/Pan
+        let initialDistance = null;
+        zoomCont.addEventListener('touchstart', (e) => {
+            if(e.touches.length === 2) {
+                initialDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+            } else if(e.touches.length === 1) {
+                panning = true;
+                start = { x: e.touches[0].clientX - pointX, y: e.touches[0].clientY - pointY };
+            }
+        });
+        
+        zoomCont.addEventListener('touchmove', (e) => {
+            if(e.touches.length === 2 && initialDistance) {
+                e.preventDefault();
+                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
+                scale = Math.min(Math.max(1, currentDistance / initialDistance), 4); 
+                setTransform();
+            } else if (e.touches.length === 1 && panning) {
+                e.preventDefault();
+                pointX = e.touches[0].clientX - start.x;
+                pointY = e.touches[0].clientY - start.y;
+                setTransform();
+            }
+        }, {passive: false});
 
-        // Reset Zoom on close
+        zoomCont.addEventListener('touchend', () => { panning = false; initialDistance = null; });
+
         function closeZoom() {
             document.getElementById('imageZoomModal').style.display='none';
             scale = 1; pointX = 0; pointY = 0; setTransform();
@@ -785,6 +838,7 @@
                         if(address) {
                             document.getElementById('chkPincodeCheckout').value = address.postcode || '';
                             document.getElementById('chkCity').value = address.city || address.town || address.state_district || '';
+                            document.getElementById('chkDistrict').value = address.state_district || '';
                             document.getElementById('chkState').value = address.state || '';
                             document.getElementById('chkAddress2').value = address.suburb || address.neighbourhood || '';
                             btn.innerHTML = "✅ Location Detected";
@@ -828,6 +882,7 @@
                         let details = data[0].PostOffice[0];
                         if(isCheckout) {
                             document.getElementById('chkCity').value = details.District;
+                            document.getElementById('chkDistrict').value = details.District;
                             document.getElementById('chkState').value = details.State;
                         }
                     }
@@ -853,13 +908,14 @@
                 let currentTransform = track.style.transform;
                 let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
                 
-                if (startX - endX > 50) { 
+                if (startX - endX > 50) { // Swiped left
                     if(currentIndex < 2) currentIndex++; else currentIndex = 0;
-                } else if (endX - startX > 50) { 
+                } else if (endX - startX > 50) { // Swiped right
                     if(currentIndex > 0) currentIndex--; else currentIndex = 2;
                 }
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 
+                // Restart auto-slide
                 sliderInterval = setInterval(() => { 
                     currentIndex = (currentIndex + 1) % 3; 
                     track.style.transform = `translateX(-${currentIndex * 100}%)`; 
@@ -882,20 +938,81 @@
             setTimeout(() => container.innerHTML = '', 3000);
         }
 
-        // Real Rating Logic
+        // 🚀 Real Rating Logic
         function fetchReviews(productId) {
             db.ref('ProductReviews/' + productId).on('value', snap => {
+                let html = '';
                 if(snap.exists()) {
                     let total = 0; let count = 0;
-                    snap.forEach(child => { total += parseInt(child.val().rating); count++; });
+                    
+                    // Show max 3 reviews in preview
+                    let reviewArray = [];
+                    snap.forEach(child => { 
+                        let r = child.val();
+                        total += parseInt(r.rating); 
+                        count++; 
+                        reviewArray.push(r);
+                    });
+                    
                     let avg = (total / count).toFixed(1);
                     document.getElementById('realRatingText').innerText = avg;
                     document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
+                    
+                    // Display latest 3
+                    reviewArray.reverse().slice(0,3).forEach(r => {
+                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
+                        html += `
+                            <div class="review-card">
+                                <div class="review-card-header">
+                                    <span class="review-author">${safeName}</span>
+                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
+                                </div>
+                                <div class="review-card-stars">${stars}</div>
+                                <div class="review-card-text">"${r.text}"</div>
+                            </div>
+                        `;
+                    });
+                    
+                    // Populate Full Modal
+                    let fullHtml = '';
+                    reviewArray.forEach(r => {
+                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
+                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
+                        fullHtml += `
+                            <div class="review-card" style="background: white; border: 1px solid #ccc;">
+                                <div class="review-card-header">
+                                    <span class="review-author">${safeName}</span>
+                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
+                                </div>
+                                <div class="review-card-stars">${stars}</div>
+                                <div class="review-card-text">"${r.text}"</div>
+                            </div>
+                        `;
+                    });
+                    document.getElementById('allReviewsList').innerHTML = fullHtml;
+
                 } else {
-                    document.getElementById('realRatingText').innerText = "5.0";
-                    document.getElementById('realReviewCount').innerText = "New Product";
+                    document.getElementById('realRatingText').innerText = "0.0";
+                    document.getElementById('realReviewCount').innerText = "No Reviews Yet";
+                    html = '<p style="font-size: 12px; color: #888; font-style: italic;">Be the first to review this product!</p>';
+                    document.getElementById('allReviewsList').innerHTML = html;
                 }
+                document.getElementById('recentReviewsContainer').innerHTML = html;
             });
+        }
+
+        function openWriteReview() {
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
+            setRating(5); document.getElementById('reviewText').value = "";
+            document.getElementById('postOrderRatingModal').style.display = 'flex';
+            
+            document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick = function() {
+                document.getElementById('postOrderRatingModal').style.display = 'none';
+            };
+            document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick = function() {
+                submitReview(false);
+            };
         }
 
         function setRating(stars) {
@@ -909,12 +1026,14 @@
         function submitReview(goToOrders) {
             if(!selectedProductId) return;
             let text = document.getElementById('reviewText').value.trim();
+            if(!text) text = "Great product!";
+            
             db.ref('ProductReviews/' + selectedProductId).push({
-                rating: userRating, text: text, phone: currentUserPhone || "Anonymous", timestamp: new Date().toLocaleString()
+                rating: userRating, text: text, phone: currentUserPhone || "Customer", timestamp: new Date().toLocaleString()
             }).then(() => {
                 document.getElementById('postOrderRatingModal').style.display = 'none';
                 showPremiumAlert("Thank You!", "Your review has been submitted.", "success");
-                setTimeout(() => { if(goToOrders) openOrderHistory(); else goBackToHome(); }, 1500);
+                if(goToOrders) setTimeout(() => { openOrderHistory(); }, 1500);
             });
         }
 
@@ -1042,9 +1161,15 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
-            // Populating Step 1: Cart Review
+            // Populating Step 1: Cart Review (Now with Real Price)
+            let baseSellingPrice = parseInt(data.price) * selectedQty;
+            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
+            let initialProductDiscount = mrpPrice - baseSellingPrice;
+            let discountPercent = Math.round((initialProductDiscount / mrpPrice) * 100);
+            
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
+            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
@@ -1053,16 +1178,21 @@
             appliedDiscount = 0;
             influencerData = null;
             
-            // 🚀 BHAIG LOGIC: Order Summary Prices (MRP, Selling, Promo)
-            let baseSellingPrice = parseInt(data.price) * selectedQty;
-            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
-            
-            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
-            
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
-            document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; // Show MRP as crossed out
+            
+            // 🚀 BHAIG LOGIC: Payment Summary Exact Match
+            document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
+            
+            if(initialProductDiscount > 0) {
+                document.getElementById('chkProductDiscountLabel').innerText = `Product Discount (${discountPercent}%):`;
+                document.getElementById('chkProductDiscount').innerText = "-₹" + initialProductDiscount;
+                document.getElementById('productDiscountRow').style.display = "flex";
+            } else {
+                document.getElementById('productDiscountRow').style.display = "none";
+            }
+
             document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
@@ -1099,6 +1229,9 @@
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
+                    
+                    // 🚀 Update Cart Review Top Price
+                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${totalSellingPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
@@ -1111,6 +1244,7 @@
                     
                     document.getElementById('discountRow').style.display = "none";
                     document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
+                    document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -1123,9 +1257,11 @@
         function placeOrder() {
             const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
             const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout') ? document.getElementById('chkPincodeCheckout').value.trim() : document.getElementById('chkPincode').value.trim();
-            const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
+            const city = document.getElementById('chkCity').value.trim(); 
+            const district = document.getElementById('chkDistrict').value.trim();
+            const state = document.getElementById('chkState').value.trim();
 
-            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
                 showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
             }
             const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
@@ -1136,7 +1272,7 @@
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
-            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
+            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${district}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
 
@@ -1177,6 +1313,7 @@
 
             db.ref().update(updates).then(() => {
                 
+                // Notify Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1192,6 +1329,7 @@
                     })
                 }).catch(e => console.log(e));
                 
+                // Show Confirmation Screen
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -1224,6 +1362,7 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
+                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
