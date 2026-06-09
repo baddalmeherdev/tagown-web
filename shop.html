@@ -201,7 +201,7 @@
         .btn-reorder { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9;}
         .btn-track { background: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB;}
 
-        /* TRACKING TIMELINE CSS */
+        /* TRACKING TIMELINE CSS WITH DYNAMIC META */
         .timeline { position: relative; padding-left: 20px; margin-top: 20px; text-align: left;}
         .timeline-item { position: relative; padding-bottom: 25px; }
         .timeline-item::before { content: ''; position: absolute; left: -19px; top: 5px; width: 2px; height: 100%; background: #E0E0E0; }
@@ -209,6 +209,7 @@
         .timeline-dot { position: absolute; left: -24px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #E0E0E0; border: 2px solid white; box-shadow: 0 0 0 1px #E0E0E0;}
         .timeline-content h4 { margin: 0; font-size: 15px; color: #888;}
         .timeline-content p { margin: 4px 0 0 0; font-size: 12px; color: #aaa;}
+        .timeline-meta { font-size: 11px; color: var(--primary-blue); font-weight: bold; margin-top: 4px; }
         
         .timeline-item.active .timeline-dot { background: var(--primary-green); box-shadow: 0 0 0 2px var(--primary-green); }
         .timeline-item.active::before { background: var(--primary-green); }
@@ -588,6 +589,7 @@
                     <div class="timeline-content">
                         <h4>Order Placed</h4>
                         <p>We have received your order.</p>
+                        <div class="timeline-meta" id="trackPlacedMeta"></div>
                     </div>
                 </div>
                 <div class="timeline-item" id="tlShipped">
@@ -595,6 +597,7 @@
                     <div class="timeline-content">
                         <h4>Shipped</h4>
                         <p>Your item is on the way.</p>
+                        <div class="timeline-meta" id="trackShippedMeta"></div>
                     </div>
                 </div>
                 <div class="timeline-item" id="tlOut">
@@ -602,6 +605,7 @@
                     <div class="timeline-content">
                         <h4>Out for Delivery</h4>
                         <p>Delivery agent is nearby.</p>
+                        <div class="timeline-meta" id="trackOutMeta"></div>
                     </div>
                 </div>
                 <div class="timeline-item" id="tlDelivered">
@@ -609,6 +613,7 @@
                     <div class="timeline-content">
                         <h4>Delivered</h4>
                         <p>Package delivered successfully.</p>
+                        <div class="timeline-meta" id="trackDeliveredMeta"></div>
                     </div>
                 </div>
             </div>
@@ -776,6 +781,7 @@
         let appliedDiscount = 0;
         let influencerData = null;
         let orderToCancel = null;
+        window.userOrdersList = [];
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(currentUserPhone) {
@@ -1370,6 +1376,7 @@
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
             
+            // 🚀 Removed chkLandmark bug
             const fullAddress = `${addr1}, ${addr2}, ${city}, ${district}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
@@ -1411,7 +1418,26 @@
 
             db.ref().update(updates).then(() => {
                 
-                // 🚀 Send Notification in Background (Fire and forget, doesn't block UI)
+                // 🚀 User Notification (Fire & Forget)
+                let cleanPhone = phone.replace(/\D/g, '');
+                if(cleanPhone.length > 10 && cleanPhone.startsWith('91')) cleanPhone = cleanPhone.substring(cleanPhone.length - 10);
+                
+                fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
+                        target_channel: "push",
+                        include_aliases: { external_id: [cleanPhone, "91"+cleanPhone] },
+                        headings: {"en": "Order Placed Successfully! 🎉"}, 
+                        contents: {"en": "Your order for " + product.title + " is confirmed. We will ship it soon!"},
+                        priority: 10, 
+                        android_visibility: 1, 
+                        small_icon: "ic_notification_stat"
+                    })
+                }).catch(e => console.log("User Notif error:", e));
+
+                // 🚀 Admin Notification (Fire & Forget)
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1425,7 +1451,7 @@
                         android_visibility: 1, 
                         small_icon: "ic_notification_stat"
                     })
-                }).catch(e => console.log("Notification error:", e));
+                }).catch(e => console.log("Admin Notif error:", e));
                 
                 // 🚀 Instant Success UI
                 document.getElementById('confOrderId').innerText = orderId;
@@ -1469,6 +1495,8 @@
                     let timeB = isNaN(d2.getTime()) ? 0 : d2.getTime();
                     return timeB - timeA; 
                 });
+
+                window.userOrdersList = orders; // Save globally for tracking modal
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
@@ -1499,7 +1527,7 @@
                         }
                         
                         if(badgeClass !== "badge-red") {
-                            actionButtons += `<button class="btn-action btn-track" onclick="showTracking('${itemId}', '${badgeClass}')">Track Package</button>`;
+                            actionButtons += `<button class="btn-action btn-track" onclick="showTracking('${itemId}')">Track Package</button>`;
                         }
 
                         html += `
@@ -1563,7 +1591,10 @@
             }
         }
 
-        function showTracking(orderId, badgeClass) {
+        function showTracking(orderId) {
+            const order = window.userOrdersList.find(o => o.orderId === orderId);
+            if(!order) return;
+
             document.getElementById('trackOrderId').innerText = orderId;
             
             document.getElementById('tlPlaced').classList.remove('active');
@@ -1571,16 +1602,52 @@
             document.getElementById('tlOut').classList.remove('active');
             document.getElementById('tlDelivered').classList.remove('active');
 
+            let sLower = (order.status || order.orderStatus || "Processing").toLowerCase();
+
+            // 1. Placed (Always Active)
             document.getElementById('tlPlaced').classList.add('active'); 
-            
-            if(badgeClass === "badge-blue" || badgeClass === "badge-purple" || badgeClass === "badge-green") {
+            let placedMeta = (order.placedTime || order.timestamp || "").split(',')[0];
+            if(order.placedLocation) placedMeta += " • " + order.placedLocation;
+            document.getElementById('trackPlacedMeta').innerText = placedMeta;
+
+            // 2. Shipped
+            if(sLower.includes("shipped") || sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlShipped').classList.add('active');
+                let shippedMeta = (order.shippedTime || order.shippedTimestamp || "");
+                if(shippedMeta && !isNaN(shippedMeta)) {
+                    shippedMeta = new Date(parseInt(shippedMeta)).toLocaleDateString();
+                } else if (shippedMeta) {
+                    shippedMeta = shippedMeta.split(',')[0];
+                }
+                if(order.shippedLocation) shippedMeta += " • " + order.shippedLocation;
+                document.getElementById('trackShippedMeta').innerText = shippedMeta;
+            } else {
+                document.getElementById('trackShippedMeta').innerText = "";
             }
-            if(badgeClass === "badge-purple" || badgeClass === "badge-green") {
+
+            // 3. Out for Delivery
+            if(sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlOut').classList.add('active');
+                let outMeta = (order.outForDeliveryTime || "");
+                if(order.outForDeliveryLocation) outMeta += " • " + order.outForDeliveryLocation;
+                document.getElementById('trackOutMeta').innerText = outMeta;
+            } else {
+                document.getElementById('trackOutMeta').innerText = "";
             }
-            if(badgeClass === "badge-green") {
+
+            // 4. Delivered
+            if(sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlDelivered').classList.add('active');
+                let devMeta = (order.deliveredTime || order.completedTimestamp || "");
+                if(devMeta && !isNaN(devMeta)) {
+                    devMeta = new Date(parseInt(devMeta)).toLocaleDateString();
+                } else if (devMeta) {
+                    devMeta = devMeta.split(',')[0];
+                }
+                if(order.deliveredLocation) devMeta += " • " + order.deliveredLocation;
+                document.getElementById('trackDeliveredMeta').innerText = devMeta;
+            } else {
+                document.getElementById('trackDeliveredMeta').innerText = "";
             }
 
             document.getElementById('trackingModal').style.display = 'flex';
