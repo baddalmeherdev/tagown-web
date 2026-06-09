@@ -25,7 +25,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            padding-bottom: 120px; 
             overflow-x: hidden;
         }
 
@@ -268,12 +267,22 @@
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
 
         /* 🎉 Confetti Animation */
-        .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 6000; animation: fall 3s linear forwards; }
+        .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 10000; animation: fall 3s linear forwards; }
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
         /* Zoom Container for Pinch */
         .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
         .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
+
+        /* 🆕 FOOTER CSS UPDATED FOR BLUE THEME */
+        .footer-container { background: var(--primary-blue); padding: 30px 20px 120px 20px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left; }
+        .footer-container h4 { color: white; font-size: 12px; font-weight: 800; letter-spacing: 1px; margin-bottom: 15px; margin-top: 25px;}
+        .social-icons { display: flex; gap: 15px; margin-top: 15px; }
+        .social-icons img { width: 35px; height: 35px; object-fit: contain; }
+        .footer-links { list-style: none; padding: 0; margin: 0; }
+        .footer-links li { padding: 8px 0; font-size: 14px; color: white; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.1); display: block;}
+        .footer-contact p { font-size: 14px; color: white; margin: 10px 0; display: flex; align-items: flex-start; gap: 8px;}
+        .footer-bottom { margin-top: 30px; font-size: 12px; color: rgba(255,255,255,0.6); border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; }
     </style>
 </head>
 <body>
@@ -302,6 +311,17 @@
         </div>
     </div>
 
+    <div id="legalContentModal" class="overlay" style="align-items: flex-end; z-index: 6000;">
+        <div class="bottom-sheet" style="height: 90vh; display: flex; flex-direction: column; padding: 0; border-radius: 16px 16px 0 0;">
+            <div style="padding: 20px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 10; border-radius: 16px 16px 0 0;">
+                <h3 id="legalTitle" style="margin: 0; color: var(--primary-blue);">Policy</h3>
+                <span style="font-size: 24px; cursor: pointer; color: #888; font-weight: bold;" onclick="document.getElementById('legalContentModal').style.display='none'">×</span>
+            </div>
+            <div id="legalBody" style="padding: 20px; overflow-y: auto; flex: 1; font-size: 13px; color: #444; line-height: 1.6;">
+                </div>
+        </div>
+    </div>
+
     <div id="viewList" class="view-section active-view">
         <div class="cod-banner">
             🚚 Cash on Delivery Available! Pay only when you receive the product.
@@ -309,6 +329,40 @@
         <div class="shop-grid" id="shopGrid">
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
+        </div>
+        
+        <div class="footer-container">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                <img src="app_logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'" alt="Tagown App" style="width: 45px; height: 45px; object-fit: contain; filter: brightness(0) invert(1);">
+                <span style="font-size: 22px; font-weight: 900; color: white; font-style: italic; letter-spacing: 1px;">TAGOWN</span>
+            </div>
+            <p style="color: white; font-size: 13px; line-height: 1.5; margin-top: 10px;">Premium vehicle security solutions delivered to your doorstep. Experience safety made simple.</p>
+            
+            <div class="social-icons">
+                <a href="https://wa.me/916372980014" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></a>
+                <a href="https://www.instagram.com/tagownapp?igsh=b3d4bXZ5N3VzeGo5" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e7/Instagram_logo_2016.svg" alt="Instagram"></a>
+                <a href="https://youtube.com/@tagownapp?si=jcJ0YwvMhyNqrNel" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg" alt="YouTube"></a>
+            </div>
+            
+            <h4>QUICK LINKS</h4>
+            <ul class="footer-links">
+                <li onclick="openOrderHistory()">Track Order</li>
+                <li onclick="openLegal('return')">Return & Refund</li>
+                <li onclick="openLegal('faq')">FAQ</li>
+                <li onclick="openLegal('privacy')">Privacy Policy</li>
+                <li onclick="openLegal('terms')">Terms of Service</li>
+            </ul>
+            
+            <h4>GET IN TOUCH</h4>
+            <div class="footer-contact">
+                <p>📍 Tagown Company, Kuamania, Kuchipali, Bargarh, Odisha, India</p>
+                <p>📞 +91 6372980014 <br><span style="color: rgba(255,255,255,0.7); font-size: 11px; margin-left: 25px;">Mon - Fri, 10am - 6pm</span></p>
+                <p>✉️ Tagownapp@gmail.com</p>
+            </div>
+            
+            <div class="footer-bottom">
+                © 2026 Tagown. All Rights Reserved.
+            </div>
         </div>
     </div>
 
@@ -359,7 +413,7 @@
             </div>
         </div>
 
-        <div class="trust-badges" onclick="document.getElementById('trustPolicyModal').style.display='flex'">
+        <div class="trust-badges" onclick="openLegal('return')">
             <div class="trust-item"><img src="trust_cod.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2800/2800160.png'"><br>COD<br>Available</div>
             <div class="trust-item"><img src="trust_return.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2275/2275811.png'"><br>5 Days<br>Return</div>
             <div class="trust-item"><img src="trust_secure.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'"><br>100%<br>Secure</div>
@@ -411,7 +465,7 @@
             <div class="related-scroll" id="relatedProducts"></div>
         </div>
 
-        <div style="height: 100px;"></div>
+        <div style="height: 120px;"></div>
 
         <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
             <button class="btn-buy-blue" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
@@ -561,7 +615,7 @@
                 </div>
             </div>
 
-            <div style="height: 40px;"></div>
+            <div style="height: 120px;"></div>
         </div>
     </div>
 
@@ -572,13 +626,14 @@
                 <div class="skeleton skel-text" style="height:20px; width:60%; margin: 0 auto;"></div>
             </div>
         </div>
+        <div style="height: 120px;"></div>
     </div>
 
     <div id="trackingModal" class="overlay" style="align-items: center; z-index: 5000;">
         <div class="modal-box" style="padding: 20px; text-align: left; background: #F8F9FA;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h3 style="margin: 0; color: #1565C0;">Track Order</h3>
-                <span style="font-size: 24px; cursor: pointer; color: #888;" onclick="document.getElementById('trackingModal').style.display='none'">&times;</span>
+                <span style="font-size: 24px; cursor: pointer; color: #888;" onclick="document.getElementById('trackingModal').style.display='none'">×</span>
             </div>
             
             <p style="font-size: 12px; color: #666; font-weight: bold; margin-bottom: 20px;">ID: <span id="trackOrderId"></span></p>
@@ -620,27 +675,15 @@
         </div>
     </div>
 
-    <div id="cancelOrderModal" class="overlay" style="align-items: center; z-index: 5000;">
-        <div class="modal-box" style="padding: 20px;">
+    <div id="cancelOrderModal" class="overlay" style="align-items: center; z-index: 5000; background: rgba(0,0,0,0.7);">
+        <div class="modal-box" style="padding: 20px; width: 90%; max-width: 350px;">
             <div style="font-size: 40px; margin-bottom: 10px;">⚠️</div>
-            <h3 style="color: #333; margin-top: 0;">Cancel Order</h3>
-            <p style="font-size: 14px; color: #555; line-height: 1.4;">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            <h3 style="margin-top: 0; color: #333; font-size: 20px;">Cancel Order</h3>
+            <p style="font-size: 13px; color: #555; line-height: 1.4;">Are you sure you want to cancel this order? This action cannot be undone.</p>
             <div style="display: flex; gap: 10px; margin-top: 20px;">
                 <button class="btn-modal-cancel" style="background: #E0E0E0; color: #333; margin: 0; flex: 1; border-radius: 8px;" onclick="document.getElementById('cancelOrderModal').style.display='none'">Keep Order</button>
                 <button class="btn-modal-primary" style="background: #D32F2F; margin: 0; flex: 1;" onclick="processCancelOrder()">Yes, Cancel</button>
             </div>
-        </div>
-    </div>
-
-    <div id="trustPolicyModal" class="overlay" style="align-items: center; z-index: 4500;">
-        <div class="modal-box" style="padding: 20px;">
-            <div style="font-size: 40px; margin-bottom: 10px;">🔄</div>
-            <h3 style="color: var(--primary-blue); margin-top: 0;">Return Policy</h3>
-            <p style="font-size: 14px; color: #444; font-weight: bold; line-height: 1.5;">You can easily return the product within 5 days of delivery.</p>
-            <div style="background: #FFEBEE; border: 1px solid #FFCDD2; padding: 12px; border-radius: 8px; margin-top: 15px;">
-                <p style="margin:0; font-size: 12px; color: #C62828; font-weight: bold; font-style: italic;">⚠️ Note: If the sticker has been peeled and pasted on the vehicle, it cannot be returned.</p>
-            </div>
-            <button class="btn-modal-primary" style="margin-top: 20px;" onclick="document.getElementById('trustPolicyModal').style.display='none'">I Understand</button>
         </div>
     </div>
 
@@ -725,6 +768,17 @@
         </div>
     </div>
 
+    <div id="exitCheckoutModal" class="overlay" style="align-items: center; z-index: 5000; background: rgba(0,0,0,0.7);">
+        <div class="modal-box" style="padding: 20px; width: 90%; max-width: 350px;">
+            <h3 style="margin-top: 0; color: #111; font-size: 18px; font-weight: 800;">Are You Sure You Want To Exit?</h3>
+            <div style="background: #E8F5E9; color: #2E7D32; padding: 10px; border-radius: 6px; font-size: 12px; font-weight: bold; margin: 15px 0;">
+                ⏳ Products in huge demand might run Out of Stock
+            </div>
+            <button class="btn-modal-cancel" style="border: 1px solid #ccc; width: 100%; margin-bottom: 10px; color: #333;" onclick="confirmExitCheckout()">Yes, exit checkout</button>
+            <button class="btn-modal-primary" style="background: #000; color: white; width: 100%;" onclick="document.getElementById('exitCheckoutModal').style.display='none'">No, continue checkout</button>
+        </div>
+    </div>
+
     <div id="successModal" class="overlay" style="align-items: center; z-index: 4000; background: rgba(0,0,0,0.85);">
         <div class="modal-box" style="background: #F4F6F9; overflow: visible;">
             <div style="background: #00C853; padding: 40px 20px; color: white; border-radius: 20px 20px 0 0; position: relative; margin-top: -30px;">
@@ -791,6 +845,75 @@
             });
         }
 
+        // 🚀 Legal Content Viewer Data
+        const legalData = {
+            'privacy': `
+                <h4 style="color:#111; font-weight:bold;">1. Data We Collect</h4>
+                <p>Name, phone number, delivery address, vehicle registration number (via QR scan), device info, app usage data, payment method (COD only — no card data stored).</p>
+                <h4 style="color:#111; font-weight:bold;">2. How We Use Data</h4>
+                <p>Order fulfillment and delivery via Shiprocket; sending SMS/WhatsApp/push notifications; improving app experience; fraud prevention; legal compliance.</p>
+                <h4 style="color:#111; font-weight:bold;">3. Data Sharing</h4>
+                <p>We share data with: Shiprocket (shipping partner) for delivery; SMS/notification services; We NEVER sell your data to third parties.</p>
+                <h4 style="color:#111; font-weight:bold;">4. QR Code Data</h4>
+                <p>Vehicle owner info is encrypted and only visible to QR scanner. Owner's full phone number is NOT shown — only masked contact option is provided.</p>
+                <h4 style="color:#111; font-weight:bold;">5. Data Storage & User Rights</h4>
+                <p>Data stored on secure Indian servers. Retained for 2 years or as required by law. Right to access, correct, or delete your data. Contact: Tagownapp@gmail.com within 30 days response.</p>
+                <h4 style="color:#111; font-weight:bold;">6. Cookies & Changes</h4>
+                <p>App usage analytics collected for improvement. No advertising tracking. Policy updated with 30 days notice via app notification. Continued use = acceptance.</p>
+                <h4 style="color:#111; font-weight:bold;">7. Contact</h4>
+                <p>Tagown Technologies, Odisha.<br>Email: Tagownapp@gmail.com<br>Phone: +91 6372980014</p>
+            `,
+            'return': `
+                <h4 style="color:#111; font-weight:bold;">Return Window</h4>
+                <p>5 days from delivery date for returns.</p>
+                <h4 style="color:#111; font-weight:bold;">Eligible Returns</h4>
+                <p>Product defective/damaged on arrival; Wrong product sent; Product not as described.</p>
+                <div style="background: #FFEBEE; border: 1px solid #FFCDD2; padding: 10px; border-radius: 6px; margin: 10px 0;">
+                    <h4 style="color:#C62828; margin:0 0 5px 0;">NON-Eligible Returns</h4>
+                    <p style="margin:0; color:#C62828; font-size:12px;">Product already applied/pasted on vehicle; Used stickers; Return after 5 days; Normal wear.</p>
+                </div>
+                <h4 style="color:#111; font-weight:bold;">COD Return Process</h4>
+                <p>1. Email Tagownapp@gmail.com with order ID + photo of product.<br>2. Approval within 24-48 hours.<br>3. Courier pickup scheduled by Tagown.<br>4. Refund via bank transfer in 5-7 working days after product received.</p>
+                <h4 style="color:#111; font-weight:bold;">Refund Amount & Replacement</h4>
+                <p>Full product amount refunded. Shipping charges NOT refunded if order was delivered correctly. Customer can choose replacement instead of refund — faster resolution.</p>
+                <h4 style="color:#111; font-weight:bold;">Contact</h4>
+                <p>Tagownapp@gmail.com | WhatsApp: +91 6372980014</p>
+            `,
+            'terms': `
+                <h4 style="color:#111; font-weight:bold;">Eligibility</h4>
+                <p>Must be 18+ years. Must provide accurate delivery address. Indian residents only for COD.</p>
+                <h4 style="color:#111; font-weight:bold;">Product Use</h4>
+                <p>Tagown stickers for personal vehicle use only. Not for resale. Proper installation is user's responsibility.</p>
+                <h4 style="color:#111; font-weight:bold;">Order Placement & Pricing</h4>
+                <p>Order confirmed only after Tagown acceptance. We reserve right to cancel orders with full refund. Prices subject to change. Applicable price at time of order placement is final.</p>
+                <h4 style="color:#111; font-weight:bold;">COD Policy</h4>
+                <p>Customer must be available at delivery address. If 3 delivery attempts fail, order auto-cancelled.</p>
+                <h4 style="color:#111; font-weight:bold;">QR Safety & Intellectual Property</h4>
+                <p>QR code links are moderated. Tagown not responsible for misuse of contact information shared via QR. Tagown brand, logo, QR system are proprietary. Unauthorized copying prohibited.</p>
+                <h4 style="color:#111; font-weight:bold;">Dispute & Liability</h4>
+                <p>Governed by Indian law. Jurisdiction: Odisha courts. Attempt amicable resolution first. Tagown not liable for indirect/consequential damages. Maximum liability = order value.</p>
+            `,
+            'faq': `
+                <h4 style="color:#111; font-weight:bold;">Q: How to stick the Tagown QR?</h4>
+                <p>A: Clean the surface, peel the backing, and press firmly on your vehicle's visible area.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: Is it Waterproof & Sun-proof?</h4>
+                <p>A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: What if the vehicle is stolen?</h4>
+                <p>A: Anyone scanning the QR can instantly alert you of the vehicle's location without revealing your mobile number, keeping you safe.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: Do I need to pay any monthly fee?</h4>
+                <p>A: No, this is a one-time purchase with lifetime validity. No hidden charges.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: Is an App required to scan?</h4>
+                <p>A: No, anyone can scan the sticker using their normal phone camera, Google Lens, or Paytm/PhonePe scanners.</p>
+            `
+        };
+
+        function openLegal(type) {
+            let title = type === 'privacy' ? 'Privacy Policy' : type === 'return' ? 'Return & Refund Policy' : type === 'terms' ? 'Terms of Service' : 'Frequently Asked Questions';
+            document.getElementById('legalTitle').innerText = title;
+            document.getElementById('legalBody').innerHTML = legalData[type];
+            document.getElementById('legalContentModal').style.display = 'flex';
+        }
+
         function showPremiumAlert(title, message, type) {
             document.getElementById('alertTitle').innerText = title;
             document.getElementById('alertMessage').innerText = message;
@@ -804,7 +927,7 @@
             } else if(type === 'success') {
                 header.style.background = '#00C853'; btn.style.background = '#00C853'; btn.style.color = 'white'; icon.innerText = '✅';
             } else {
-                header.style.background = '#FFB300'; btn.style.background = '#FFB300'; btn.style.color = '#000'; icon.innerText = 'ℹ️';
+                header.style.background = '#FF9800'; btn.style.background = '#FF9800'; btn.style.color = '#000'; icon.innerText = 'ℹ️';
             }
             document.getElementById('alertModal').style.display = 'flex';
         }
@@ -871,7 +994,6 @@
             scale = 1; pointX = 0; pointY = 0; setTransform();
         }
 
-        // 🚀 Auto-Detect & Auto-Fill Location Logic
         function autoDetectLocation() {
             const btn = document.getElementById('btnAutoDetect');
             btn.innerHTML = "⏳ Detecting...";
@@ -935,11 +1057,6 @@
                     let estDate = d.toLocaleDateString('en-US', options);
                     document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
                     document.getElementById('shiprocketCheckoutResult').style.display = 'block';
-                } else {
-                    let d = new Date(); d.setDate(d.getDate() + 5);
-                    let options = { month: 'short', day: 'numeric' };
-                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
-                    document.getElementById('pinResult').style.display = 'block';
                 }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
@@ -958,13 +1075,10 @@
                 if(isCheckout) {
                     document.getElementById('shiprocketCheckoutResult').style.display = 'none';
                     document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
-                } else {
-                    document.getElementById('pinResult').style.display = 'none';
                 }
             }
         }
 
-        // Slider Swipe Logic
         function initSliderSwipe() {
             const track = document.getElementById('detSlider');
             let startX = 0; let endX = 0;
@@ -989,7 +1103,7 @@
             });
         }
 
-        // 🚀 CONFETTI LOGIC
+        // 🚀 CONFETTI LOGIC (Z-index updated)
         function fireConfetti() {
             const container = document.getElementById('confetti-container');
             const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
@@ -1004,7 +1118,6 @@
             setTimeout(() => container.innerHTML = '', 3000);
         }
 
-        // 🚀 Real Rating Logic
         function fetchReviews(productId) {
             db.ref('ProductReviews/' + productId).on('value', snap => {
                 let html = '';
@@ -1217,7 +1330,6 @@
             document.getElementById('vehiclePreviewContainer').style.display = 'block';
         }
 
-        // 🚀 Multi-Step Checkout Navigation Logic
         function toggleStep(step) {
             for(let i=1; i<=4; i++) {
                 document.getElementById('step' + i + 'Body').classList.remove('active');
@@ -1259,9 +1371,8 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
-            loadSavedAddress(); // Load auto-fill data
+            loadSavedAddress(); 
             
-            // Populating Step 1: Cart Review
             let baseSellingPrice = parseInt(data.price) * selectedQty;
             let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
             let initialProductDiscount = mrpPrice - baseSellingPrice;
@@ -1282,7 +1393,6 @@
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
             
-            // Payment Summary Exact Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
             
             if(initialProductDiscount > 0) {
@@ -1371,7 +1481,6 @@
             const btn = document.getElementById('btnPlaceOrder'); 
             btn.innerText = "PROCESSING..."; btn.disabled = true;
 
-            // 🚀 Address Auto-Save
             const savedAddress = { name: name, phone: phone, addr1: addr1, addr2: addr2, pincode: pincode, city: city, district: district, state: state };
             localStorage.setItem('tagownSavedAddress', JSON.stringify(savedAddress));
 
@@ -1423,7 +1532,6 @@
 
             db.ref().update(updates).then(() => {
                 
-                // 🚀 Send Notification in Background (Fire and forget, doesn't block UI)
                 let cleanPhone = phone.replace(/\D/g, '');
                 if(cleanPhone.length > 10 && cleanPhone.startsWith('91')) cleanPhone = cleanPhone.substring(cleanPhone.length - 10);
                 
@@ -1457,11 +1565,11 @@
                     })
                 }).catch(e => console.log("Admin Notif error:", e));
                 
-                // 🚀 Instant Success UI
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('successModal').style.display = 'flex';
+                fireConfetti();
                 
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
@@ -1491,7 +1599,6 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
-                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
@@ -1500,7 +1607,7 @@
                     return timeB - timeA; 
                 });
 
-                window.userOrdersList = orders; // Save globally for tracking modal
+                window.userOrdersList = orders; 
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
@@ -1566,7 +1673,6 @@
             });
         }
 
-        // Premium Cancel Custom Popup
         function confirmCancel(orderId) {
             orderToCancel = orderId;
             document.getElementById('cancelOrderModal').style.display = 'flex';
@@ -1608,13 +1714,11 @@
 
             let sLower = (order.status || order.orderStatus || "Processing").toLowerCase();
 
-            // 1. Placed
             document.getElementById('tlPlaced').classList.add('active'); 
             let placedMeta = (order.placedTime || order.timestamp || "");
             if(order.placedLocation) placedMeta += " • " + order.placedLocation;
             document.getElementById('trackPlacedMeta').innerText = placedMeta;
 
-            // 2. Shipped
             if(sLower.includes("shipped") || sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlShipped').classList.add('active');
                 let shippedMeta = (order.shippedTime || order.shippedTimestamp || "");
@@ -1627,7 +1731,6 @@
                 document.getElementById('trackShippedMeta').innerText = "";
             }
 
-            // 3. Out for Delivery
             if(sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlOut').classList.add('active');
                 let outMeta = (order.outForDeliveryTime || "");
@@ -1637,7 +1740,6 @@
                 document.getElementById('trackOutMeta').innerText = "";
             }
 
-            // 4. Delivered
             if(sLower.includes("deliver") || sLower.includes("complete")) {
                 document.getElementById('tlDelivered').classList.add('active');
                 let devMeta = (order.deliveredTime || order.completedTimestamp || "");
@@ -1651,6 +1753,12 @@
             }
 
             document.getElementById('trackingModal').style.display = 'flex';
+        }
+
+        function confirmExitCheckout() {
+            document.getElementById('exitCheckoutModal').style.display = 'none';
+            document.getElementById('pageTitle').innerText = "Product Details";
+            switchView('viewDetail');
         }
 
         function switchView(viewId) {
@@ -1676,8 +1784,7 @@
 
         function goBack() {
             if(document.getElementById('viewCheckout').classList.contains('active-view')) {
-                document.getElementById('pageTitle').innerText = "Product Details";
-                switchView('viewDetail');
+                document.getElementById('exitCheckoutModal').style.display = 'flex';
             } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view')) {
                 goBackToHome();
             }
