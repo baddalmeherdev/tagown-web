@@ -142,15 +142,8 @@
         
         /* 📝 3. MULTI-STEP CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
-        .checkout-step { background: white; border-radius: 2px; padding: 0; border: 1px solid #E5E5EA; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;}
-        .step-header { background: #F8FAFC; padding: 15px; font-size: 14px; font-weight: bold; color: #555; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
-        .step-header.active { background: var(--primary-blue); color: white; }
-        .step-header .step-num { display: inline-flex; justify-content: center; align-items: center; width: 20px; height: 20px; background: #ddd; color: #555; border-radius: 4px; font-size: 12px; margin-right: 10px;}
-        .step-header.active .step-num { background: white; color: var(--primary-blue); }
-        .step-body { padding: 15px; display: none; }
-        .step-body.active { display: block; animation: fadeIn 0.3s ease;}
-
-        .btn-continue { background: var(--btn-yellow); color: #000; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer;}
+        .checkout-step { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .step-header { font-size: 16px; font-weight: bold; font-style: italic; color: #1565C0; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px;}
         
         .cart-review-item { display: flex; gap: 15px; margin-bottom: 15px; align-items: center;}
         .cart-review-img { width: 70px; height: 70px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
@@ -292,12 +285,18 @@
         </div>
     </div>
 
-    <div id="allReviewsModal" class="overlay" style="z-index: 4500;">
-        <div class="bottom-sheet" style="height: 85vh; padding: 20px;">
-            <div class="drag-handle"></div>
-            <button class="close-btn" onclick="document.getElementById('allReviewsModal').style.display='none'">×</button>
-            <h3 class="sheet-header" style="color: var(--primary-blue);">All Customer Reviews</h3>
-            <div id="allReviewsList" style="margin-top: 15px;"></div>
+    <div id="chkCancelModal" class="overlay" style="align-items: center; z-index: 5500;">
+        <div class="modal-box" style="padding: 25px;">
+            <div style="font-size: 60px; color: #D32F2F; margin-bottom: 10px;">⚠️</div>
+            <h3 style="color: #333; margin-top: 0; font-style: italic;">Cancel This Order?</h3>
+            <p style="font-size: 14px; color: #666; line-height: 1.5; font-style: italic; font-weight: bold; margin-bottom: 25px;">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            
+            <p style="font-size: 12px; color: #888; margin-bottom: 25px;">Order ID: <span id="cancelOrderDisplayId" style="font-weight:bold; color:#111;"></span></p>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-modal-cancel" style="border: 1px solid #ccc; border-radius: 8px; color: #555; background: #f5f5f5;" onclick="document.getElementById('chkCancelModal').style.display='none'">NO, GO BACK</button>
+                <button class="btn-modal-primary" style="background: #B71C1C;" id="btnConfirmCancel">YES, CANCEL ORDER</button>
+            </div>
         </div>
     </div>
 
@@ -331,15 +330,6 @@
             </div>
         </div>
 
-        <div class="qty-box">
-            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
-            </div>
-        </div>
-
         <div class="selection-box">
             <div class="selection-label">Select Vehicle Type</div>
             <button class="selector-btn" onclick="openVehicleSheet()">
@@ -355,6 +345,15 @@
             <div class="instruction-box" style="margin-top: 15px;">
                 <span style="color: #4CAF50; font-size: 18px;">✅</span>
                 <p class="instruction-text">Peel the backing and stick the smart QR on a visible area of your vehicle.</p>
+            </div>
+        </div>
+
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
             </div>
         </div>
 
@@ -421,145 +420,115 @@
         <div class="checkout-container">
             
             <div class="checkout-step">
-                <div class="step-header" id="step1Header" onclick="toggleStep(1)">
-                    <div><span class="step-num" id="step1Num">1</span> Cart Review</div>
-                    <span id="step1Icon">▼</span>
+                <div class="step-header"><span>1️⃣</span> Cart Review</div>
+                <div class="cart-review-item">
+                    <img id="chkProductImg" src="" class="cart-review-img">
+                    <div class="cart-review-details">
+                        <p class="summary-item" id="chkProductName">Product Name</p>
+                        <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
+                        <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
+                    </div>
                 </div>
-                <div class="step-body active" id="step1Body">
-                    <div class="cart-review-item">
-                        <img id="chkProductImg" src="" class="cart-review-img">
-                        <div class="cart-review-details">
-                            <p class="summary-item" id="chkProductName">Product Name</p>
-                            <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
-                            <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
-                        </div>
+                
+                <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
+                    <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
+                        <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
                     </div>
-                    
-                    <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
-                        <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
-                        <div style="display: flex; gap: 10px;">
-                            <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
-                            <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
-                        </div>
-                        <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
-                    </div>
-                    <button class="btn-continue" onclick="nextStep(2)">CONTINUE</button>
+                    <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
                 </div>
             </div>
 
             <div class="checkout-step">
-                <div class="step-header" id="step2Header" onclick="toggleStep(2)">
-                    <div><span class="step-num" id="step2Num">2</span> Delivery Address</div>
-                    <span id="step2Icon">▶</span>
-                </div>
-                <div class="step-body" id="step2Body">
-                    <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
-                        📍 Auto-Detect My Location
-                    </button>
+                <div class="step-header"><span>2️⃣</span> Delivery Address</div>
+                
+                <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
+                    📍 Auto-Detect My Location
+                </button>
 
-                    <label class="form-label">Full Name</label>
-                    <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
-                    
-                    <label class="form-label">Mobile Number</label>
-                    <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-                    
-                    <label class="form-label">Flat / House no.</label>
-                    <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
-                    
-                    <label class="form-label">Area / Landmark</label>
-                    <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
-                    
-                    <div class="row-2">
-                        <div class="form-group">
-                            <label class="form-label">Pincode</label>
-                            <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">City</label>
-                            <input type="text" id="chkCity" class="form-input" placeholder="City">
-                        </div>
+                <label class="form-label">Full Name</label>
+                <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
+                
+                <label class="form-label">Mobile Number</label>
+                <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+                
+                <label class="form-label">Flat / House no.</label>
+                <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
+                
+                <label class="form-label">Area / Landmark</label>
+                <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
+                
+                <div class="row-2">
+                    <div class="form-group">
+                        <label class="form-label">Pincode</label>
+                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
                     </div>
-                    
-                    <div class="row-2">
-                        <div class="form-group">
-                            <label class="form-label">District</label>
-                            <input type="text" id="chkDistrict" class="form-input" placeholder="District">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">State</label>
-                            <input type="text" id="chkState" class="form-input" placeholder="State">
-                        </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" id="chkCity" class="form-input" placeholder="City">
                     </div>
-                    <button class="btn-continue" onclick="nextStep(3)">SAVE & CONTINUE</button>
+                </div>
+                
+                <label class="form-label">State</label>
+                <input type="text" id="chkState" class="form-input" placeholder="State">
+            </div>
+
+            <div class="checkout-step">
+                <div class="step-header"><span>3️⃣</span> Delivery Slot</div>
+                <div id="shiprocketUI" style="text-align: center; padding: 10px;">
+                    <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
+                    <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
+                        <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
+                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
+                        <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
+                    </div>
                 </div>
             </div>
 
             <div class="checkout-step">
-                <div class="step-header" id="step3Header" onclick="toggleStep(3)">
-                    <div><span class="step-num" id="step3Num">3</span> Delivery Slot</div>
-                    <span id="step3Icon">▶</span>
-                </div>
-                <div class="step-body" id="step3Body">
-                    <div id="shiprocketUI" style="text-align: center; padding: 10px;">
-                        <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
-                        <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
-                            <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
-                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
-                            <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
-                        </div>
+                <div class="step-header"><span>4️⃣</span> Payment</div>
+                <div class="payment-box">
+                    <span style="font-size: 24px;">💵</span>
+                    <div>
+                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
+                        <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
                     </div>
-                    <button class="btn-continue" onclick="nextStep(4)">CONTINUE</button>
+                </div>
+
+                <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                        <span>MRP (Total Qty):</span>
+                        <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
+                    </div>
+                    <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
+                        <span id="chkProductDiscountLabel">Product Discount:</span>
+                        <span id="chkProductDiscount">-₹0</span>
+                    </div>
+
+                    <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
+                        <span>Selling Price:</span>
+                        <span id="chkSellingPrice">₹0</span>
+                    </div>
+
+                    <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
+                        <span>Promo Discount:</span>
+                        <span id="chkDiscount">-₹0</span>
+                    </div>
+
+                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                        <span>Delivery Fee:</span>
+                        <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                    </div>
+                    
+                    <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
+                        <span>Amount to Pay:</span>
+                        <span class="total-price" id="chkPrice">₹0</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="checkout-step">
-                <div class="step-header" id="step4Header" onclick="toggleStep(4)">
-                    <div><span class="step-num" id="step4Num">4</span> Payment Options</div>
-                    <span id="step4Icon">▶</span>
-                </div>
-                <div class="step-body" id="step4Body">
-                    <div class="payment-box">
-                        <span style="font-size: 24px;">💵</span>
-                        <div>
-                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
-                            <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
-                        </div>
-                    </div>
-
-                    <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
-                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                            <span>MRP (Total Qty):</span>
-                            <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
-                        </div>
-                        <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
-                            <span id="chkProductDiscountLabel">Product Discount:</span>
-                            <span id="chkProductDiscount">-₹0</span>
-                        </div>
-
-                        <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
-                            <span>Selling Price:</span>
-                            <span id="chkSellingPrice">₹0</span>
-                        </div>
-
-                        <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
-                            <span>Promo Discount:</span>
-                            <span id="chkDiscount">-₹0</span>
-                        </div>
-
-                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                            <span>Delivery Fee:</span>
-                            <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
-                        </div>
-                        
-                        <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
-                            <span>Amount to Pay:</span>
-                            <span class="total-price" id="chkPrice">₹0</span>
-                        </div>
-                    </div>
-                    <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()" style="margin-top: 20px;">CONFIRM & PLACE ORDER</button>
-                </div>
-            </div>
-
+            <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">CONFIRM & PLACE ORDER</button>
             <div style="height: 40px;"></div>
         </div>
     </div>
@@ -815,6 +784,7 @@
             zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
 
+        // Mobile Touch Events for Pinch/Pan
         let initialDistance = null;
         zoomCont.addEventListener('touchstart', (e) => {
             if(e.touches.length === 2) {
@@ -852,7 +822,7 @@
             scale = 1; pointX = 0; pointY = 0; setTransform();
         }
 
-        // 🚀 Auto-Detect & Auto-Fill Location Logic
+        // 🚀 Auto-Detect Location Logic
         function autoDetectLocation() {
             const btn = document.getElementById('btnAutoDetect');
             btn.innerHTML = "⏳ Detecting...";
@@ -867,7 +837,6 @@
                         if(address) {
                             document.getElementById('chkPincodeCheckout').value = address.postcode || '';
                             document.getElementById('chkCity').value = address.city || address.town || address.state_district || '';
-                            document.getElementById('chkDistrict').value = address.state_district || '';
                             document.getElementById('chkState').value = address.state || '';
                             document.getElementById('chkAddress2').value = address.suburb || address.neighbourhood || '';
                             btn.innerHTML = "✅ Location Detected";
@@ -887,26 +856,7 @@
             }
         }
 
-        function loadSavedAddress() {
-            const saved = localStorage.getItem('tagownSavedAddress');
-            if(saved) {
-                try {
-                    const addr = JSON.parse(saved);
-                    if(addr.name) document.getElementById('chkName').value = addr.name;
-                    if(addr.phone) document.getElementById('chkPhone').value = addr.phone;
-                    if(addr.addr1) document.getElementById('chkAddress1').value = addr.addr1;
-                    if(addr.addr2) document.getElementById('chkAddress2').value = addr.addr2;
-                    if(addr.pincode) {
-                        document.getElementById('chkPincodeCheckout').value = addr.pincode;
-                        checkPincodeAPI(addr.pincode, true); 
-                    }
-                    if(addr.city) document.getElementById('chkCity').value = addr.city;
-                    if(addr.district) document.getElementById('chkDistrict').value = addr.district;
-                    if(addr.state) document.getElementById('chkState').value = addr.state;
-                } catch(e){}
-            }
-        }
-
+        // Pincode Lookup API for Auto-fill City & State
         function checkPincodeAPI(val, isCheckout = false) {
             if(val.length === 6) {
                 if(isCheckout) {
@@ -929,9 +879,8 @@
                     if(data[0].Status === "Success") {
                         let details = data[0].PostOffice[0];
                         if(isCheckout) {
-                            if(!document.getElementById('chkCity').value) document.getElementById('chkCity').value = details.District;
-                            if(!document.getElementById('chkDistrict').value) document.getElementById('chkDistrict').value = details.District;
-                            if(!document.getElementById('chkState').value) document.getElementById('chkState').value = details.State;
+                            document.getElementById('chkCity').value = details.District;
+                            document.getElementById('chkState').value = details.State;
                         }
                     }
                 }).catch(e => console.log(e));
@@ -945,6 +894,7 @@
             }
         }
 
+        // Slider Swipe Logic
         function initSliderSwipe() {
             const track = document.getElementById('detSlider');
             let startX = 0; let endX = 0;
@@ -955,13 +905,14 @@
                 let currentTransform = track.style.transform;
                 let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
                 
-                if (startX - endX > 50) { 
+                if (startX - endX > 50) { // Swiped left
                     if(currentIndex < 2) currentIndex++; else currentIndex = 0;
-                } else if (endX - startX > 50) { 
+                } else if (endX - startX > 50) { // Swiped right
                     if(currentIndex > 0) currentIndex--; else currentIndex = 2;
                 }
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 
+                // Restart auto-slide
                 sliderInterval = setInterval(() => { 
                     currentIndex = (currentIndex + 1) % 3; 
                     track.style.transform = `translateX(-${currentIndex * 100}%)`; 
@@ -969,19 +920,61 @@
             });
         }
 
-        // 🚀 CONFETTI LOGIC
+        // 🚀 CONFETTI LOGIC - UPDATED TO BE CENTERED AND BIG
         function fireConfetti() {
             const container = document.getElementById('confetti-container');
             const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
-            for (let i = 0; i < 60; i++) {
+            
+            // Create a burst from the center
+            for (let i = 0; i < 100; i++) {
                 let conf = document.createElement('div');
                 conf.className = 'confetti';
-                conf.style.left = Math.random() * 100 + '%';
-                conf.style.animationDelay = Math.random() * 1.5 + 's';
+                
+                // Start from the middle 20% of the screen
+                const startX = 40 + Math.random() * 20; 
+                conf.style.left = startX + '%';
+                conf.style.top = '50%'; // Start from middle height
+                
+                // Random fall direction and speed
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 1 + Math.random() * 3;
+                const xVelocity = Math.cos(angle) * speed;
+                const yVelocity = Math.sin(angle) * speed + 2; // Bias downwards
+
+                // Store velocities as data attributes for animation
+                conf.setAttribute('data-vx', xVelocity);
+                conf.setAttribute('data-vy', yVelocity);
+                
+                conf.style.animationDelay = Math.random() * 0.5 + 's';
                 conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 container.appendChild(conf);
+                
+                // Custom animation logic to move from center
+                animateConfetti(conf);
             }
-            setTimeout(() => container.innerHTML = '', 3000);
+            
+            setTimeout(() => container.innerHTML = '', 4000); // Clean up after longer time
+        }
+        
+        function animateConfetti(conf) {
+            let vx = parseFloat(conf.getAttribute('data-vx'));
+            let vy = parseFloat(conf.getAttribute('data-vy'));
+            let x = parseFloat(conf.style.left);
+            let y = 50; // Start at 50% top
+
+            let interval = setInterval(() => {
+                x += vx * 0.1; // Slow down the velocity multiplier
+                y += vy * 0.1;
+                vy += 0.05; // Gravity
+
+                conf.style.left = x + '%';
+                conf.style.top = y + '%';
+
+                if (y > 110 || x < -10 || x > 110) {
+                    clearInterval(interval);
+                    if(conf.parentNode) conf.parentNode.removeChild(conf);
+                }
+            }, 20); // Animate smoothly
         }
 
         // 🚀 Real Rating Logic
@@ -991,6 +984,7 @@
                 if(snap.exists()) {
                     let total = 0; let count = 0;
                     
+                    // Show max 3 reviews in preview
                     let reviewArray = [];
                     snap.forEach(child => { 
                         let r = child.val();
@@ -1003,6 +997,7 @@
                     document.getElementById('realRatingText').innerText = avg;
                     document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
                     
+                    // Display latest 3
                     reviewArray.reverse().slice(0,3).forEach(r => {
                         let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
                         let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
@@ -1018,6 +1013,7 @@
                         `;
                     });
                     
+                    // Populate Full Modal
                     let fullHtml = '';
                     reviewArray.forEach(r => {
                         let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
@@ -1196,41 +1192,6 @@
             document.getElementById('previewName').innerText = cleanType;
             document.getElementById('vehiclePreviewContainer').style.display = 'block';
         }
-
-        // 🚀 Multi-Step Checkout Navigation Logic
-        function toggleStep(step) {
-            for(let i=1; i<=4; i++) {
-                document.getElementById('step' + i + 'Body').classList.remove('active');
-                document.getElementById('step' + i + 'Header').classList.remove('active');
-                document.getElementById('step' + i + 'Icon').innerText = "▶";
-                document.getElementById('step' + i + 'Num').innerHTML = i; 
-            }
-            
-            document.getElementById('step' + step + 'Body').classList.add('active');
-            document.getElementById('step' + step + 'Header').classList.add('active');
-            document.getElementById('step' + step + 'Icon').innerText = "▼";
-
-            for(let j=1; j<step; j++) {
-                document.getElementById('step' + j + 'Num').innerHTML = "✓";
-            }
-        }
-
-        function nextStep(step) {
-            if (step === 3) {
-                const name = document.getElementById('chkName').value.trim(); 
-                const phone = document.getElementById('chkPhone').value.trim();
-                const addr1 = document.getElementById('chkAddress1').value.trim(); 
-                const pincode = document.getElementById('chkPincodeCheckout').value.trim();
-                const city = document.getElementById('chkCity').value.trim(); 
-                const district = document.getElementById('chkDistrict').value.trim();
-                const state = document.getElementById('chkState').value.trim();
-                
-                if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
-                    showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly to continue.', 'error'); return; 
-                }
-            }
-            toggleStep(step);
-        }
         
         function proceedToCheckout() {
             if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
@@ -1239,9 +1200,7 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
-            loadSavedAddress(); // Load auto-fill data
-            
-            // Populating Step 1: Cart Review
+            // Populating Step 1: Cart Review (Now with Real Price)
             let baseSellingPrice = parseInt(data.price) * selectedQty;
             let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
             let initialProductDiscount = mrpPrice - baseSellingPrice;
@@ -1262,7 +1221,7 @@
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
             
-            // Payment Summary Match
+            // Payment Summary Exact Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
             
             if(initialProductDiscount > 0) {
@@ -1277,7 +1236,6 @@
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
             switchView('viewCheckout');
-            toggleStep(1); 
         }
 
         function applyPromoCode() {
@@ -1316,7 +1274,8 @@
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
                     
-                    fireConfetti();
+                    // Optional confetti on apply promo
+                    // fireConfetti();
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
@@ -1334,27 +1293,15 @@
             });
         }
 
-        // 🚀 BUG FIXED HERE: Re-enabled proper address saving & async cloudflare call
         function placeOrder() {
-            const name = document.getElementById('chkName').value.trim(); 
-            const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim(); 
-            const addr2 = document.getElementById('chkAddress2').value.trim(); 
-            const pincode = document.getElementById('chkPincodeCheckout').value.trim();
-            const city = document.getElementById('chkCity').value.trim(); 
-            const district = document.getElementById('chkDistrict').value.trim();
-            const state = document.getElementById('chkState').value.trim();
+            const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout') ? document.getElementById('chkPincodeCheckout').value.trim() : document.getElementById('chkPincode').value.trim();
+            const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
 
-            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
+            if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
                 showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
             }
-            
-            const btn = document.getElementById('btnPlaceOrder'); 
-            btn.innerText = "PROCESSING..."; btn.disabled = true;
-
-            // 🚀 Address Auto-Save
-            const savedAddress = { name: name, phone: phone, addr1: addr1, addr2: addr2, pincode: pincode, city: city, district: district, state: state };
-            localStorage.setItem('tagownSavedAddress', JSON.stringify(savedAddress));
+            const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             const product = currentProducts[selectedProductId];
             const totalSellingPrice = parseInt(product.price) * selectedQty;
@@ -1362,9 +1309,7 @@
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
-            
-            // 🚀 Removed chkLandmark bug
-            const fullAddress = `${addr1}, ${addr2}, ${city}, ${district}, ${state} - ${pincode}`;
+            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
 
@@ -1405,7 +1350,7 @@
 
             db.ref().update(updates).then(() => {
                 
-                // 🚀 Send Notification in Background (Fire and forget, doesn't block UI)
+                // Notify Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1419,19 +1364,21 @@
                         android_visibility: 1, 
                         small_icon: "ic_notification_stat"
                     })
-                }).catch(e => console.log("Notification error:", e));
+                }).catch(e => console.log(e));
                 
-                // 🚀 Instant Success UI
+                // Show Confirmation Screen
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('successModal').style.display = 'flex';
                 
+                // 🚀 TRIGGER CENTERED CELEBRATION
+                fireConfetti(); 
+
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
             }).catch(err => {
-                showPremiumAlert('Database Error', err.message, 'error'); 
-                btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
+                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
 
@@ -1528,17 +1475,35 @@
             });
         }
 
+        let cancelOrderId = null; // Store ID for custom modal
+
         function cancelOrder(orderId) {
-            if(confirm("Are you sure you want to cancel this order?")) {
-                let updates = {};
-                updates['UserOrders/' + currentUserPhone + '/' + orderId + '/status'] = "Cancelled";
-                updates['UserOrders/' + currentUserPhone + '/' + orderId + '/orderStatus'] = "Cancelled";
-                updates['Orders/' + orderId + '/status'] = "Cancelled";
-                updates['Orders/' + orderId + '/orderStatus'] = "Cancelled";
-                db.ref().update(updates).then(() => {
-                    showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
-                });
-            }
+            cancelOrderId = orderId;
+            document.getElementById('cancelOrderDisplayId').innerText = orderId;
+            document.getElementById('chkCancelModal').style.display = 'flex';
+            
+            // Set "YES" button click handler
+            document.getElementById('btnConfirmCancel').onclick = function() {
+                confirmCancelOrder();
+            };
+        }
+
+        function confirmCancelOrder() {
+            if (!cancelOrderId) return;
+            let id = cancelOrderId;
+            
+            let updates = {};
+            updates['UserOrders/' + currentUserPhone + '/' + id + '/status'] = "Cancelled";
+            updates['UserOrders/' + currentUserPhone + '/' + id + '/orderStatus'] = "Cancelled";
+            updates['Orders/' + id + '/status'] = "Cancelled";
+            updates['Orders/' + id + '/orderStatus'] = "Cancelled";
+            db.ref().update(updates).then(() => {
+                document.getElementById('chkCancelModal').style.display = 'none';
+                showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
+                loadOrders(); // Refresh order list
+            });
+            
+            cancelOrderId = null; // Reset
         }
 
         function reorderProduct(productId) {
