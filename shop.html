@@ -81,11 +81,12 @@
         .slider-container { width: 100%; height: 240px; overflow: hidden; background: white; position: relative; border-bottom: 1px solid #E5E5EA;}
         .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
         .slider-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
-        .slider-slide img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .slider-slide img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
         .slider-hint { text-align: center; font-size: 11px; color: #999; font-style: italic; padding: 8px 0; background: white;}
 
         .detail-box { background: white; padding: 15px; margin-top: 5px; }
         .detail-title { font-size: 18px; font-weight: bold; font-style: italic; margin: 10px 0 5px 0; color: #222;}
+        .review-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
         
         .selection-box { background: white; padding: 15px; margin-top: 10px; border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
         .selection-label { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin-bottom: 8px;}
@@ -93,49 +94,104 @@
         .instruction-box { background: #E8F5E9; border: 1px solid #C8E6C9; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px;}
         .instruction-text { font-size: 13px; color: #2E7D32; font-style: italic; font-weight: bold; margin:0;}
 
+        /* Trust Badges */
+        .trust-badges { display: flex; justify-content: space-between; background: white; padding: 15px; margin-top: 10px; }
+        .trust-item { text-align: center; font-size: 10px; color: #555; width: 25%; font-weight: bold; font-style: italic;}
+        .trust-icon { font-size: 22px; margin-bottom: 5px; }
+
+        /* Quantity Selector */
+        .qty-box { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; margin-top: 10px;}
+        .qty-controls { display: flex; align-items: center; gap: 15px; border: 1px solid #ccc; border-radius: 8px; padding: 5px 15px; }
+        .qty-btn { background: transparent; border: none; font-size: 20px; font-weight: bold; color: var(--primary-blue); cursor: pointer; }
+
+        /* FAQ Section */
+        .faq-item { margin-bottom: 15px; border-bottom: 1px solid #F0F0F0; padding-bottom: 10px;}
+        .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
+        .faq-q { font-size: 14px; font-weight: bold; color: #222; font-style: italic; margin-bottom: 4px;}
+        .faq-a { font-size: 13px; color: #666; font-style: italic; line-height: 1.4;}
+
+        /* Related Products */
+        .related-scroll { display: flex; overflow-x: auto; gap: 10px; padding-bottom: 10px; scrollbar-width: none; }
+        .related-scroll::-webkit-scrollbar { display: none; }
+        .related-card { min-width: 140px; background: white; border-radius: 12px; border: 1px solid #E5E5EA; padding: 10px; cursor: pointer; }
+        .related-img { width: 100%; height: 90px; object-fit: contain; }
+        .related-title { font-size: 12px; font-weight: bold; color: #333; margin: 5px 0 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+        .related-price { font-size: 14px; font-weight: bold; color: var(--primary-blue);}
+
         .desc-box { background: white; padding: 15px; margin-top: 10px; }
-        .desc-text { font-size: 14px; color: #444; font-style: italic; margin-top: 10px;}
+        .desc-text { font-size: 14px; color: #444; font-style: italic; margin-top: 10px; line-height: 1.5;}
 
         .fixed-bottom-btn { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); box-sizing: border-box; z-index: 90; }
         .btn-buy-blue { background: var(--primary-blue); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-buy-blue:active { transform: scale(0.98); }
         
-        /* 📝 3. CHECKOUT FORM VIEW */
+        /* 📝 3. MULTI-STEP CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
-        .order-summary { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px;}
-        .summary-title { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin: 0 0 5px 0;}
-        .summary-item { font-size: 14px; font-weight: bold; font-style: italic; color: #333; margin: 0 0 10px 0;}
-        .summary-total { font-size: 14px; font-weight: bold; font-style: italic; color: #333; display: flex; justify-content: space-between;}
+        .checkout-step { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
+        .step-header { font-size: 16px; font-weight: bold; font-style: italic; color: #1565C0; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        
+        .cart-review-item { display: flex; gap: 15px; margin-bottom: 15px; align-items: center;}
+        .cart-review-img { width: 70px; height: 70px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
+        .cart-review-details { flex: 1; }
+        .summary-item { font-size: 14px; font-weight: bold; font-style: italic; color: #333; margin: 0 0 5px 0;}
+        .summary-qty { font-size: 12px; color: #666; margin: 0;}
+        
+        .summary-total { font-size: 14px; font-weight: bold; font-style: italic; color: #333; display: flex; justify-content: space-between; margin-bottom: 8px;}
         .total-price { color: var(--primary-green); font-size: 18px;}
 
-        .form-heading { font-size: 18px; font-weight: bold; font-style: italic; color: #222; margin-bottom: 15px;}
         .form-label { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;}
-        .form-input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; font-style: italic; color: #555; margin-bottom: 15px; box-sizing: border-box;}
+        .form-input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; font-style: italic; color: #555; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;}
+        .form-input:focus { border-color: var(--primary-blue); outline: none; }
         .row-2 { display: flex; gap: 10px; }
         .row-2 .form-group { width: 50%; }
+        
+        .btn-auto-detect { width: 100%; padding: 12px; background: #E3F2FD; color: #1565C0; border: 1px dashed #1565C0; border-radius: 8px; font-weight: bold; font-size: 13px; margin-bottom: 15px; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 5px;}
+
+        .payment-box { border: 2px solid var(--primary-green); background: #E8F5E9; border-radius: 8px; padding: 15px; display: flex; align-items: center; gap: 10px;}
 
         .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-place-order:active { transform: scale(0.98); }
 
-        /* 📋 4. MY ORDERS HISTORY VIEW */
+        /* 📋 4. MY ORDERS HISTORY VIEW (UPGRADED UI) */
         .order-history-container { padding: 15px; }
-        .order-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.02);}
-        .order-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
-        .order-date { font-size: 11px; color: #888; font-weight: bold; font-style: italic;}
+        .history-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;}
+        .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
+        .order-date { font-size: 11px; color: #888; font-weight: bold;}
         
-        .order-status-processing { background: #FFF8E1; color: #F57F17; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
-        .order-status-shipped { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
-        .order-status-completed { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic;}
-        
-        .order-title { font-size: 15px; font-weight: bold; color: #222; margin: 0 0 4px 0; font-style: italic;}
-        .order-vehicle { font-size: 12px; color: #555; margin: 0 0 10px 0; font-style: italic;}
-        .order-price-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;}
-        .order-id { font-size: 11px; color: #888; font-weight: bold;}
-        .order-amt { font-size: 16px; font-weight: bold; color: var(--primary-blue);}
+        /* EXACT STATUS COLORS */
+        .badge-orange { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
+        .badge-blue { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
+        .badge-purple { background: #F3E5F5; color: #6A1B9A; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
+        .badge-green { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
+        .badge-red { background: #FFEBEE; color: #C62828; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
 
-        .tracking-box { background: #F5F7FA; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #E0E0E0;}
-        .tracking-text { font-size: 12px; color: #444; font-weight: bold;}
-        .btn-copy { background: #1565C0; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; font-style: italic;}
+        .history-body { display: flex; gap: 15px; align-items: center; }
+        .history-img { width: 65px; height: 65px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 4px;}
+        .history-info { flex: 1; }
+        .history-title { font-size: 14px; font-weight: bold; color: #222; margin: 0 0 4px 0;}
+        .history-meta { font-size: 12px; color: #666; margin: 0 0 6px 0;}
+        .history-price { font-size: 16px; font-weight: bold; color: var(--primary-blue); margin: 0;}
+
+        .history-actions { display: flex; gap: 10px; margin-top: 5px; }
+        .btn-action { flex: 1; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; transition: 0.2s;}
+        .btn-action:active { transform: scale(0.95); }
+        .btn-cancel { background: #FFEBEE; color: #C62828; }
+        .btn-reorder { background: #E8F5E9; color: #2E7D32; }
+        .btn-track { background: #E3F2FD; color: #1565C0; }
+
+        /* TRACKING TIMELINE CSS */
+        .timeline { position: relative; padding-left: 20px; margin-top: 20px; text-align: left;}
+        .timeline-item { position: relative; padding-bottom: 25px; }
+        .timeline-item::before { content: ''; position: absolute; left: -19px; top: 5px; width: 2px; height: 100%; background: #E0E0E0; }
+        .timeline-item:last-child::before { display: none; }
+        .timeline-dot { position: absolute; left: -24px; top: 2px; width: 12px; height: 12px; border-radius: 50%; background: #E0E0E0; border: 2px solid white; box-shadow: 0 0 0 1px #E0E0E0;}
+        .timeline-content h4 { margin: 0; font-size: 15px; color: #888;}
+        .timeline-content p { margin: 4px 0 0 0; font-size: 12px; color: #aaa;}
+        
+        .timeline-item.active .timeline-dot { background: var(--primary-green); box-shadow: 0 0 0 2px var(--primary-green); }
+        .timeline-item.active::before { background: var(--primary-green); }
+        .timeline-item.active .timeline-content h4 { color: #222; }
+        .timeline-item.active .timeline-content p { color: #555; }
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
@@ -151,9 +207,9 @@
         .hide-nav { display: none !important; }
 
         /* 🚨 PREMIUM POPUP MODALS & ALERTS */
-        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: flex-end; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: 0.3s;}
         
-        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
+        .bottom-sheet { background: white; width: 100%; max-width: 500px; border-radius: 24px 24px 0 0; padding: 25px; box-sizing: border-box; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: absolute; bottom: 0; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2);}
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
         
         .drag-handle { width: 50px; height: 5px; background: #D1D1D6; border-radius: 5px; margin: 0 auto 20px auto; }
@@ -176,7 +232,7 @@
         .support-call-icon { background: #1976D2; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-size: 20px;}
 
         /* Generic Central Modal */
-        .modal-box { background: white; border-radius: 20px; width: 85%; max-width: 350px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
+        .modal-box { background: white; border-radius: 20px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 20px 40px rgba(0,0,0,0.3); overflow: hidden; animation: scaleUp 0.3s ease; margin: auto;}
         @keyframes scaleUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
         .modal-header-red { background: #B71C1C; color: white; padding: 25px 20px; }
@@ -197,13 +253,16 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000; align-items: center;" onclick="this.style.display='none'">
+        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
+        <img id="zoomedImg" src="" style="width: 95%; max-height: 85vh; object-fit: contain; border-radius: 16px;">
+    </div>
+
     <div id="viewList" class="view-section active-view">
         <div class="cod-banner">
             🚚 Cash on Delivery Available! Pay only when you receive the product.
         </div>
         <div class="shop-grid" id="shopGrid">
-            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
-            <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
             <div class="skel-card"><div class="skeleton skel-img"></div><div class="skeleton skel-text"></div><div class="skeleton skel-price"></div></div>
         </div>
@@ -214,9 +273,13 @@
             <div class="product-badge" id="detBadge" style="display:none; left: 15px; top: 15px;">50%</div>
             <div class="slider-track" id="detSlider"></div>
         </div>
-        <div class="slider-hint">Auto-Sliding | Swipe to see &gt;&gt;</div>
+        <div class="slider-hint">Auto-Sliding | Tap image to zoom 🔍</div>
 
         <div class="detail-box">
+            <div class="review-stars">
+                <span style="color:#FFB300; font-size:16px;">★★★★★</span>
+                <span style="font-size:12px; color:#888; font-weight:bold;">(4.8/5 from 1,200+ Reviews)</span>
+            </div>
             <h2 class="detail-title" id="detTitle">Product Title</h2>
             <div class="price-row">
                 <span class="price-current" id="detPrice">₹0</span>
@@ -230,11 +293,41 @@
                 <span id="selectedVehicleText" style="color: #888;">Select your vehicle...</span>
                 <span>▼</span>
             </button>
-            <div class="selection-label" style="margin-top: 20px;">Where to Paste (How to Use)</div>
-            <div class="instruction-box">
-                <span style="color: #4CAF50; font-size: 16px;">✅</span>
-                <p class="instruction-text">Please select your vehicle type(s) above to view the exact pasting instructions.</p>
+            
+            <div id="vehiclePreviewContainer" style="display:none; text-align:center; margin-top:15px; padding:15px; background:#F5F7FA; border-radius:12px; border: 1px dashed #ccc;">
+                <div id="vehiclePreviewIcon" style="font-size: 55px; margin-bottom: 5px;">🚗</div>
+                <div style="font-size:13px; color:#555; font-weight:bold; font-style:italic;">Selected: <span id="previewName"></span></div>
             </div>
+
+            <div class="instruction-box" style="margin-top: 15px;">
+                <span style="color: #4CAF50; font-size: 18px;">✅</span>
+                <p class="instruction-text">Peel the backing and stick the smart QR on a visible area of your vehicle.</p>
+            </div>
+        </div>
+
+        <div style="background:white; padding:15px; margin-top:10px;">
+            <div class="selection-label">Delivery Options</div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <input type="number" id="pinInput" placeholder="Enter Pincode" style="flex:1; padding:12px; border:1px solid #ccc; border-radius:8px; font-size:14px; font-style: italic;">
+                <button onclick="checkPincode()" style="background:var(--primary-blue); color:white; border:none; border-radius:8px; padding:0 20px; font-weight:bold;">CHECK</button>
+            </div>
+            <div id="pinResult" style="margin-top:12px; font-size:14px; font-weight:bold; color:var(--primary-green); display:none;"></div>
+        </div>
+
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
+            </div>
+        </div>
+
+        <div class="trust-badges">
+            <div class="trust-item"><div class="trust-icon">💵</div>COD<br>Available</div>
+            <div class="trust-item"><div class="trust-icon">🔄</div>7 Days<br>Return</div>
+            <div class="trust-item"><div class="trust-icon">🔒</div>100%<br>Secure</div>
+            <div class="trust-item"><div class="trust-icon">💯</div>Genuine<br>Brand</div>
         </div>
 
         <div class="desc-box">
@@ -242,66 +335,130 @@
             <div class="desc-text" id="detDesc">Description goes here...</div>
         </div>
 
-        <div style="height: 90px;"></div>
+        <div style="background:white; padding:15px; margin-top:10px;">
+            <div class="selection-label" style="margin-bottom: 12px;">Frequently Asked Questions</div>
+            <div class="faq-item">
+                <div class="faq-q">Q: How to stick the Tagown QR?</div>
+                <div class="faq-a">A: Clean the surface, peel the backing, and press firmly on your vehicle's visible area.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: Is it Waterproof & Sun-proof?</div>
+                <div class="faq-a">A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: What if the vehicle is stolen?</div>
+                <div class="faq-a">A: Anyone scanning the QR can instantly alert you of the vehicle's location without revealing your mobile number.</div>
+            </div>
+        </div>
+
+        <div style="padding:15px; margin-top:5px;">
+            <div class="selection-label" style="margin-bottom:10px; padding-left: 5px;">You May Also Like</div>
+            <div class="related-scroll" id="relatedProducts"></div>
+        </div>
+
+        <div style="height: 100px;"></div>
 
         <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
-            <button class="btn-buy-blue" onclick="proceedToCheckout()">BUY NOW (CASH ON DELIVERY)</button>
+            <button class="btn-buy-blue" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
         </div>
     </div>
 
     <div id="viewCheckout" class="view-section">
         <div class="checkout-container">
-            <div class="order-summary">
-                <p class="summary-title">Order Summary</p>
-                <p class="summary-item" id="chkProductName">Product Name (For: Bike)</p>
+            
+            <div class="checkout-step">
+                <div class="step-header"><span>1️⃣</span> Cart Review</div>
+                <div class="cart-review-item">
+                    <img id="chkProductImg" src="banner_home_tag.webp" class="cart-review-img">
+                    <div class="cart-review-details">
+                        <p class="summary-item" id="chkProductName">Product Name</p>
+                        <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
+                    </div>
+                </div>
                 
-                <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666; margin-bottom: 5px;">
-                    <span>Original Price:</span>
-                    <span id="chkOriginalPrice">₹0</span>
-                </div>
-                <div class="summary-total" id="discountRow" style="display: none; font-weight: normal; font-size: 13px; color: #00C853; margin-bottom: 5px;">
-                    <span>Discount Applied:</span>
-                    <span id="chkDiscount">-₹0</span>
-                </div>
-
-                <div class="summary-total">
-                    <span>Amount to Pay (COD):</span>
-                    <span class="total-price" id="chkPrice">₹0</span>
+                <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
+                    <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
+                        <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
+                    </div>
+                    <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
                 </div>
             </div>
 
-            <div style="background: white; border-radius: 12px; padding: 15px; border: 1px dashed #1565C0; margin-bottom: 20px;">
-                <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
-                <div style="display: flex; gap: 10px;">
-                    <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
-                    <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
+            <div class="checkout-step">
+                <div class="step-header"><span>2️⃣</span> Delivery Address</div>
+                
+                <button class="btn-auto-detect" onclick="showPremiumAlert('Location', 'Feature coming soon. Please enter manually.', 'info')">
+                    📍 Auto-Detect My Location
+                </button>
+
+                <label class="form-label">Full Name</label>
+                <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
+                
+                <label class="form-label">Mobile Number</label>
+                <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+                
+                <label class="form-label">Flat / House no.</label>
+                <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
+                
+                <label class="form-label">Area / Landmark</label>
+                <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
+                
+                <div class="row-2">
+                    <div class="form-group">
+                        <label class="form-label">Pincode</label>
+                        <input type="number" id="chkPincode" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">City</label>
+                        <input type="text" id="chkCity" class="form-input" placeholder="City">
+                    </div>
                 </div>
-                <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
+                
+                <label class="form-label">State</label>
+                <input type="text" id="chkState" class="form-input" placeholder="State">
             </div>
 
-            <h3 class="form-heading">Add Delivery Address</h3>
-            <label class="form-label">Country</label>
-            <input type="text" class="form-input" value="India" readonly>
-            <label class="form-label">Full Name (First and Last name)</label>
-            <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
-            <label class="form-label">Mobile Number</label>
-            <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-            <label class="form-label">Flat, House no., Building, Company</label>
-            <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
-            <label class="form-label">Area, Street, Sector, Village</label>
-            <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Main Market Road">
-            <label class="form-label">Landmark</label>
-            <input type="text" id="chkLandmark" class="form-input" placeholder="E.g. Near Apollo Hospital">
-            <div class="row-2">
-                <div class="form-group"><label class="form-label">Pincode</label><input type="number" id="chkPincode" class="form-input" placeholder="6-digit Pincode"></div>
-                <div class="form-group"><label class="form-label">Town/City</label><input type="text" id="chkCity" class="form-input" placeholder="E.g. Bhubaneswar"></div>
+            <div class="checkout-step">
+                <div class="step-header"><span>3️⃣</span> Delivery Slot</div>
+                <div id="shiprocketUI" style="text-align: center; padding: 10px;">
+                    <div id="shiprocketLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
+                    <div id="shiprocketResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
+                        <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
+                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketText">Estimated Delivery: 14 June</div>
+                        <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
+                    </div>
+                </div>
             </div>
-            <div class="row-2">
-                <div class="form-group"><label class="form-label">District</label><input type="text" id="chkDistrict" class="form-input" placeholder="E.g. Bargarh"></div>
-                <div class="form-group"><label class="form-label">State</label><input type="text" id="chkState" class="form-input" placeholder="E.g. Odisha"></div>
+
+            <div class="checkout-step">
+                <div class="step-header"><span>4️⃣</span> Payment</div>
+                <div class="payment-box">
+                    <span style="font-size: 24px;">💵</span>
+                    <div>
+                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
+                        <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                        <span>Base Price:</span>
+                        <span id="chkOriginalPrice">₹0</span>
+                    </div>
+                    <div class="summary-total" id="discountRow" style="display: none; font-weight: normal; font-size: 13px; color: #00C853;">
+                        <span>Promo Discount:</span>
+                        <span id="chkDiscount">-₹0</span>
+                    </div>
+                    <div class="summary-total" style="margin-top: 10px; font-size: 16px;">
+                        <span>Amount to Pay:</span>
+                        <span class="total-price" id="chkPrice">₹0</span>
+                    </div>
+                </div>
             </div>
-            <div style="height: 20px;"></div>
-            <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">PLACE ORDER (CASH ON DELIVERY)</button>
+
+            <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">CONFIRM & PLACE ORDER</button>
             <div style="height: 40px;"></div>
         </div>
     </div>
@@ -315,17 +472,59 @@
         </div>
     </div>
 
-    <div id="vehicleSheet" class="overlay">
+    <div id="trackingModal" class="overlay" style="align-items: center; z-index: 5000;">
+        <div class="modal-box" style="padding: 20px; text-align: left; background: #F8F9FA;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #1565C0;">Track Order</h3>
+                <span style="font-size: 24px; cursor: pointer; color: #888;" onclick="document.getElementById('trackingModal').style.display='none'">&times;</span>
+            </div>
+            
+            <p style="font-size: 12px; color: #666; font-weight: bold; margin-bottom: 20px;">ID: <span id="trackOrderId"></span></p>
+
+            <div class="timeline">
+                <div class="timeline-item active" id="tlPlaced">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Order Placed</h4>
+                        <p>We have received your order.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" id="tlShipped">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Shipped</h4>
+                        <p>Your item is on the way.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" id="tlOut">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Out for Delivery</h4>
+                        <p>Delivery agent is nearby.</p>
+                    </div>
+                </div>
+                <div class="timeline-item" id="tlDelivered">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>Delivered</h4>
+                        <p>Package delivered successfully.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="vehicleSheet" class="overlay" style="align-items: flex-end;">
         <div class="bottom-sheet" style="padding: 20px 0;">
             <div class="drag-handle"></div>
             <h3 class="sheet-header" style="padding: 0 20px 15px 20px; margin-bottom: 0; color: var(--primary-green);">Select Vehicle Type</h3>
-            <div class="type-item" onclick="selectType('Bike')">Bike</div>
-            <div class="type-item" onclick="selectType('Scooter / Activa')">Scooter / Activa</div>
-            <div class="type-item" onclick="selectType('Car')">Car</div>
-            <div class="type-item" onclick="selectType('SUV / Jeep')">SUV / Jeep</div>
-            <div class="type-item" onclick="selectType('Auto Rickshaw')">Auto Rickshaw</div>
-            <div class="type-item" onclick="selectType('Commercial')">Truck / Bus / Commercial</div>
-            <div class="type-item" onclick="selectType('Other')">Other</div>
+            <div class="type-item" onclick="selectType('Bike')">🏍️ Bike</div>
+            <div class="type-item" onclick="selectType('Scooter / Activa')">🛵 Scooter / Activa</div>
+            <div class="type-item" onclick="selectType('Car')">🚗 Car</div>
+            <div class="type-item" onclick="selectType('SUV / Jeep')">🚙 SUV / Jeep</div>
+            <div class="type-item" onclick="selectType('Auto Rickshaw')">🛺 Auto Rickshaw</div>
+            <div class="type-item" onclick="selectType('Commercial')">🚚 Truck / Bus / Commercial</div>
+            <div class="type-item" onclick="selectType('Other')">⚙️ Other</div>
         </div>
     </div>
 
@@ -347,81 +546,38 @@
         </div>
     </div>
 
-    <div id="sosSheet" class="overlay">
+    <div id="sosSheet" class="overlay" style="align-items: flex-end;">
         <div class="bottom-sheet" style="background: #F8F9FA;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
             <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
-            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
-            
             <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
                 ⚠️ You can also dial 112 for any emergency
             </div>
-            
-            <a href="tel:112" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1033" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1073" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Road Accident Relief</h4><p style="color:var(--sos-red);">1073</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:100" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Police Control Room</h4><p style="color:var(--sos-red);">100</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:108" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Ambulance Medical</h4><p style="color:var(--sos-red);">108</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:101" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Fire Brigade</h4><p style="color:var(--sos-red);">101</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
-            <a href="tel:1091" class="list-item">
-                <div class="list-icon" style="background:#FFEBEE;">📞</div>
-                <div class="list-text"><h4>Women Helpline</h4><p style="color:var(--sos-red);">1091</p></div>
-                <div style="color:#4CAF50; font-size:18px;">▼</div>
-            </a>
+            <a href="tel:112" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
+            <a href="tel:1033" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div></a>
         </div>
     </div>
 
-    <div id="supportSheet" class="overlay">
+    <div id="supportSheet" class="overlay" style="align-items: flex-end;">
         <div class="bottom-sheet" style="background: #FFFFFF;">
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('supportSheet').style.display='none'">×</button>
             <h2 class="sheet-header" style="color:var(--primary-blue);">Help & Support</h2>
-            <p style="color:#888; font-size:13px; margin-top:-20px; margin-bottom: 20px;">We are here to help you 24/7</p>
-            
             <a href="https://wa.me/916372980014" target="_blank" class="support-wa">
                 <div class="support-wa-icon"><img src="ic_whatsapp.webp" alt="WA" style="width:24px; height:24px; object-fit:contain;"></div>
-                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4><p style="color: #388E3C; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Instant reply</p></div>
+                <div style="flex-grow:1;"><h4 style="color: #2E7D32; margin: 0; font-size: 16px;">Chat on WhatsApp</h4></div>
             </a>
-
             <a href="tel:180093486290" class="support-call">
                 <div class="support-call-icon">📞</div>
-                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4><p style="color: #1976D2; margin: 2px 0 0 0; font-size: 13px; font-weight: 600;">Toll-free number</p></div>
+                <div style="flex-grow:1;"><h4 style="color: #1565C0; margin: 0; font-size: 16px;">Call Helpline</h4></div>
             </a>
         </div>
     </div>
 
     <div id="loginRequiredModal" class="overlay" style="align-items: center;">
         <div class="modal-box">
-            <div class="modal-header-red">
-                <div style="font-size: 35px; margin-bottom: 5px;">🔒</div>
-                <h3>Not Logged In!</h3>
-                <p>Login now to place orders and track history.</p>
-            </div>
+            <div class="modal-header-red"><div style="font-size: 35px; margin-bottom: 5px;">🔒</div><h3>Not Logged In!</h3></div>
             <div class="modal-body">
                 <button class="btn-modal-primary" style="background: #B71C1C;" onclick="window.location.href='auth.html'">LOGIN / SIGN UP</button>
                 <button class="btn-modal-cancel" onclick="document.getElementById('loginRequiredModal').style.display='none'">Cancel</button>
@@ -431,10 +587,7 @@
 
     <div id="alertModal" class="overlay" style="align-items: center; z-index: 3000;">
         <div class="modal-box">
-            <div class="modal-header-red" id="alertHeader" style="background: #FF9800;">
-                <div style="font-size: 35px; margin-bottom: 5px;" id="alertIcon">⚠️</div>
-                <h3 id="alertTitle">Alert</h3>
-            </div>
+            <div class="modal-header-red" id="alertHeader" style="background: #FF9800;"><div style="font-size: 35px; margin-bottom: 5px;" id="alertIcon">⚠️</div><h3 id="alertTitle">Alert</h3></div>
             <div class="modal-body">
                 <p id="alertMessage" style="font-size: 14px; font-weight: bold; color: #333; margin-bottom: 15px; line-height: 1.4;"></p>
                 <button class="btn-modal-primary" id="alertBtn" style="background: #FF9800; color: #000;" onclick="document.getElementById('alertModal').style.display='none'">OKAY</button>
@@ -443,14 +596,20 @@
     </div>
 
     <div id="successModal" class="overlay" style="align-items: center; z-index: 4000;">
-        <div class="modal-box">
-            <div class="modal-header-red" style="background: white; padding: 25px 20px 10px 20px;">
-                <div style="font-size: 50px; margin-bottom: 10px;">🎉</div>
-                <h3 style="color: #2E7D32;">Order Confirmed!</h3>
+        <div class="modal-box" style="background: #F4F6F9;">
+            <div style="background: #00C853; padding: 30px 20px; color: white;">
+                <div style="font-size: 60px; margin-bottom: 10px;">✅</div>
+                <h2 style="margin: 0; font-style: italic;">Order Placed!</h2>
             </div>
-            <div class="modal-body" style="padding-top: 0;">
-                <p style="font-size: 14px; color: #424242; margin-bottom: 20px; line-height: 1.4;">Your Tagown package will be shipped to your detailed address soon. Pay cash on delivery.</p>
-                <button class="btn-modal-primary" style="background: #0D47A1;" onclick="closeSuccessModal()">BACK TO SHOP</button>
+            <div class="modal-body" style="background: white; text-align: left; padding: 20px;">
+                <p style="font-size: 13px; color: #555; margin: 0 0 5px 0;">Order ID</p>
+                <p style="font-size: 16px; font-weight: bold; color: #111; margin: 0 0 15px 0;" id="confOrderId">ORD-XXXXXX</p>
+                
+                <p style="font-size: 13px; color: #555; margin: 0 0 5px 0;">Estimated Delivery</p>
+                <p style="font-size: 16px; font-weight: bold; color: #2E7D32; margin: 0 0 20px 0;" id="confEstDate">Fetching...</p>
+                
+                <button class="btn-modal-primary" style="background: #0D47A1; margin-bottom: 10px;" onclick="closeSuccessModal(true)">TRACK MY ORDER</button>
+                <button class="btn-modal-cancel" onclick="closeSuccessModal(false)">Continue Shopping</button>
             </div>
         </div>
     </div>
@@ -469,6 +628,7 @@
         let selectedProductId = null;
         let selectedVehicleType = null;
         let sliderInterval;
+        let selectedQty = 1;
 
         let appliedPromoCode = null;
         let appliedDiscount = 0;
@@ -500,9 +660,41 @@
             document.getElementById('alertModal').style.display = 'flex';
         }
 
-        function closeSuccessModal() {
+        function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
-            goBackToHome();
+            if(goToOrders) openOrderHistory();
+            else goBackToHome();
+        }
+
+        // Image Zoom Logic
+        function openZoom(src) {
+            document.getElementById('zoomedImg').src = src;
+            document.getElementById('imageZoomModal').style.display = 'flex';
+        }
+
+        // Pincode Lookup API for Auto-fill City & State
+        function checkPincodeAPI(val) {
+            if(val.length === 6) {
+                document.getElementById('shiprocketLoading').style.display = 'none';
+                let d = new Date(); d.setDate(d.getDate() + 5);
+                let options = { month: 'short', day: 'numeric' };
+                let estDate = d.toLocaleDateString('en-US', options);
+                document.getElementById('shiprocketText').innerText = "Estimated Delivery: " + estDate;
+                document.getElementById('shiprocketResult').style.display = 'block';
+                
+                fetch('https://api.postalpincode.in/pincode/' + val)
+                .then(response => response.json())
+                .then(data => {
+                    if(data[0].Status === "Success") {
+                        let details = data[0].PostOffice[0];
+                        document.getElementById('chkCity').value = details.District;
+                        document.getElementById('chkState').value = details.State;
+                    }
+                }).catch(e => console.log(e));
+            } else {
+                document.getElementById('shiprocketResult').style.display = 'none';
+                document.getElementById('shiprocketLoading').style.display = 'block';
+            }
         }
 
         db.ref('ShopProducts').on('value', (snapshot) => {
@@ -535,6 +727,9 @@
 
         function openProductDetail(id) {
             selectedProductId = id; const data = currentProducts[id];
+            selectedQty = 1; 
+            document.getElementById('qtyDisplay').innerText = selectedQty;
+
             document.getElementById('pageTitle').innerText = "Product Details";
             document.getElementById('detTitle').innerText = data.title;
             document.getElementById('detPrice').innerText = "₹" + data.price;
@@ -554,32 +749,66 @@
             if(imgs.length === 2) imgs.push(imgs[0]);
 
             slider.innerHTML = `
-                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'"></div>
-                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'"></div>
-                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'"></div>
+                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'" onclick="openZoom(this.src)"></div>
+                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'" onclick="openZoom(this.src)"></div>
+                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'" onclick="openZoom(this.src)"></div>
             `;
             
             clearInterval(sliderInterval); let slideIndex = 0;
             sliderInterval = setInterval(() => { slideIndex = (slideIndex + 1) % 3; slider.style.transform = `translateX(-${slideIndex * 100}%)`; }, 2500);
 
+            let relatedHtml = '';
+            Object.keys(currentProducts).forEach(pid => {
+                if(pid !== id) {
+                    let p = currentProducts[pid];
+                    let rImg = (p.imgUrl1 && p.imgUrl1.trim() !== "") ? p.imgUrl1 : "banner_home_tag.webp";
+                    relatedHtml += `
+                        <div class="related-card" onclick="openProductDetail('${pid}')">
+                            <img class="related-img" src="${rImg}">
+                            <div class="related-title">${p.title}</div>
+                            <div class="related-price">₹${p.price}</div>
+                        </div>
+                    `;
+                }
+            });
+            document.getElementById('relatedProducts').innerHTML = relatedHtml;
+
             selectedVehicleType = null;
             document.getElementById('selectedVehicleText').innerText = "Select your vehicle...";
             document.getElementById('selectedVehicleText').style.color = "#888";
+            document.getElementById('vehiclePreviewContainer').style.display = 'none';
+
             switchView('viewDetail');
+        }
+
+        function updateQty(change) {
+            if(selectedQty + change >= 1) {
+                selectedQty += change;
+                document.getElementById('qtyDisplay').innerText = selectedQty;
+                let basePrice = parseInt(currentProducts[selectedProductId].price);
+                document.getElementById('detPrice').innerText = "₹" + (basePrice * selectedQty);
+            }
         }
 
         function openVehicleSheet() { document.getElementById('vehicleSheet').style.display = 'flex'; }
         
-        window.onclick = function(event) {
-            const modals = ['vehicleSheet', 'sosSheet', 'supportSheet', 'loginRequiredModal', 'alertModal', 'successModal'];
-            modals.forEach(id => { const modal = document.getElementById(id); if (event.target == modal) modal.style.display = "none"; });
-        }
-        
         function selectType(type) {
-            selectedVehicleType = type;
-            document.getElementById('selectedVehicleText').innerText = type;
+            let cleanType = type.replace(/[^a-zA-Z \/]/g, '').trim();
+            selectedVehicleType = cleanType;
+            document.getElementById('selectedVehicleText').innerText = cleanType;
             document.getElementById('selectedVehicleText').style.color = "#111";
             document.getElementById('vehicleSheet').style.display = 'none';
+
+            let previewEmoji = "🚗";
+            if(cleanType.includes('Bike')) previewEmoji = "🏍️";
+            else if(cleanType.includes('Scooter')) previewEmoji = "🛵";
+            else if(cleanType.includes('SUV')) previewEmoji = "🚙";
+            else if(cleanType.includes('Auto')) previewEmoji = "🛺";
+            else if(cleanType.includes('Commercial')) previewEmoji = "🚚";
+
+            document.getElementById('vehiclePreviewIcon').innerText = previewEmoji;
+            document.getElementById('previewName').innerText = cleanType;
+            document.getElementById('vehiclePreviewContainer').style.display = 'block';
         }
         
         function proceedToCheckout() {
@@ -588,21 +817,28 @@
             
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
-            document.getElementById('chkProductName').innerText = `${data.title} (For: ${selectedVehicleType})`;
+            
+            // Populating Step 1: Cart Review
+            document.getElementById('chkProductName').innerText = data.title;
+            document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
+            let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
+            document.getElementById('chkProductImg').src = rImg;
             
             appliedPromoCode = null;
             appliedDiscount = 0;
             influencerData = null;
+            
+            let totalOriginalPrice = parseInt(data.price) * selectedQty;
+            
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
-            document.getElementById('chkOriginalPrice').innerText = "₹" + data.price;
-            document.getElementById('chkPrice').innerText = "₹" + data.price;
+            document.getElementById('chkOriginalPrice').innerText = "₹" + totalOriginalPrice;
+            document.getElementById('chkPrice').innerText = "₹" + totalOriginalPrice;
 
             switchView('viewCheckout');
         }
 
-        // 🚀 BHAIG LOGIC: 100% Fixed JS Promo Code syntax check
         function applyPromoCode() {
             const code = document.getElementById('chkPromoCode').value.trim().toUpperCase();
             const msg = document.getElementById('promoMessage');
@@ -614,22 +850,20 @@
             msg.innerText = "Checking..."; msg.style.color = "#1565C0";
 
             db.ref('PromoCodes/' + code).once('value').then(snap => {
-                // Fixed JavaScript safety check
                 if(snap.exists() && snap.child("status").val() && String(snap.child("status").val()).toLowerCase() === "active") {
                     const data = snap.val();
-                    
                     const product = currentProducts[selectedProductId];
-                    const originalPrice = parseInt(product.price);
+                    const totalOriginalPrice = parseInt(product.price) * selectedQty;
 
                     let percentage = 20; 
-                    appliedDiscount = Math.floor((originalPrice * percentage) / 100);
-                    let finalPrice = Math.max(originalPrice - appliedDiscount, 0);
+                    appliedDiscount = Math.floor((totalOriginalPrice * percentage) / 100);
+                    let finalPrice = Math.max(totalOriginalPrice - appliedDiscount, 0);
 
                     appliedPromoCode = code;
                     influencerData = {
                         phone: data.influencerPhone || "",
                         name: data.influencerName || "",
-                        commission: 120 
+                        commission: 120 * selectedQty 
                     };
 
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
@@ -641,9 +875,10 @@
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
+                    let totalOriginalPrice = parseInt(product.price) * selectedQty;
                     
                     document.getElementById('discountRow').style.display = "none";
-                    document.getElementById('chkPrice').innerText = "₹" + product.price;
+                    document.getElementById('chkPrice').innerText = "₹" + totalOriginalPrice;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -664,24 +899,30 @@
             const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             const product = currentProducts[selectedProductId];
-            const originalPrice = parseInt(product.price);
-            const finalPrice = Math.max(originalPrice - appliedDiscount, 0);
+            const totalOriginalPrice = parseInt(product.price) * selectedQty;
+            const finalPrice = Math.max(totalOriginalPrice - appliedDiscount, 0);
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
             const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
 
+            // 🚀 BHAIG LOGIC: Saving Image & ProductID for history features
+            let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
+
             const orderData = {
                 orderId: orderId, 
+                productId: selectedProductId, // Used for Reorder
+                imgUrl: rImg, // Used for My Orders Image
                 productTitle: product.title, 
                 productName: product.title,
-                originalPrice: String(originalPrice), 
+                quantity: String(selectedQty),
+                originalPrice: String(totalOriginalPrice), 
                 discountApplied: String(appliedDiscount), 
                 price: String(finalPrice), 
                 amount: String(finalPrice),
                 vehicleType: selectedVehicleType,
                 customerName: name, customerPhone: phone, deliveryAddress: fullAddress, message: fullAddress,
-                orderStatus: "Pending", status: "Pending", timestamp: date, trackingId: "",
+                orderStatus: "Processing", status: "Processing", timestamp: date, trackingId: "",
                 promoCode: appliedPromoCode || "",
                 influencerPhone: influencerData ? influencerData.phone : "",
                 influencerName: influencerData ? influencerData.name : "",
@@ -705,6 +946,7 @@
 
             db.ref().update(updates).then(() => {
                 
+                // Notify Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -713,20 +955,29 @@
                         target_channel: "push",
                         include_aliases: { external_id: ["TAGOWN-ADMIN-DEVICE"] },
                         headings: {"en": "New Order Alert! 📦"}, 
-                        contents: {"en": name + " ordered " + product.title},
+                        contents: {"en": name + " ordered " + selectedQty + "x " + product.title},
                         priority: 10, 
                         android_visibility: 1, 
                         small_icon: "ic_notification_stat"
                     })
                 }).catch(e => console.log(e));
                 
+                // Show Confirmation Screen
+                document.getElementById('confOrderId').innerText = orderId;
+                let d = new Date(); d.setDate(d.getDate() + 5);
+                document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('successModal').style.display = 'flex';
-                btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                
+                btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
             }).catch(err => {
-                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "PLACE ORDER (CASH ON DELIVERY)"; btn.disabled = false;
+                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
+
+        // ==========================================
+        // 📋 PREMIUM MY ORDERS SCREEN LOGIC
+        // ==========================================
 
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
@@ -744,6 +995,7 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
+                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
@@ -754,32 +1006,56 @@
                 
                 if(orders.length > 0) {
                     orders.forEach(data => {
-                        let statusText = data.status || data.orderStatus || "Pending";
-                        let statusHtml = `<span class="order-status-processing">Processing ⏳</span>`;
-                        let trackingHtml = "";
+                        let statusText = data.status || data.orderStatus || "Processing";
+                        let sLower = statusText.toLowerCase();
+                        
+                        // Exact Custom Rules Mapping
+                        let badgeClass = "badge-orange";
+                        let statusDisplay = "Processing ⏳";
+                        
+                        if(sLower.includes("shipped")) { badgeClass = "badge-blue"; statusDisplay = "Shipped 🚚"; }
+                        else if(sLower.includes("out")) { badgeClass = "badge-purple"; statusDisplay = "Out for Delivery 🛵"; }
+                        else if(sLower.includes("deliver") || sLower.includes("complete")) { badgeClass = "badge-green"; statusDisplay = "Delivered ✅"; }
+                        else if(sLower.includes("cancel")) { badgeClass = "badge-red"; statusDisplay = "Cancelled ❌"; }
 
-                        if (statusText.toLowerCase() === "completed") {
-                            statusHtml = `<span class="order-status-completed">Completed ✅</span>`;
-                        } else if (statusText.toLowerCase() === "shipped" || (data.trackingId && data.trackingId.trim() !== "")) {
-                            statusHtml = `<span class="order-status-shipped">Shipped 🚚</span>`;
-                        }
-
-                        if(data.trackingId && data.trackingId.trim() !== "") {
-                            trackingHtml = `<div class="tracking-box"><span class="tracking-text">Tracking ID: <b>${data.trackingId}</b></span><button class="btn-copy" onclick="copyTracking('${data.trackingId}')">COPY</button></div>`;
-                        }
+                        let imgHtml = data.imgUrl ? `<img src="${data.imgUrl}" class="history-img" onerror="this.src='banner_home_tag.webp'">` : `<img src="banner_home_tag.webp" class="history-img">`;
 
                         const itemTitle = data.productName || data.productTitle || data.title || "Tagown Security Product";
                         const itemPrice = data.amount || data.price || "299";
-                        const itemVehicle = data.vehicleType || "Vehicle";
                         const itemId = data.orderId || "N/A";
+                        const itemQty = data.quantity ? ` (x${data.quantity})` : "";
+                        const itemVehicle = data.vehicleType || "Vehicle";
+
+                        // Action Buttons Logic
+                        let actionButtons = '';
+                        if(badgeClass === "badge-orange") {
+                            // Only Processing orders can be cancelled
+                            actionButtons += `<button class="btn-action btn-cancel" onclick="cancelOrder('${itemId}')">Cancel Order</button>`;
+                        } else if (badgeClass === "badge-green") {
+                            // Delivered/Completed orders can be reordered
+                            actionButtons += `<button class="btn-action btn-reorder" onclick="reorderProduct('${data.productId}')">Buy Again</button>`;
+                        }
+                        
+                        // All orders except Cancelled can be tracked
+                        if(badgeClass !== "badge-red") {
+                            actionButtons += `<button class="btn-action btn-track" onclick="showTracking('${itemId}', '${badgeClass}')">Track Package</button>`;
+                        }
 
                         html += `
-                            <div class="order-card">
-                                <div class="order-card-header"><span class="order-date">${data.timestamp || 'Recent'}</span>${statusHtml}</div>
-                                <h3 class="order-title">${itemTitle}</h3>
-                                <p class="order-vehicle">Vehicle: ${itemVehicle}</p>
-                                <div class="order-price-row"><span class="order-id">ID: ${itemId}</span><span class="order-amt">₹${itemPrice}</span></div>
-                                ${trackingHtml}
+                            <div class="history-card">
+                                <div class="history-header">
+                                    <span class="order-date">${data.timestamp || 'Recent'}</span>
+                                    <span class="${badgeClass}">${statusDisplay}</span>
+                                </div>
+                                <div class="history-body">
+                                    ${imgHtml}
+                                    <div class="history-info">
+                                        <h3 class="history-title">${itemTitle}${itemQty}</h3>
+                                        <p class="history-meta">ID: ${itemId} | ${itemVehicle}</p>
+                                        <p class="history-price">₹${itemPrice}</p>
+                                    </div>
+                                </div>
+                                <div class="history-actions">${actionButtons}</div>
                             </div>
                         `;
                     });
@@ -797,10 +1073,51 @@
             });
         }
 
-        function copyTracking(id) { 
-            navigator.clipboard.writeText(id).then(() => { 
-                showPremiumAlert('Copied!', 'Tracking ID: ' + id, 'success'); 
-            }); 
+        // Action Functions
+        function cancelOrder(orderId) {
+            if(confirm("Are you sure you want to cancel this order?")) {
+                let updates = {};
+                updates['UserOrders/' + currentUserPhone + '/' + orderId + '/status'] = "Cancelled";
+                updates['UserOrders/' + currentUserPhone + '/' + orderId + '/orderStatus'] = "Cancelled";
+                updates['Orders/' + orderId + '/status'] = "Cancelled";
+                updates['Orders/' + orderId + '/orderStatus'] = "Cancelled";
+                db.ref().update(updates).then(() => {
+                    showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
+                });
+            }
+        }
+
+        function reorderProduct(productId) {
+            if(productId && currentProducts[productId]) {
+                openProductDetail(productId);
+            } else {
+                showPremiumAlert("Unavailable", "This product is currently out of stock or removed.", "error");
+            }
+        }
+
+        function showTracking(orderId, badgeClass) {
+            document.getElementById('trackOrderId').innerText = orderId;
+            
+            // Reset all dots
+            document.getElementById('tlPlaced').classList.remove('active');
+            document.getElementById('tlShipped').classList.remove('active');
+            document.getElementById('tlOut').classList.remove('active');
+            document.getElementById('tlDelivered').classList.remove('active');
+
+            // Timeline logic based on exact class
+            document.getElementById('tlPlaced').classList.add('active'); // Always placed
+            
+            if(badgeClass === "badge-blue" || badgeClass === "badge-purple" || badgeClass === "badge-green") {
+                document.getElementById('tlShipped').classList.add('active');
+            }
+            if(badgeClass === "badge-purple" || badgeClass === "badge-green") {
+                document.getElementById('tlOut').classList.add('active');
+            }
+            if(badgeClass === "badge-green") {
+                document.getElementById('tlDelivered').classList.add('active');
+            }
+
+            document.getElementById('trackingModal').style.display = 'flex';
         }
 
         function switchView(viewId) {
