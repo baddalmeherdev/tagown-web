@@ -142,8 +142,15 @@
         
         /* 📝 3. MULTI-STEP CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
-        .checkout-step { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-        .step-header { font-size: 16px; font-weight: bold; font-style: italic; color: #1565C0; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        .checkout-step { background: white; border-radius: 2px; padding: 0; border: 1px solid #E5E5EA; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;}
+        .step-header { background: #F8FAFC; padding: 15px; font-size: 14px; font-weight: bold; color: #555; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .step-header.active { background: var(--primary-blue); color: white; }
+        .step-header .step-num { display: inline-flex; justify-content: center; align-items: center; width: 20px; height: 20px; background: #ddd; color: #555; border-radius: 4px; font-size: 12px; margin-right: 10px;}
+        .step-header.active .step-num { background: white; color: var(--primary-blue); }
+        .step-body { padding: 15px; display: none; }
+        .step-body.active { display: block; animation: fadeIn 0.3s ease;}
+
+        .btn-continue { background: var(--btn-yellow); color: #000; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer;}
         
         .cart-review-item { display: flex; gap: 15px; margin-bottom: 15px; align-items: center;}
         .cart-review-img { width: 70px; height: 70px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
@@ -264,8 +271,27 @@
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
         /* Zoom Container for Pinch */
-        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
-        .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
+        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: auto;}
+        .zoom-container img { width: 100%; object-fit: contain; transition: transform 0.1s; transform-origin: center center; cursor: grab;}
+    
+        /* 🚀 Order Success Celebration (Image 2) */
+        .celebration-banner { background: #E8F5E9; border: 2px dashed #00C853; color: #2E7D32; padding: 15px; border-radius: 12px; margin-top: 15px; text-align: center; font-style: italic; animation: fadeInCelebration 0.8s ease; display: flex; align-items: center; justify-content: center; gap: 10px;}
+        @keyframes fadeInCelebration { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .celebration-emoji { font-size: 24px; animation: bounceEmoji 1s infinite alternate; }
+        @keyframes bounceEmoji { from { transform: translateY(0); } to { transform: translateY(-5px); } }
+
+        /* 🚀 iOS Style Premium Cancel Modal (Image 1) */
+        .ios-modal { background: rgba(255,255,255,0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 14px; width: 270px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; animation: iosScaleUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); margin: auto; border: 1px solid rgba(0,0,0,0.05); }
+        @keyframes iosScaleUp { from { transform: scale(1.1); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .ios-modal-body { padding: 20px; }
+        .ios-modal-title { font-size: 17px; font-weight: 600; color: #000; margin: 0 0 5px 0; }
+        .ios-modal-text { font-size: 13px; color: #000; margin: 0; line-height: 1.4; }
+        .ios-modal-footer { display: flex; flex-direction: column; border-top: 0.5px solid rgba(0,0,0,0.15); }
+        .ios-modal-btn { background: transparent; border: none; padding: 12px; font-size: 17px; cursor: pointer; color: #007AFF; font-family: inherit; border-bottom: 0.5px solid rgba(0,0,0,0.15); transition: background 0.2s; }
+        .ios-modal-btn:last-child { border-bottom: none; }
+        .ios-modal-btn:active { background: rgba(0,0,0,0.05); }
+        .ios-modal-btn.destruct { color: #FF3B30; font-weight: 400; }
+        .ios-modal-btn.primary { font-weight: 600; }
     </style>
 </head>
 <body>
@@ -278,24 +304,22 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
-    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.95);">
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.9);">
         <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">&times;</span>
         <div class="zoom-container" id="zoomContainer">
             <img id="zoomedImg" src="">
         </div>
     </div>
 
-    <div id="chkCancelModal" class="overlay" style="align-items: center; z-index: 5500;">
-        <div class="modal-box" style="padding: 25px;">
-            <div style="font-size: 60px; color: #D32F2F; margin-bottom: 10px;">⚠️</div>
-            <h3 style="color: #333; margin-top: 0; font-style: italic;">Cancel This Order?</h3>
-            <p style="font-size: 14px; color: #666; line-height: 1.5; font-style: italic; font-weight: bold; margin-bottom: 25px;">Are you sure you want to cancel this order? This action cannot be undone.</p>
-            
-            <p style="font-size: 12px; color: #888; margin-bottom: 25px;">Order ID: <span id="cancelOrderDisplayId" style="font-weight:bold; color:#111;"></span></p>
-
-            <div style="display: flex; gap: 10px;">
-                <button class="btn-modal-cancel" style="border: 1px solid #ccc; border-radius: 8px; color: #555; background: #f5f5f5;" onclick="document.getElementById('chkCancelModal').style.display='none'">NO, GO BACK</button>
-                <button class="btn-modal-primary" style="background: #B71C1C;" id="btnConfirmCancel">YES, CANCEL ORDER</button>
+    <div id="cancelConfirmModal" class="overlay" style="align-items: center; z-index: 5500;">
+        <div class="ios-modal">
+            <div class="ios-modal-body">
+                <h4 class="ios-modal-title">Cancel Order?</h4>
+                <p class="ios-modal-text">Are you sure you want to cancel this order? This action cannot be undone.</p>
+            </div>
+            <div class="ios-modal-footer">
+                <button class="ios-modal-btn primary" onclick="closeCancelModal()">No, Keep Order</button>
+                <button class="ios-modal-btn destruct" id="finalCancelBtn">Yes, Cancel Order</button>
             </div>
         </div>
     </div>
@@ -319,8 +343,8 @@
 
         <div class="detail-box">
             <div class="review-stars">
-                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">0.0</span></div>
-                <span class="review-text-info" id="realReviewCount">No Reviews Yet</span>
+                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">5.0</span></div>
+                <span class="review-text-info" id="realReviewCount">from 0 Reviews</span>
             </div>
             
             <h2 class="detail-title" id="detTitle">Product Title</h2>
@@ -367,17 +391,6 @@
         <div class="desc-box">
             <div class="selection-label">Product Details & Specifications</div>
             <div class="desc-text" id="detDesc">Description goes here...</div>
-        </div>
-
-        <div class="review-section">
-            <div class="selection-label" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
-                <span>Customer Reviews</span>
-                <span style="font-size: 12px; color: var(--primary-blue); cursor: pointer;" onclick="document.getElementById('allReviewsModal').style.display='flex'">View All</span>
-            </div>
-            <div id="recentReviewsContainer">
-                <p style="font-size: 12px; color: #888; font-style: italic;">Loading reviews...</p>
-            </div>
-            <button class="btn-write-review" onclick="openWriteReview()">Write a Review</button>
         </div>
 
         <div style="background:white; padding:15px; margin-top:10px;">
@@ -501,21 +514,14 @@
                         <span>MRP (Total Qty):</span>
                         <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
                     </div>
-                    <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
-                        <span id="chkProductDiscountLabel">Product Discount:</span>
-                        <span id="chkProductDiscount">-₹0</span>
-                    </div>
-
                     <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
                         <span>Selling Price:</span>
                         <span id="chkSellingPrice">₹0</span>
                     </div>
-
                     <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
                         <span>Promo Discount:</span>
                         <span id="chkDiscount">-₹0</span>
                     </div>
-
                     <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
                         <span>Delivery Fee:</span>
                         <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
@@ -684,7 +690,13 @@
                 <h2 style="margin: 0; font-style: italic;">Order Placed!</h2>
             </div>
             <div class="modal-body" style="background: white; text-align: left; padding: 20px;">
-                <p style="font-size: 13px; color: #555; margin: 0 0 5px 0;">Order ID</p>
+                
+                <div class="celebration-banner">
+                    <span class="celebration-emoji">🎉</span>
+                    <span>Hooray! Time to celebrate! Your order is confirmed.</span>
+                </div>
+
+                <p style="font-size: 13px; color: #555; margin: 15px 0 5px 0;">Order ID</p>
                 <p style="font-size: 16px; font-weight: bold; color: #111; margin: 0 0 15px 0;" id="confOrderId">ORD-XXXXXX</p>
                 
                 <p style="font-size: 13px; color: #555; margin: 0 0 5px 0;">Estimated Delivery</p>
@@ -761,6 +773,7 @@
 
         function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
+            // Show Rating popup right after closing success modal
             setRating(5); 
             document.getElementById('reviewText').value = "";
             document.getElementById('postOrderRatingModal').style.display = 'flex';
@@ -775,7 +788,7 @@
             };
         }
 
-        // 🚀 Pinch & Pan Image Zoom Logic
+        // Image Zoom Logic (Pinch/Pan logic setup)
         let scale = 1, panning = false, pointX = 0, pointY = 0, start = { x: 0, y: 0 };
         const zoomCont = document.getElementById('zoomContainer');
         const zoomImg = document.getElementById('zoomedImg');
@@ -784,33 +797,22 @@
             zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
 
-        // Mobile Touch Events for Pinch/Pan
-        let initialDistance = null;
-        zoomCont.addEventListener('touchstart', (e) => {
-            if(e.touches.length === 2) {
-                initialDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-            } else if(e.touches.length === 1) {
-                panning = true;
-                start = { x: e.touches[0].clientX - pointX, y: e.touches[0].clientY - pointY };
-            }
-        });
-        
-        zoomCont.addEventListener('touchmove', (e) => {
-            if(e.touches.length === 2 && initialDistance) {
-                e.preventDefault();
-                let currentDistance = Math.hypot(e.touches[0].pageX - e.touches[1].pageX, e.touches[0].pageY - e.touches[1].pageY);
-                scale = Math.min(Math.max(1, currentDistance / initialDistance), 4); 
-                setTransform();
-            } else if (e.touches.length === 1 && panning) {
-                e.preventDefault();
-                pointX = e.touches[0].clientX - start.x;
-                pointY = e.touches[0].clientY - start.y;
-                setTransform();
-            }
-        }, {passive: false});
+        zoomCont.onmousedown = function (e) {
+            e.preventDefault(); start = { x: e.clientX - pointX, y: e.clientY - pointY }; panning = true;
+        }
+        zoomCont.onmouseup = function (e) { panning = false; }
+        zoomCont.onmousemove = function (e) {
+            e.preventDefault(); if (!panning) return;
+            pointX = (e.clientX - start.x); pointY = (e.clientY - start.y); setTransform();
+        }
+        zoomCont.onwheel = function (e) {
+            e.preventDefault(); let xs = (e.clientX - pointX) / scale, ys = (e.clientY - pointY) / scale;
+            let delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
+            (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
+            pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; setTransform();
+        }
 
-        zoomCont.addEventListener('touchend', () => { panning = false; initialDistance = null; });
-
+        // Reset Zoom on close
         function closeZoom() {
             document.getElementById('imageZoomModal').style.display='none';
             scale = 1; pointX = 0; pointY = 0; setTransform();
@@ -905,14 +907,13 @@
                 let currentTransform = track.style.transform;
                 let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
                 
-                if (startX - endX > 50) { // Swiped left
+                if (startX - endX > 50) { 
                     if(currentIndex < 2) currentIndex++; else currentIndex = 0;
-                } else if (endX - startX > 50) { // Swiped right
+                } else if (endX - startX > 50) { 
                     if(currentIndex > 0) currentIndex--; else currentIndex = 2;
                 }
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 
-                // Restart auto-slide
                 sliderInterval = setInterval(() => { 
                     currentIndex = (currentIndex + 1) % 3; 
                     track.style.transform = `translateX(-${currentIndex * 100}%)`; 
@@ -920,138 +921,35 @@
             });
         }
 
-        // 🚀 CONFETTI LOGIC - UPDATED TO BE CENTERED AND BIG
+        // 🚀 CONFETTI LOGIC
         function fireConfetti() {
             const container = document.getElementById('confetti-container');
             const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
-            
-            // Create a burst from the center
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 60; i++) {
                 let conf = document.createElement('div');
                 conf.className = 'confetti';
-                
-                // Start from the middle 20% of the screen
-                const startX = 40 + Math.random() * 20; 
-                conf.style.left = startX + '%';
-                conf.style.top = '50%'; // Start from middle height
-                
-                // Random fall direction and speed
-                const angle = Math.random() * Math.PI * 2;
-                const speed = 1 + Math.random() * 3;
-                const xVelocity = Math.cos(angle) * speed;
-                const yVelocity = Math.sin(angle) * speed + 2; // Bias downwards
-
-                // Store velocities as data attributes for animation
-                conf.setAttribute('data-vx', xVelocity);
-                conf.setAttribute('data-vy', yVelocity);
-                
-                conf.style.animationDelay = Math.random() * 0.5 + 's';
+                conf.style.left = Math.random() * 100 + '%';
+                conf.style.animationDelay = Math.random() * 1.5 + 's';
                 conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
                 container.appendChild(conf);
-                
-                // Custom animation logic to move from center
-                animateConfetti(conf);
             }
-            
-            setTimeout(() => container.innerHTML = '', 4000); // Clean up after longer time
-        }
-        
-        function animateConfetti(conf) {
-            let vx = parseFloat(conf.getAttribute('data-vx'));
-            let vy = parseFloat(conf.getAttribute('data-vy'));
-            let x = parseFloat(conf.style.left);
-            let y = 50; // Start at 50% top
-
-            let interval = setInterval(() => {
-                x += vx * 0.1; // Slow down the velocity multiplier
-                y += vy * 0.1;
-                vy += 0.05; // Gravity
-
-                conf.style.left = x + '%';
-                conf.style.top = y + '%';
-
-                if (y > 110 || x < -10 || x > 110) {
-                    clearInterval(interval);
-                    if(conf.parentNode) conf.parentNode.removeChild(conf);
-                }
-            }, 20); // Animate smoothly
+            setTimeout(() => container.innerHTML = '', 3000);
         }
 
-        // 🚀 Real Rating Logic
+        // Real Rating Logic
         function fetchReviews(productId) {
             db.ref('ProductReviews/' + productId).on('value', snap => {
-                let html = '';
                 if(snap.exists()) {
                     let total = 0; let count = 0;
-                    
-                    // Show max 3 reviews in preview
-                    let reviewArray = [];
-                    snap.forEach(child => { 
-                        let r = child.val();
-                        total += parseInt(r.rating); 
-                        count++; 
-                        reviewArray.push(r);
-                    });
-                    
+                    snap.forEach(child => { total += parseInt(child.val().rating); count++; });
                     let avg = (total / count).toFixed(1);
                     document.getElementById('realRatingText').innerText = avg;
                     document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
-                    
-                    // Display latest 3
-                    reviewArray.reverse().slice(0,3).forEach(r => {
-                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
-                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
-                        html += `
-                            <div class="review-card">
-                                <div class="review-card-header">
-                                    <span class="review-author">${safeName}</span>
-                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
-                                </div>
-                                <div class="review-card-stars">${stars}</div>
-                                <div class="review-card-text">"${r.text}"</div>
-                            </div>
-                        `;
-                    });
-                    
-                    // Populate Full Modal
-                    let fullHtml = '';
-                    reviewArray.forEach(r => {
-                        let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
-                        let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
-                        fullHtml += `
-                            <div class="review-card" style="background: white; border: 1px solid #ccc;">
-                                <div class="review-card-header">
-                                    <span class="review-author">${safeName}</span>
-                                    <span class="review-date">${r.timestamp.split(',')[0]}</span>
-                                </div>
-                                <div class="review-card-stars">${stars}</div>
-                                <div class="review-card-text">"${r.text}"</div>
-                            </div>
-                        `;
-                    });
-                    document.getElementById('allReviewsList').innerHTML = fullHtml;
-
                 } else {
-                    document.getElementById('realRatingText').innerText = "0.0";
-                    document.getElementById('realReviewCount').innerText = "No Reviews Yet";
-                    html = '<p style="font-size: 12px; color: #888; font-style: italic;">Be the first to review this product!</p>';
-                    document.getElementById('allReviewsList').innerHTML = html;
+                    document.getElementById('realRatingText').innerText = "5.0";
+                    document.getElementById('realReviewCount').innerText = "New Product";
                 }
-                document.getElementById('recentReviewsContainer').innerHTML = html;
             });
-        }
-
-        function openWriteReview() {
-            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
-            setRating(5); document.getElementById('reviewText').value = "";
-            document.getElementById('postOrderRatingModal').style.display = 'flex';
-            
-            document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick = function() {
-                document.getElementById('postOrderRatingModal').style.display = 'none';
-            };
-            document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick = function() {
-                submitReview(false);
-            };
         }
 
         function setRating(stars) {
@@ -1065,14 +963,12 @@
         function submitReview(goToOrders) {
             if(!selectedProductId) return;
             let text = document.getElementById('reviewText').value.trim();
-            if(!text) text = "Great product!";
-            
             db.ref('ProductReviews/' + selectedProductId).push({
-                rating: userRating, text: text, phone: currentUserPhone || "Customer", timestamp: new Date().toLocaleString()
+                rating: userRating, text: text, phone: currentUserPhone || "Anonymous", timestamp: new Date().toLocaleString()
             }).then(() => {
                 document.getElementById('postOrderRatingModal').style.display = 'none';
                 showPremiumAlert("Thank You!", "Your review has been submitted.", "success");
-                if(goToOrders) setTimeout(() => { openOrderHistory(); }, 1500);
+                setTimeout(() => { if(goToOrders) openOrderHistory(); else goBackToHome(); }, 1500);
             });
         }
 
@@ -1200,15 +1096,9 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
-            // Populating Step 1: Cart Review (Now with Real Price)
-            let baseSellingPrice = parseInt(data.price) * selectedQty;
-            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
-            let initialProductDiscount = mrpPrice - baseSellingPrice;
-            let discountPercent = Math.round((initialProductDiscount / mrpPrice) * 100);
-            
+            // Populating Step 1: Cart Review
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
-            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
@@ -1217,23 +1107,17 @@
             appliedDiscount = 0;
             influencerData = null;
             
+            let totalSellingPrice = parseInt(data.price) * selectedQty;
+            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
+            
+            document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
+            
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
-            
-            // Payment Summary Exact Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
-            
-            if(initialProductDiscount > 0) {
-                document.getElementById('chkProductDiscountLabel').innerText = `Product Discount (${discountPercent}%):`;
-                document.getElementById('chkProductDiscount').innerText = "-₹" + initialProductDiscount;
-                document.getElementById('productDiscountRow').style.display = "flex";
-            } else {
-                document.getElementById('productDiscountRow').style.display = "none";
-            }
-
-            document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
-            document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
+            document.getElementById('chkSellingPrice').innerText = "₹" + totalSellingPrice; 
+            document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
 
             switchView('viewCheckout');
         }
@@ -1268,14 +1152,11 @@
                     document.getElementById('chkDiscount').innerText = "-₹" + appliedDiscount;
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
-                    
-                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${totalSellingPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
                     
-                    // Optional confetti on apply promo
-                    // fireConfetti();
+                    fireConfetti();
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
@@ -1283,7 +1164,6 @@
                     
                     document.getElementById('discountRow').style.display = "none";
                     document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
-                    document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -1295,7 +1175,7 @@
 
         function placeOrder() {
             const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout') ? document.getElementById('chkPincodeCheckout').value.trim() : document.getElementById('chkPincode').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout').value.trim();
             const city = document.getElementById('chkCity').value.trim(); const state = document.getElementById('chkState').value.trim();
 
             if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
@@ -1309,7 +1189,7 @@
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
-            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${document.getElementById('chkDistrict').value}, ${state} - ${pincode}`;
+            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, ${city}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
 
@@ -1350,7 +1230,6 @@
 
             db.ref().update(updates).then(() => {
                 
-                // Notify Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1366,15 +1245,11 @@
                     })
                 }).catch(e => console.log(e));
                 
-                // Show Confirmation Screen
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
                 document.getElementById('successModal').style.display = 'flex';
                 
-                // 🚀 TRIGGER CENTERED CELEBRATION
-                fireConfetti(); 
-
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
             }).catch(err => {
@@ -1402,7 +1277,6 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
-                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
@@ -1434,7 +1308,7 @@
 
                         let actionButtons = '';
                         if(badgeClass === "badge-orange") {
-                            actionButtons += `<button class="btn-action btn-cancel" onclick="cancelOrder('${itemId}')">Cancel Order</button>`;
+                            actionButtons += `<button class="btn-action btn-cancel" onclick="openCancelModal('${itemId}')">Cancel Order</button>`;
                         } else if (badgeClass === "badge-green") {
                             actionButtons += `<button class="btn-action btn-reorder" onclick="reorderProduct('${data.productId}')">Buy Again</button>`;
                         }
@@ -1475,35 +1349,27 @@
             });
         }
 
-        let cancelOrderId = null; // Store ID for custom modal
-
-        function cancelOrder(orderId) {
-            cancelOrderId = orderId;
-            document.getElementById('cancelOrderDisplayId').innerText = orderId;
-            document.getElementById('chkCancelModal').style.display = 'flex';
-            
-            // Set "YES" button click handler
-            document.getElementById('btnConfirmCancel').onclick = function() {
-                confirmCancelOrder();
-            };
+        // 🚀 Premium Cancel Modal Logic (Image 1)
+        function openCancelModal(orderId) {
+            const finalCancelBtn = document.getElementById('finalCancelBtn');
+            finalCancelBtn.onclick = function() { cancelOrder(orderId); };
+            document.getElementById('cancelConfirmModal').style.display = 'flex';
         }
 
-        function confirmCancelOrder() {
-            if (!cancelOrderId) return;
-            let id = cancelOrderId;
-            
+        function closeCancelModal() {
+            document.getElementById('cancelConfirmModal').style.display = 'none';
+        }
+
+        function cancelOrder(orderId) {
+            closeCancelModal(); // Hide modal first
             let updates = {};
-            updates['UserOrders/' + currentUserPhone + '/' + id + '/status'] = "Cancelled";
-            updates['UserOrders/' + currentUserPhone + '/' + id + '/orderStatus'] = "Cancelled";
-            updates['Orders/' + id + '/status'] = "Cancelled";
-            updates['Orders/' + id + '/orderStatus'] = "Cancelled";
+            updates['UserOrders/' + currentUserPhone + '/' + orderId + '/status'] = "Cancelled";
+            updates['UserOrders/' + currentUserPhone + '/' + orderId + '/orderStatus'] = "Cancelled";
+            updates['Orders/' + orderId + '/status'] = "Cancelled";
+            updates['Orders/' + orderId + '/orderStatus'] = "Cancelled";
             db.ref().update(updates).then(() => {
-                document.getElementById('chkCancelModal').style.display = 'none';
                 showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
-                loadOrders(); // Refresh order list
             });
-            
-            cancelOrderId = null; // Reset
         }
 
         function reorderProduct(productId) {
