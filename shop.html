@@ -27,6 +27,7 @@
             margin: 0; padding: 0; color: var(--text-main); 
             padding-bottom: 120px; 
             overflow-x: hidden;
+            touch-action: pan-y;
         }
 
         /* 📱 Top Header */
@@ -107,7 +108,7 @@
         /* Quantity Selector */
         .qty-box { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; margin-top: 10px;}
         .qty-controls { display: flex; align-items: center; gap: 15px; border: 1px solid #ccc; border-radius: 8px; padding: 5px 15px; }
-        .qty-btn { background: transparent; border: none; font-size: 20px; font-weight: bold; color: var(--primary-blue); cursor: pointer; }
+        .qty-btn { background: transparent; border: none; font-size: 20px; font-weight: bold; color: var(--primary-blue); cursor: pointer; padding: 5px 10px; }
 
         /* FAQ Section */
         .faq-item { margin-bottom: 15px; border-bottom: 1px solid #F0F0F0; padding-bottom: 10px;}
@@ -141,8 +142,8 @@
         .summary-item { font-size: 14px; font-weight: bold; font-style: italic; color: #333; margin: 0 0 5px 0;}
         .summary-qty { font-size: 12px; color: #666; margin: 0;}
         
-        .summary-total { font-size: 14px; font-weight: bold; font-style: italic; color: #333; display: flex; justify-content: space-between; margin-bottom: 8px;}
-        .total-price { color: var(--primary-green); font-size: 18px;}
+        .summary-total { font-size: 13px; font-style: italic; color: #333; display: flex; justify-content: space-between; margin-bottom: 6px;}
+        .total-price { color: var(--primary-green); font-size: 18px; font-weight: bold;}
 
         .form-label { font-size: 12px; font-weight: bold; color: #333; margin-bottom: 5px; display: block;}
         .form-input { width: 100%; padding: 14px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; font-style: italic; color: #555; margin-bottom: 15px; box-sizing: border-box; transition: 0.3s;}
@@ -164,11 +165,11 @@
         .order-date { font-size: 11px; color: #888; font-weight: bold;}
         
         /* EXACT STATUS COLORS */
-        .badge-orange { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
-        .badge-blue { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
-        .badge-purple { background: #F3E5F5; color: #6A1B9A; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
-        .badge-green { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
-        .badge-red { background: #FFEBEE; color: #C62828; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; }
+        .badge-orange { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
+        .badge-blue { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
+        .badge-purple { background: #F3E5F5; color: #6A1B9A; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
+        .badge-green { background: #E8F5E9; color: #2E7D32; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
+        .badge-red { background: #FFEBEE; color: #C62828; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
 
         .history-body { display: flex; gap: 15px; align-items: center; }
         .history-img { width: 65px; height: 65px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 4px;}
@@ -178,11 +179,11 @@
         .history-price { font-size: 16px; font-weight: bold; color: var(--primary-blue); margin: 0;}
 
         .history-actions { display: flex; gap: 10px; margin-top: 5px; }
-        .btn-action { flex: 1; padding: 12px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; transition: 0.2s;}
+        .btn-action { flex: 1; padding: 10px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: pointer; border: none; transition: 0.2s;}
         .btn-action:active { transform: scale(0.95); }
-        .btn-cancel { background: #FFEBEE; color: #C62828; }
-        .btn-reorder { background: #E8F5E9; color: #2E7D32; }
-        .btn-track { background: #E3F2FD; color: #1565C0; }
+        .btn-cancel { background: #FFEBEE; color: #C62828; border: 1px solid #FFCDD2;}
+        .btn-reorder { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9;}
+        .btn-track { background: #E3F2FD; color: #1565C0; border: 1px solid #BBDEFB;}
 
         /* TRACKING TIMELINE CSS */
         .timeline { position: relative; padding-left: 20px; margin-top: 20px; text-align: left;}
@@ -254,8 +255,8 @@
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
         /* Zoom Container for Pinch */
-        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: pan-x pan-y pinch-zoom; }
-        .zoom-container img { width: 95%; max-height: 85vh; object-fit: contain; border-radius: 16px; transition: transform 0.2s; }
+        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: auto;}
+        .zoom-container img { width: 100%; object-fit: contain; transition: transform 0.1s; transform-origin: center center; cursor: grab;}
     </style>
 </head>
 <body>
@@ -268,9 +269,9 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
-    <div id="imageZoomModal" class="overlay" style="z-index: 2000;">
-        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="document.getElementById('imageZoomModal').style.display='none'">&times;</span>
-        <div class="zoom-container">
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.9);">
+        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">&times;</span>
+        <div class="zoom-container" id="zoomContainer">
             <img id="zoomedImg" src="">
         </div>
     </div>
@@ -426,7 +427,7 @@
                 <div class="row-2">
                     <div class="form-group">
                         <label class="form-label">Pincode</label>
-                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value)">
+                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
                     </div>
                     <div class="form-group">
                         <label class="form-label">City</label>
@@ -462,14 +463,23 @@
 
                 <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
                     <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                        <span>Base Price:</span>
-                        <span id="chkOriginalPrice">₹0</span>
+                        <span>MRP (Total Qty):</span>
+                        <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
                     </div>
-                    <div class="summary-total" id="discountRow" style="display: none; font-weight: normal; font-size: 13px; color: #00C853;">
+                    <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
+                        <span>Selling Price:</span>
+                        <span id="chkSellingPrice">₹0</span>
+                    </div>
+                    <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
                         <span>Promo Discount:</span>
                         <span id="chkDiscount">-₹0</span>
                     </div>
-                    <div class="summary-total" style="margin-top: 10px; font-size: 16px;">
+                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                        <span>Delivery Fee:</span>
+                        <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                    </div>
+                    
+                    <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
                         <span>Amount to Pay:</span>
                         <span class="total-price" id="chkPrice">₹0</span>
                     </div>
@@ -675,7 +685,7 @@
         let selectedVehicleType = null;
         let sliderInterval;
         let selectedQty = 1;
-        let userRating = 5; // Default for modal
+        let userRating = 5; 
 
         let appliedPromoCode = null;
         let appliedDiscount = 0;
@@ -710,27 +720,54 @@
         function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
             // Show Rating popup right after closing success modal
-            setRating(5); // Reset stars
+            setRating(5); 
             document.getElementById('reviewText').value = "";
             document.getElementById('postOrderRatingModal').style.display = 'flex';
             
-            // Overriding close of rating modal to handle redirect
-            const oldCancel = document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick;
             document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick = function() {
                 document.getElementById('postOrderRatingModal').style.display = 'none';
                 if(goToOrders) openOrderHistory(); else goBackToHome();
             };
             
-            const oldSubmit = document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick;
             document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick = function() {
                 submitReview(goToOrders);
             };
         }
 
-        // Image Zoom Logic
+        // Image Zoom Logic (Pinch/Pan logic setup)
+        let scale = 1, panning = false, pointX = 0, pointY = 0, start = { x: 0, y: 0 };
+        const zoomCont = document.getElementById('zoomContainer');
+        const zoomImg = document.getElementById('zoomedImg');
+
+        function setTransform() {
+            zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
+        }
+
+        zoomCont.onmousedown = function (e) {
+            e.preventDefault(); start = { x: e.clientX - pointX, y: e.clientY - pointY }; panning = true;
+        }
+        zoomCont.onmouseup = function (e) { panning = false; }
+        zoomCont.onmousemove = function (e) {
+            e.preventDefault(); if (!panning) return;
+            pointX = (e.clientX - start.x); pointY = (e.clientY - start.y); setTransform();
+        }
+        zoomCont.onwheel = function (e) {
+            e.preventDefault(); let xs = (e.clientX - pointX) / scale, ys = (e.clientY - pointY) / scale;
+            let delta = (e.wheelDelta ? e.wheelDelta : -e.deltaY);
+            (delta > 0) ? (scale *= 1.2) : (scale /= 1.2);
+            pointX = e.clientX - xs * scale; pointY = e.clientY - ys * scale; setTransform();
+        }
+
+        // Reset Zoom on close
+        function closeZoom() {
+            document.getElementById('imageZoomModal').style.display='none';
+            scale = 1; pointX = 0; pointY = 0; setTransform();
+        }
+
         function openZoom(src) {
-            document.getElementById('zoomedImg').src = src;
+            zoomImg.src = src;
             document.getElementById('imageZoomModal').style.display = 'flex';
+            scale = 1; pointX = 0; pointY = 0; setTransform();
         }
 
         // 🚀 Auto-Detect Location Logic
@@ -752,7 +789,7 @@
                             document.getElementById('chkAddress2').value = address.suburb || address.neighbourhood || '';
                             btn.innerHTML = "✅ Location Detected";
                             btn.style.background = "#E8F5E9"; btn.style.color = "#2E7D32"; btn.style.borderColor = "#2E7D32";
-                            if(address.postcode) checkPincodeAPI(address.postcode);
+                            if(address.postcode) checkPincodeAPI(address.postcode, true);
                         }
                     }).catch(err => {
                         btn.innerHTML = "📍 Auto-Detect My Location";
@@ -768,27 +805,40 @@
         }
 
         // Pincode Lookup API for Auto-fill City & State
-        function checkPincodeAPI(val) {
+        function checkPincodeAPI(val, isCheckout = false) {
             if(val.length === 6) {
-                document.getElementById('shiprocketCheckoutLoading').style.display = 'none';
-                let d = new Date(); d.setDate(d.getDate() + 5);
-                let options = { month: 'short', day: 'numeric' };
-                let estDate = d.toLocaleDateString('en-US', options);
-                document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
-                document.getElementById('shiprocketCheckoutResult').style.display = 'block';
+                if(isCheckout) {
+                    document.getElementById('shiprocketCheckoutLoading').style.display = 'none';
+                    let d = new Date(); d.setDate(d.getDate() + 5);
+                    let options = { month: 'short', day: 'numeric' };
+                    let estDate = d.toLocaleDateString('en-US', options);
+                    document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
+                    document.getElementById('shiprocketCheckoutResult').style.display = 'block';
+                } else {
+                    let d = new Date(); d.setDate(d.getDate() + 5);
+                    let options = { month: 'short', day: 'numeric' };
+                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
+                    document.getElementById('pinResult').style.display = 'block';
+                }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
                 .then(response => response.json())
                 .then(data => {
                     if(data[0].Status === "Success") {
                         let details = data[0].PostOffice[0];
-                        document.getElementById('chkCity').value = details.District;
-                        document.getElementById('chkState').value = details.State;
+                        if(isCheckout) {
+                            document.getElementById('chkCity').value = details.District;
+                            document.getElementById('chkState').value = details.State;
+                        }
                     }
                 }).catch(e => console.log(e));
             } else {
-                document.getElementById('shiprocketCheckoutResult').style.display = 'none';
-                document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
+                if(isCheckout) {
+                    document.getElementById('shiprocketCheckoutResult').style.display = 'none';
+                    document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
+                } else {
+                    document.getElementById('pinResult').style.display = 'none';
+                }
             }
         }
 
@@ -803,14 +853,13 @@
                 let currentTransform = track.style.transform;
                 let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
                 
-                if (startX - endX > 50) { // Swiped left
+                if (startX - endX > 50) { 
                     if(currentIndex < 2) currentIndex++; else currentIndex = 0;
-                } else if (endX - startX > 50) { // Swiped right
+                } else if (endX - startX > 50) { 
                     if(currentIndex > 0) currentIndex--; else currentIndex = 2;
                 }
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 
-                // Restart auto-slide
                 sliderInterval = setInterval(() => { 
                     currentIndex = (currentIndex + 1) % 3; 
                     track.style.transform = `translateX(-${currentIndex * 100}%)`; 
@@ -996,8 +1045,6 @@
             // Populating Step 1: Cart Review
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
-            let totalOriginalPrice = parseInt(data.price) * selectedQty;
-            document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalOriginalPrice;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
@@ -1006,11 +1053,18 @@
             appliedDiscount = 0;
             influencerData = null;
             
+            // 🚀 BHAIG LOGIC: Order Summary Prices (MRP, Selling, Promo)
+            let baseSellingPrice = parseInt(data.price) * selectedQty;
+            let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
+            
+            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
+            
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
-            document.getElementById('chkOriginalPrice').innerText = "₹" + totalOriginalPrice;
-            document.getElementById('chkPrice').innerText = "₹" + totalOriginalPrice;
+            document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; // Show MRP as crossed out
+            document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
+            document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
             switchView('viewCheckout');
         }
@@ -1029,11 +1083,11 @@
                 if(snap.exists() && snap.child("status").val() && String(snap.child("status").val()).toLowerCase() === "active") {
                     const data = snap.val();
                     const product = currentProducts[selectedProductId];
-                    const totalOriginalPrice = parseInt(product.price) * selectedQty;
+                    const totalSellingPrice = parseInt(product.price) * selectedQty;
 
                     let percentage = 20; 
-                    appliedDiscount = Math.floor((totalOriginalPrice * percentage) / 100);
-                    let finalPrice = Math.max(totalOriginalPrice - appliedDiscount, 0);
+                    appliedDiscount = Math.floor((totalSellingPrice * percentage) / 100);
+                    let finalPrice = Math.max(totalSellingPrice - appliedDiscount, 0);
 
                     appliedPromoCode = code;
                     influencerData = {
@@ -1049,15 +1103,14 @@
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
                     
-                    // 🚀 CELEBRATION!
                     fireConfetti();
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
-                    let totalOriginalPrice = parseInt(product.price) * selectedQty;
+                    let totalSellingPrice = parseInt(product.price) * selectedQty;
                     
                     document.getElementById('discountRow').style.display = "none";
-                    document.getElementById('chkPrice').innerText = "₹" + totalOriginalPrice;
+                    document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -1078,8 +1131,8 @@
             const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
 
             const product = currentProducts[selectedProductId];
-            const totalOriginalPrice = parseInt(product.price) * selectedQty;
-            const finalPrice = Math.max(totalOriginalPrice - appliedDiscount, 0);
+            const totalSellingPrice = parseInt(product.price) * selectedQty;
+            const finalPrice = Math.max(totalSellingPrice - appliedDiscount, 0);
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
@@ -1094,7 +1147,7 @@
                 productTitle: product.title, 
                 productName: product.title,
                 quantity: String(selectedQty),
-                originalPrice: String(totalOriginalPrice), 
+                originalPrice: String(totalSellingPrice), 
                 discountApplied: String(appliedDiscount), 
                 price: String(finalPrice), 
                 amount: String(finalPrice),
@@ -1124,7 +1177,6 @@
 
             db.ref().update(updates).then(() => {
                 
-                // Notify Admin
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1140,7 +1192,6 @@
                     })
                 }).catch(e => console.log(e));
                 
-                // Show Confirmation Screen
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -1173,7 +1224,6 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
-                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
@@ -1187,7 +1237,6 @@
                         let statusText = data.status || data.orderStatus || "Processing";
                         let sLower = statusText.toLowerCase();
                         
-                        // Exact Custom Rules Mapping
                         let badgeClass = "badge-orange";
                         let statusDisplay = "Processing ⏳";
                         
@@ -1204,17 +1253,13 @@
                         const itemQty = data.quantity ? ` (x${data.quantity})` : "";
                         const itemVehicle = data.vehicleType || "Vehicle";
 
-                        // Action Buttons Logic
                         let actionButtons = '';
                         if(badgeClass === "badge-orange") {
-                            // Only Processing orders can be cancelled
                             actionButtons += `<button class="btn-action btn-cancel" onclick="cancelOrder('${itemId}')">Cancel Order</button>`;
                         } else if (badgeClass === "badge-green") {
-                            // Delivered/Completed orders can be reordered
                             actionButtons += `<button class="btn-action btn-reorder" onclick="reorderProduct('${data.productId}')">Buy Again</button>`;
                         }
                         
-                        // All orders except Cancelled can be tracked
                         if(badgeClass !== "badge-red") {
                             actionButtons += `<button class="btn-action btn-track" onclick="showTracking('${itemId}', '${badgeClass}')">Track Package</button>`;
                         }
@@ -1251,7 +1296,6 @@
             });
         }
 
-        // Action Functions
         function cancelOrder(orderId) {
             if(confirm("Are you sure you want to cancel this order?")) {
                 let updates = {};
@@ -1276,14 +1320,12 @@
         function showTracking(orderId, badgeClass) {
             document.getElementById('trackOrderId').innerText = orderId;
             
-            // Reset all dots
             document.getElementById('tlPlaced').classList.remove('active');
             document.getElementById('tlShipped').classList.remove('active');
             document.getElementById('tlOut').classList.remove('active');
             document.getElementById('tlDelivered').classList.remove('active');
 
-            // Timeline logic based on exact class
-            document.getElementById('tlPlaced').classList.add('active'); // Always placed
+            document.getElementById('tlPlaced').classList.add('active'); 
             
             if(badgeClass === "badge-blue" || badgeClass === "badge-purple" || badgeClass === "badge-green") {
                 document.getElementById('tlShipped').classList.add('active');
