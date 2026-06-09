@@ -331,6 +331,15 @@
             </div>
         </div>
 
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
+            </div>
+        </div>
+
         <div class="selection-box">
             <div class="selection-label">Select Vehicle Type</div>
             <button class="selector-btn" onclick="openVehicleSheet()">
@@ -346,15 +355,6 @@
             <div class="instruction-box" style="margin-top: 15px;">
                 <span style="color: #4CAF50; font-size: 18px;">✅</span>
                 <p class="instruction-text">Peel the backing and stick the smart QR on a visible area of your vehicle.</p>
-            </div>
-        </div>
-
-        <div class="qty-box">
-            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
             </div>
         </div>
 
@@ -453,7 +453,9 @@
                     <span id="step2Icon">▶</span>
                 </div>
                 <div class="step-body" id="step2Body">
-                    <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">📍 Auto-Detect My Location</button>
+                    <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
+                        📍 Auto-Detect My Location
+                    </button>
 
                     <label class="form-label">Full Name</label>
                     <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
@@ -850,7 +852,7 @@
             scale = 1; pointX = 0; pointY = 0; setTransform();
         }
 
-        // 🚀 Auto-Detect Location Logic
+        // 🚀 Auto-Detect & Auto-Fill Location Logic
         function autoDetectLocation() {
             const btn = document.getElementById('btnAutoDetect');
             btn.innerHTML = "⏳ Detecting...";
@@ -885,7 +887,26 @@
             }
         }
 
-        // Pincode Lookup API for Auto-fill City & State
+        function loadSavedAddress() {
+            const saved = localStorage.getItem('tagownSavedAddress');
+            if(saved) {
+                try {
+                    const addr = JSON.parse(saved);
+                    if(addr.name) document.getElementById('chkName').value = addr.name;
+                    if(addr.phone) document.getElementById('chkPhone').value = addr.phone;
+                    if(addr.addr1) document.getElementById('chkAddress1').value = addr.addr1;
+                    if(addr.addr2) document.getElementById('chkAddress2').value = addr.addr2;
+                    if(addr.pincode) {
+                        document.getElementById('chkPincodeCheckout').value = addr.pincode;
+                        checkPincodeAPI(addr.pincode, true); 
+                    }
+                    if(addr.city) document.getElementById('chkCity').value = addr.city;
+                    if(addr.district) document.getElementById('chkDistrict').value = addr.district;
+                    if(addr.state) document.getElementById('chkState').value = addr.state;
+                } catch(e){}
+            }
+        }
+
         function checkPincodeAPI(val, isCheckout = false) {
             if(val.length === 6) {
                 if(isCheckout) {
@@ -895,6 +916,11 @@
                     let estDate = d.toLocaleDateString('en-US', options);
                     document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
                     document.getElementById('shiprocketCheckoutResult').style.display = 'block';
+                } else {
+                    let d = new Date(); d.setDate(d.getDate() + 5);
+                    let options = { month: 'short', day: 'numeric' };
+                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
+                    document.getElementById('pinResult').style.display = 'block';
                 }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
@@ -903,9 +929,9 @@
                     if(data[0].Status === "Success") {
                         let details = data[0].PostOffice[0];
                         if(isCheckout) {
-                            document.getElementById('chkCity').value = details.District;
-                            document.getElementById('chkDistrict').value = details.District;
-                            document.getElementById('chkState').value = details.State;
+                            if(!document.getElementById('chkCity').value) document.getElementById('chkCity').value = details.District;
+                            if(!document.getElementById('chkDistrict').value) document.getElementById('chkDistrict').value = details.District;
+                            if(!document.getElementById('chkState').value) document.getElementById('chkState').value = details.State;
                         }
                     }
                 }).catch(e => console.log(e));
@@ -913,11 +939,12 @@
                 if(isCheckout) {
                     document.getElementById('shiprocketCheckoutResult').style.display = 'none';
                     document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
+                } else {
+                    document.getElementById('pinResult').style.display = 'none';
                 }
             }
         }
 
-        // Slider Swipe Logic
         function initSliderSwipe() {
             const track = document.getElementById('detSlider');
             let startX = 0; let endX = 0;
@@ -1176,37 +1203,31 @@
                 document.getElementById('step' + i + 'Body').classList.remove('active');
                 document.getElementById('step' + i + 'Header').classList.remove('active');
                 document.getElementById('step' + i + 'Icon').innerText = "▶";
-                document.getElementById('step' + i + 'Num').innerHTML = i; // Reset to number
+                document.getElementById('step' + i + 'Num').innerHTML = i; 
             }
             
-            // Activate current step
             document.getElementById('step' + step + 'Body').classList.add('active');
             document.getElementById('step' + step + 'Header').classList.add('active');
             document.getElementById('step' + step + 'Icon').innerText = "▼";
 
-            // Mark previous steps as completed (✅)
             for(let j=1; j<step; j++) {
                 document.getElementById('step' + j + 'Num').innerHTML = "✓";
             }
         }
 
         function nextStep(step) {
-            // Validation before moving next
-            if (step === 2) {
-                // Moving from 1 to 2
-            } else if (step === 3) {
-                // Moving from 2 to 3 (Validate Address)
+            if (step === 3) {
                 const name = document.getElementById('chkName').value.trim(); 
                 const phone = document.getElementById('chkPhone').value.trim();
                 const addr1 = document.getElementById('chkAddress1').value.trim(); 
                 const pincode = document.getElementById('chkPincodeCheckout').value.trim();
                 const city = document.getElementById('chkCity').value.trim(); 
+                const district = document.getElementById('chkDistrict').value.trim();
                 const state = document.getElementById('chkState').value.trim();
-                if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+                
+                if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
                     showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly to continue.', 'error'); return; 
                 }
-            } else if (step === 4) {
-                // Moving from 3 to 4 (Delivery Slot checked automatically)
             }
             toggleStep(step);
         }
@@ -1218,7 +1239,9 @@
             const data = currentProducts[selectedProductId];
             document.getElementById('pageTitle').innerText = "Checkout";
             
-            // Populating Step 1: Cart Review (Now with Real Price)
+            loadSavedAddress(); // Load auto-fill data
+            
+            // Populating Step 1: Cart Review
             let baseSellingPrice = parseInt(data.price) * selectedQty;
             let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
             let initialProductDiscount = mrpPrice - baseSellingPrice;
@@ -1239,7 +1262,7 @@
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
             
-            // Payment Summary Exact Match
+            // Payment Summary Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
             
             if(initialProductDiscount > 0) {
@@ -1254,7 +1277,7 @@
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
             switchView('viewCheckout');
-            toggleStep(1); // Start at step 1
+            toggleStep(1); 
         }
 
         function applyPromoCode() {
@@ -1311,9 +1334,13 @@
             });
         }
 
+        // 🚀 BUG FIXED HERE: Re-enabled proper address saving & async cloudflare call
         function placeOrder() {
-            const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout').value.trim();
+            const name = document.getElementById('chkName').value.trim(); 
+            const phone = document.getElementById('chkPhone').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); 
+            const addr2 = document.getElementById('chkAddress2').value.trim(); 
+            const pincode = document.getElementById('chkPincodeCheckout').value.trim();
             const city = document.getElementById('chkCity').value.trim(); 
             const district = document.getElementById('chkDistrict').value.trim();
             const state = document.getElementById('chkState').value.trim();
@@ -1321,7 +1348,13 @@
             if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state || !district) { 
                 showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly.', 'error'); return; 
             }
-            const btn = document.getElementById('btnPlaceOrder'); btn.innerText = "PROCESSING..."; btn.disabled = true;
+            
+            const btn = document.getElementById('btnPlaceOrder'); 
+            btn.innerText = "PROCESSING..."; btn.disabled = true;
+
+            // 🚀 Address Auto-Save
+            const savedAddress = { name: name, phone: phone, addr1: addr1, addr2: addr2, pincode: pincode, city: city, district: district, state: state };
+            localStorage.setItem('tagownSavedAddress', JSON.stringify(savedAddress));
 
             const product = currentProducts[selectedProductId];
             const totalSellingPrice = parseInt(product.price) * selectedQty;
@@ -1329,7 +1362,9 @@
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
-            const fullAddress = `${addr1}, ${document.getElementById('chkAddress2').value}, Landmark: ${document.getElementById('chkLandmark').value}, ${city}, ${district}, ${state} - ${pincode}`;
+            
+            // 🚀 Removed chkLandmark bug
+            const fullAddress = `${addr1}, ${addr2}, ${city}, ${district}, ${state} - ${pincode}`;
 
             let rImg = (product.imgUrl1 && product.imgUrl1.trim() !== "") ? product.imgUrl1 : "banner_home_tag.webp";
 
@@ -1370,7 +1405,7 @@
 
             db.ref().update(updates).then(() => {
                 
-                // Fire and forget Async call to Worker
+                // 🚀 Send Notification in Background (Fire and forget, doesn't block UI)
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1384,8 +1419,9 @@
                         android_visibility: 1, 
                         small_icon: "ic_notification_stat"
                     })
-                }).catch(e => console.log(e));
+                }).catch(e => console.log("Notification error:", e));
                 
+                // 🚀 Instant Success UI
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -1394,7 +1430,8 @@
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
                 
             }).catch(err => {
-                showPremiumAlert('Database Error', err.message, 'error'); btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
+                showPremiumAlert('Database Error', err.message, 'error'); 
+                btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
 
@@ -1418,6 +1455,7 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
+                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
