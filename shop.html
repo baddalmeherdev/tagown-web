@@ -142,8 +142,15 @@
         
         /* 📝 3. MULTI-STEP CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
-        .checkout-step { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);}
-        .step-header { font-size: 16px; font-weight: bold; font-style: italic; color: #1565C0; margin-bottom: 15px; border-bottom: 1px dashed #eee; padding-bottom: 10px; display: flex; align-items: center; gap: 8px;}
+        .checkout-step { background: white; border-radius: 2px; padding: 0; border: 1px solid #E5E5EA; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); overflow: hidden;}
+        .step-header { background: #F8FAFC; padding: 15px; font-size: 14px; font-weight: bold; color: #555; display: flex; justify-content: space-between; align-items: center; cursor: pointer;}
+        .step-header.active { background: var(--primary-blue); color: white; }
+        .step-header .step-num { display: inline-flex; justify-content: center; align-items: center; width: 20px; height: 20px; background: #ddd; color: #555; border-radius: 4px; font-size: 12px; margin-right: 10px;}
+        .step-header.active .step-num { background: white; color: var(--primary-blue); }
+        .step-body { padding: 15px; display: none; }
+        .step-body.active { display: block; animation: fadeIn 0.3s ease;}
+
+        .btn-continue { background: var(--btn-yellow); color: #000; width: 100%; padding: 14px; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; margin-top: 15px; cursor: pointer;}
         
         .cart-review-item { display: flex; gap: 15px; margin-bottom: 15px; align-items: center;}
         .cart-review-img { width: 70px; height: 70px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
@@ -167,12 +174,13 @@
         .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-place-order:active { transform: scale(0.98); }
 
-        /* 📋 4. MY ORDERS HISTORY VIEW */
+        /* 📋 4. MY ORDERS HISTORY VIEW (UPGRADED UI) */
         .order-history-container { padding: 15px; }
         .history-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;}
         .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
         .order-date { font-size: 11px; color: #888; font-weight: bold;}
         
+        /* EXACT STATUS COLORS */
         .badge-orange { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
         .badge-blue { background: #E3F2FD; color: #1565C0; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
         .badge-purple { background: #F3E5F5; color: #6A1B9A; font-size: 11px; font-weight: bold; padding: 4px 8px; border-radius: 6px; font-style: italic; display: inline-block;}
@@ -262,7 +270,7 @@
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 6000; animation: fall 3s linear forwards; }
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
-        /* Zoom Container */
+        /* Zoom Container for Pinch */
         .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
         .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
     </style>
@@ -323,15 +331,6 @@
             </div>
         </div>
 
-        <div class="qty-box">
-            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
-            <div class="qty-controls">
-                <button class="qty-btn" onclick="updateQty(-1)">-</button>
-                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
-                <button class="qty-btn" onclick="updateQty(1)">+</button>
-            </div>
-        </div>
-
         <div class="selection-box">
             <div class="selection-label">Select Vehicle Type</div>
             <button class="selector-btn" onclick="openVehicleSheet()">
@@ -347,6 +346,15 @@
             <div class="instruction-box" style="margin-top: 15px;">
                 <span style="color: #4CAF50; font-size: 18px;">✅</span>
                 <p class="instruction-text">Peel the backing and stick the smart QR on a visible area of your vehicle.</p>
+            </div>
+        </div>
+
+        <div class="qty-box">
+            <span style="font-weight:bold; color:#333; font-size:15px;">Quantity</span>
+            <div class="qty-controls">
+                <button class="qty-btn" onclick="updateQty(-1)">-</button>
+                <span id="qtyDisplay" style="font-size:18px; font-weight:bold; color:#111;">1</span>
+                <button class="qty-btn" onclick="updateQty(1)">+</button>
             </div>
         </div>
 
@@ -413,123 +421,143 @@
         <div class="checkout-container">
             
             <div class="checkout-step">
-                <div class="step-header"><span>1️⃣</span> Cart Review</div>
-                <div class="cart-review-item">
-                    <img id="chkProductImg" src="" class="cart-review-img">
-                    <div class="cart-review-details">
-                        <p class="summary-item" id="chkProductName">Product Name</p>
-                        <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
-                        <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
-                    </div>
+                <div class="step-header" id="step1Header" onclick="toggleStep(1)">
+                    <div><span class="step-num" id="step1Num">1</span> Cart Review</div>
+                    <span id="step1Icon">▼</span>
                 </div>
-                
-                <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
-                    <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
-                    <div style="display: flex; gap: 10px;">
-                        <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
-                        <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
-                    </div>
-                    <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
-                </div>
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>2️⃣</span> Delivery Address</div>
-                
-                <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
-                    📍 Auto-Detect My Location
-                </button>
-
-                <label class="form-label">Full Name</label>
-                <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
-                
-                <label class="form-label">Mobile Number</label>
-                <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
-                
-                <label class="form-label">Flat / House no.</label>
-                <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
-                
-                <label class="form-label">Area / Landmark</label>
-                <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
-                
-                <div class="row-2">
-                    <div class="form-group">
-                        <label class="form-label">Pincode</label>
-                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">City</label>
-                        <input type="text" id="chkCity" class="form-input" placeholder="City">
-                    </div>
-                </div>
-                
-                <div class="row-2">
-                    <div class="form-group">
-                        <label class="form-label">District</label>
-                        <input type="text" id="chkDistrict" class="form-input" placeholder="District">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">State</label>
-                        <input type="text" id="chkState" class="form-input" placeholder="State">
-                    </div>
-                </div>
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>3️⃣</span> Delivery Slot</div>
-                <div id="shiprocketUI" style="text-align: center; padding: 10px;">
-                    <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
-                    <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
-                        <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
-                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
-                        <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="checkout-step">
-                <div class="step-header"><span>4️⃣</span> Payment</div>
-                <div class="payment-box">
-                    <span style="font-size: 24px;">💵</span>
-                    <div>
-                        <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
-                        <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
-                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                        <span>MRP (Total Qty):</span>
-                        <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
-                    </div>
-                    <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
-                        <span id="chkProductDiscountLabel">Product Discount:</span>
-                        <span id="chkProductDiscount">-₹0</span>
-                    </div>
-
-                    <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
-                        <span>Selling Price:</span>
-                        <span id="chkSellingPrice">₹0</span>
-                    </div>
-
-                    <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
-                        <span>Promo Discount:</span>
-                        <span id="chkDiscount">-₹0</span>
-                    </div>
-
-                    <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
-                        <span>Delivery Fee:</span>
-                        <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                <div class="step-body active" id="step1Body">
+                    <div class="cart-review-item">
+                        <img id="chkProductImg" src="" class="cart-review-img">
+                        <div class="cart-review-details">
+                            <p class="summary-item" id="chkProductName">Product Name</p>
+                            <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
+                            <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
+                        </div>
                     </div>
                     
-                    <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
-                        <span>Amount to Pay:</span>
-                        <span class="total-price" id="chkPrice">₹0</span>
+                    <div style="margin-top: 15px; border-top: 1px dashed #eee; padding-top: 15px;">
+                        <label class="form-label" style="color: #1565C0;">Apply Influencer Promo Code</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="chkPromoCode" class="form-input" placeholder="Enter Code" style="margin-bottom: 0; text-transform: uppercase;">
+                            <button id="btnApplyPromo" class="btn-modal-primary" style="width: auto; padding: 0 20px;" onclick="applyPromoCode()">APPLY</button>
+                        </div>
+                        <p id="promoMessage" style="font-size: 12px; margin-top: 8px; font-weight: bold; margin-bottom: 0;"></p>
                     </div>
+                    <button class="btn-continue" onclick="nextStep(2)">CONTINUE</button>
                 </div>
             </div>
 
-            <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()">CONFIRM & PLACE ORDER</button>
+            <div class="checkout-step">
+                <div class="step-header" id="step2Header" onclick="toggleStep(2)">
+                    <div><span class="step-num" id="step2Num">2</span> Delivery Address</div>
+                    <span id="step2Icon">▶</span>
+                </div>
+                <div class="step-body" id="step2Body">
+                    <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">📍 Auto-Detect My Location</button>
+
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="chkName" class="form-input" placeholder="Enter your full name">
+                    
+                    <label class="form-label">Mobile Number</label>
+                    <input type="tel" id="chkPhone" class="form-input" placeholder="10-digit mobile number" maxlength="10">
+                    
+                    <label class="form-label">Flat / House no.</label>
+                    <input type="text" id="chkAddress1" class="form-input" placeholder="E.g. Flat 101, Tagown Building">
+                    
+                    <label class="form-label">Area / Landmark</label>
+                    <input type="text" id="chkAddress2" class="form-input" placeholder="E.g. Near Apollo Hospital">
+                    
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label class="form-label">Pincode</label>
+                            <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <input type="text" id="chkCity" class="form-input" placeholder="City">
+                        </div>
+                    </div>
+                    
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label class="form-label">District</label>
+                            <input type="text" id="chkDistrict" class="form-input" placeholder="District">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">State</label>
+                            <input type="text" id="chkState" class="form-input" placeholder="State">
+                        </div>
+                    </div>
+                    <button class="btn-continue" onclick="nextStep(3)">SAVE & CONTINUE</button>
+                </div>
+            </div>
+
+            <div class="checkout-step">
+                <div class="step-header" id="step3Header" onclick="toggleStep(3)">
+                    <div><span class="step-num" id="step3Num">3</span> Delivery Slot</div>
+                    <span id="step3Icon">▶</span>
+                </div>
+                <div class="step-body" id="step3Body">
+                    <div id="shiprocketUI" style="text-align: center; padding: 10px;">
+                        <div id="shiprocketCheckoutLoading" style="color: #888; font-size: 13px; font-style: italic;">Please enter Pincode above to check delivery estimate...</div>
+                        <div id="shiprocketCheckoutResult" style="display: none; border: 1px solid #C8E6C9; background: #E8F5E9; border-radius: 8px; padding: 15px;">
+                            <div style="font-size: 20px; margin-bottom: 5px;">🚚</div>
+                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;" id="shiprocketCheckoutText">Estimated Delivery: 14 June</div>
+                            <div style="font-size: 11px; color: #555; margin-top: 5px;">Powered by Shiprocket Logistics</div>
+                        </div>
+                    </div>
+                    <button class="btn-continue" onclick="nextStep(4)">CONTINUE</button>
+                </div>
+            </div>
+
+            <div class="checkout-step">
+                <div class="step-header" id="step4Header" onclick="toggleStep(4)">
+                    <div><span class="step-num" id="step4Num">4</span> Payment Options</div>
+                    <span id="step4Icon">▶</span>
+                </div>
+                <div class="step-body" id="step4Body">
+                    <div class="payment-box">
+                        <span style="font-size: 24px;">💵</span>
+                        <div>
+                            <div style="font-weight: bold; color: #2E7D32; font-size: 14px;">Cash on Delivery</div>
+                            <div style="font-size: 11px; color: #555;">Pay only when you receive the item.</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; border-top: 1px dashed #ccc; padding-top: 15px;">
+                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                            <span>MRP (Total Qty):</span>
+                            <span id="chkOriginalPrice" style="text-decoration: line-through;">₹0</span>
+                        </div>
+                        <div class="summary-total" id="productDiscountRow" style="font-weight: bold; font-size: 13px; color: #E65100; margin-bottom: 5px; display: none;">
+                            <span id="chkProductDiscountLabel">Product Discount:</span>
+                            <span id="chkProductDiscount">-₹0</span>
+                        </div>
+
+                        <div class="summary-total" style="font-weight: bold; font-size: 13px; color: #333;">
+                            <span>Selling Price:</span>
+                            <span id="chkSellingPrice">₹0</span>
+                        </div>
+
+                        <div class="summary-total" id="discountRow" style="display: none; font-weight: bold; font-size: 13px; color: #00C853;">
+                            <span>Promo Discount:</span>
+                            <span id="chkDiscount">-₹0</span>
+                        </div>
+
+                        <div class="summary-total" style="font-weight: normal; font-size: 13px; color: #666;">
+                            <span>Delivery Fee:</span>
+                            <span><span style="text-decoration: line-through; margin-right: 5px;">₹60</span><span style="color: #00C853; font-weight: bold;">FREE</span></span>
+                        </div>
+                        
+                        <div class="summary-total" style="margin-top: 10px; font-size: 16px; border-top: 1px solid #eee; padding-top: 10px;">
+                            <span>Amount to Pay:</span>
+                            <span class="total-price" id="chkPrice">₹0</span>
+                        </div>
+                    </div>
+                    <button class="btn-place-order" id="btnPlaceOrder" onclick="placeOrder()" style="margin-top: 20px;">CONFIRM & PLACE ORDER</button>
+                </div>
+            </div>
+
             <div style="height: 40px;"></div>
         </div>
     </div>
@@ -785,7 +813,6 @@
             zoomImg.style.transform = `translate(${pointX}px, ${pointY}px) scale(${scale})`;
         }
 
-        // Mobile Touch Events for Pinch/Pan
         let initialDistance = null;
         zoomCont.addEventListener('touchstart', (e) => {
             if(e.touches.length === 2) {
@@ -868,11 +895,6 @@
                     let estDate = d.toLocaleDateString('en-US', options);
                     document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
                     document.getElementById('shiprocketCheckoutResult').style.display = 'block';
-                } else {
-                    let d = new Date(); d.setDate(d.getDate() + 5);
-                    let options = { month: 'short', day: 'numeric' };
-                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
-                    document.getElementById('pinResult').style.display = 'block';
                 }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
@@ -891,8 +913,6 @@
                 if(isCheckout) {
                     document.getElementById('shiprocketCheckoutResult').style.display = 'none';
                     document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
-                } else {
-                    document.getElementById('pinResult').style.display = 'none';
                 }
             }
         }
@@ -908,14 +928,13 @@
                 let currentTransform = track.style.transform;
                 let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
                 
-                if (startX - endX > 50) { // Swiped left
+                if (startX - endX > 50) { 
                     if(currentIndex < 2) currentIndex++; else currentIndex = 0;
-                } else if (endX - startX > 50) { // Swiped right
+                } else if (endX - startX > 50) { 
                     if(currentIndex > 0) currentIndex--; else currentIndex = 2;
                 }
                 track.style.transform = `translateX(-${currentIndex * 100}%)`;
                 
-                // Restart auto-slide
                 sliderInterval = setInterval(() => { 
                     currentIndex = (currentIndex + 1) % 3; 
                     track.style.transform = `translateX(-${currentIndex * 100}%)`; 
@@ -945,7 +964,6 @@
                 if(snap.exists()) {
                     let total = 0; let count = 0;
                     
-                    // Show max 3 reviews in preview
                     let reviewArray = [];
                     snap.forEach(child => { 
                         let r = child.val();
@@ -958,7 +976,6 @@
                     document.getElementById('realRatingText').innerText = avg;
                     document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
                     
-                    // Display latest 3
                     reviewArray.reverse().slice(0,3).forEach(r => {
                         let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
                         let safeName = r.phone.length > 5 ? r.phone.substring(0,3) + "***" : "Customer";
@@ -974,7 +991,6 @@
                         `;
                     });
                     
-                    // Populate Full Modal
                     let fullHtml = '';
                     reviewArray.forEach(r => {
                         let stars = '★'.repeat(r.rating) + '☆'.repeat(5-r.rating);
@@ -1153,6 +1169,47 @@
             document.getElementById('previewName').innerText = cleanType;
             document.getElementById('vehiclePreviewContainer').style.display = 'block';
         }
+
+        // 🚀 Multi-Step Checkout Navigation Logic
+        function toggleStep(step) {
+            for(let i=1; i<=4; i++) {
+                document.getElementById('step' + i + 'Body').classList.remove('active');
+                document.getElementById('step' + i + 'Header').classList.remove('active');
+                document.getElementById('step' + i + 'Icon').innerText = "▶";
+                document.getElementById('step' + i + 'Num').innerHTML = i; // Reset to number
+            }
+            
+            // Activate current step
+            document.getElementById('step' + step + 'Body').classList.add('active');
+            document.getElementById('step' + step + 'Header').classList.add('active');
+            document.getElementById('step' + step + 'Icon').innerText = "▼";
+
+            // Mark previous steps as completed (✅)
+            for(let j=1; j<step; j++) {
+                document.getElementById('step' + j + 'Num').innerHTML = "✓";
+            }
+        }
+
+        function nextStep(step) {
+            // Validation before moving next
+            if (step === 2) {
+                // Moving from 1 to 2
+            } else if (step === 3) {
+                // Moving from 2 to 3 (Validate Address)
+                const name = document.getElementById('chkName').value.trim(); 
+                const phone = document.getElementById('chkPhone').value.trim();
+                const addr1 = document.getElementById('chkAddress1').value.trim(); 
+                const pincode = document.getElementById('chkPincodeCheckout').value.trim();
+                const city = document.getElementById('chkCity').value.trim(); 
+                const state = document.getElementById('chkState').value.trim();
+                if(!name || phone.length !== 10 || !addr1 || !pincode || !city || !state) { 
+                    showPremiumAlert('Incomplete Details', 'Please fill all the mandatory delivery details correctly to continue.', 'error'); return; 
+                }
+            } else if (step === 4) {
+                // Moving from 3 to 4 (Delivery Slot checked automatically)
+            }
+            toggleStep(step);
+        }
         
         function proceedToCheckout() {
             if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
@@ -1182,7 +1239,7 @@
             document.getElementById('promoMessage').innerText = '';
             document.getElementById('discountRow').style.display = 'none';
             
-            // 🚀 BHAIG LOGIC: Payment Summary Exact Match
+            // Payment Summary Exact Match
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
             
             if(initialProductDiscount > 0) {
@@ -1197,6 +1254,7 @@
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
             switchView('viewCheckout');
+            toggleStep(1); // Start at step 1
         }
 
         function applyPromoCode() {
@@ -1230,7 +1288,6 @@
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
                     
-                    // 🚀 Update Cart Review Top Price
                     document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${totalSellingPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
@@ -1256,7 +1313,7 @@
 
         function placeOrder() {
             const name = document.getElementById('chkName').value.trim(); const phone = document.getElementById('chkPhone').value.trim();
-            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout') ? document.getElementById('chkPincodeCheckout').value.trim() : document.getElementById('chkPincode').value.trim();
+            const addr1 = document.getElementById('chkAddress1').value.trim(); const pincode = document.getElementById('chkPincodeCheckout').value.trim();
             const city = document.getElementById('chkCity').value.trim(); 
             const district = document.getElementById('chkDistrict').value.trim();
             const state = document.getElementById('chkState').value.trim();
@@ -1313,7 +1370,7 @@
 
             db.ref().update(updates).then(() => {
                 
-                // Notify Admin
+                // Fire and forget Async call to Worker
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
@@ -1329,7 +1386,6 @@
                     })
                 }).catch(e => console.log(e));
                 
-                // Show Confirmation Screen
                 document.getElementById('confOrderId').innerText = orderId;
                 let d = new Date(); d.setDate(d.getDate() + 5);
                 document.getElementById('confEstDate').innerText = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -1362,7 +1418,6 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
-                // Sorting Newest First
                 orders.sort((a, b) => {
                     let d1 = new Date(a.timestamp);
                     let d2 = new Date(b.timestamp);
