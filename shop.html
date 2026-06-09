@@ -26,6 +26,7 @@
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
             padding-bottom: 120px; 
+            overflow-x: hidden;
         }
 
         /* 📱 Top Header */
@@ -79,14 +80,18 @@
 
         /* 📦 2. PRODUCT DETAIL VIEW */
         .slider-container { width: 100%; height: 240px; overflow: hidden; background: white; position: relative; border-bottom: 1px solid #E5E5EA;}
-        .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.4s ease-in-out; }
+        .slider-track { display: flex; width: 100%; height: 100%; transition: transform 0.3s ease-out; }
         .slider-slide { min-width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; padding: 15px; box-sizing: border-box; }
         .slider-slide img { max-width: 100%; max-height: 100%; object-fit: contain; cursor: zoom-in; }
         .slider-hint { text-align: center; font-size: 11px; color: #999; font-style: italic; padding: 8px 0; background: white;}
 
         .detail-box { background: white; padding: 15px; margin-top: 5px; }
         .detail-title { font-size: 18px; font-weight: bold; font-style: italic; margin: 10px 0 5px 0; color: #222;}
-        .review-stars { display: flex; align-items: center; gap: 5px; margin-bottom: 10px; }
+        
+        /* 🚀 REAL RATINGS BADGE */
+        .review-stars { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+        .real-rating-badge { background: #E8F5E9; color: #2E7D32; font-size: 13px; font-weight: 900; padding: 4px 10px; border-radius: 8px; display: inline-flex; align-items: center; gap: 4px; border: 1px solid #C8E6C9;}
+        .review-text-info { font-size: 12px; color: #888; font-weight: bold; }
         
         .selection-box { background: white; padding: 15px; margin-top: 10px; border-top: 1px solid #eee; border-bottom: 1px solid #eee;}
         .selection-label { font-size: 13px; color: var(--primary-blue); font-weight: bold; font-style: italic; margin-bottom: 8px;}
@@ -94,10 +99,10 @@
         .instruction-box { background: #E8F5E9; border: 1px solid #C8E6C9; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px;}
         .instruction-text { font-size: 13px; color: #2E7D32; font-style: italic; font-weight: bold; margin:0;}
 
-        /* Trust Badges */
-        .trust-badges { display: flex; justify-content: space-between; background: white; padding: 15px; margin-top: 10px; }
+        /* Trust Badges - Updated to use Images */
+        .trust-badges { display: flex; justify-content: space-between; background: white; padding: 15px; margin-top: 10px; cursor: pointer;}
         .trust-item { text-align: center; font-size: 10px; color: #555; width: 25%; font-weight: bold; font-style: italic;}
-        .trust-icon { font-size: 22px; margin-bottom: 5px; }
+        .trust-icon-img { width: 30px; height: 30px; object-fit: contain; margin-bottom: 5px; }
 
         /* Quantity Selector */
         .qty-box { display: flex; justify-content: space-between; align-items: center; background: white; padding: 15px; margin-top: 10px;}
@@ -243,9 +248,19 @@
         .btn-modal-primary { background: var(--primary-blue); color: white; padding: 14px; width: 100%; border: none; border-radius: 12px; font-weight: bold; font-size: 15px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0, 0.1); font-style: italic; transition: 0.2s;}
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
+
+        /* 🎉 Confetti Animation */
+        .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 6000; animation: fall 3s linear forwards; }
+        @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
+
+        /* Zoom Container for Pinch */
+        .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: auto; touch-action: pan-x pan-y pinch-zoom; }
+        .zoom-container img { width: 95%; max-height: 85vh; object-fit: contain; border-radius: 16px; transition: transform 0.2s; }
     </style>
 </head>
 <body>
+
+    <div id="confetti-container"></div>
 
     <div class="header">
         <button class="back-btn" id="btnBack" onclick="goBack()">«</button>
@@ -253,9 +268,11 @@
         <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
     </div>
 
-    <div id="imageZoomModal" class="overlay" style="z-index: 2000; align-items: center;" onclick="this.style.display='none'">
-        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer;">&times;</span>
-        <img id="zoomedImg" src="" style="width: 95%; max-height: 85vh; object-fit: contain; border-radius: 16px;">
+    <div id="imageZoomModal" class="overlay" style="z-index: 2000;">
+        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="document.getElementById('imageZoomModal').style.display='none'">&times;</span>
+        <div class="zoom-container">
+            <img id="zoomedImg" src="">
+        </div>
     </div>
 
     <div id="viewList" class="view-section active-view">
@@ -269,17 +286,18 @@
     </div>
 
     <div id="viewDetail" class="view-section">
-        <div class="slider-container">
+        <div class="slider-container" id="sliderContainer">
             <div class="product-badge" id="detBadge" style="display:none; left: 15px; top: 15px;">50%</div>
             <div class="slider-track" id="detSlider"></div>
         </div>
-        <div class="slider-hint">Auto-Sliding | Tap image to zoom 🔍</div>
+        <div class="slider-hint">Auto-Sliding | Swipe to change | Tap to zoom 🔍</div>
 
         <div class="detail-box">
             <div class="review-stars">
-                <span style="color:#FFB300; font-size:16px;">★★★★★</span>
-                <span style="font-size:12px; color:#888; font-weight:bold;">(4.8/5 from 1,200+ Reviews)</span>
+                <div class="real-rating-badge"><span style="color:#FFB300;">★</span> <span id="realRatingText">5.0</span></div>
+                <span class="review-text-info" id="realReviewCount">from 0 Reviews</span>
             </div>
+            
             <h2 class="detail-title" id="detTitle">Product Title</h2>
             <div class="price-row">
                 <span class="price-current" id="detPrice">₹0</span>
@@ -314,11 +332,11 @@
             </div>
         </div>
 
-        <div class="trust-badges">
-            <div class="trust-item"><div class="trust-icon">💵</div>COD<br>Available</div>
-            <div class="trust-item"><div class="trust-icon">🔄</div>7 Days<br>Return</div>
-            <div class="trust-item"><div class="trust-icon">🔒</div>100%<br>Secure</div>
-            <div class="trust-item"><div class="trust-icon">💯</div>Genuine<br>Brand</div>
+        <div class="trust-badges" onclick="document.getElementById('trustPolicyModal').style.display='flex'">
+            <div class="trust-item"><img src="trust_cod.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2800/2800160.png'"><br>COD<br>Available</div>
+            <div class="trust-item"><img src="trust_return.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2275/2275811.png'"><br>5 Days<br>Return</div>
+            <div class="trust-item"><img src="trust_secure.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'"><br>100%<br>Secure</div>
+            <div class="trust-item"><img src="trust_genuine.webp" class="trust-icon-img" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3233/3233077.png'"><br>Genuine<br>Brand</div>
         </div>
 
         <div class="desc-box">
@@ -334,11 +352,19 @@
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q: Is it Waterproof & Sun-proof?</div>
-                <div class="faq-a">A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading.</div>
+                <div class="faq-a">A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading or peeling.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q: What if the vehicle is stolen?</div>
-                <div class="faq-a">A: Anyone scanning the QR can instantly alert you of the vehicle's location without revealing your mobile number.</div>
+                <div class="faq-a">A: Anyone scanning the QR can instantly alert you of the vehicle's location without revealing your mobile number, keeping you safe.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: Do I need to pay any monthly fee?</div>
+                <div class="faq-a">A: No, this is a one-time purchase with lifetime validity. No hidden charges.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: Is an App required to scan?</div>
+                <div class="faq-a">A: No, anyone can scan the sticker using their normal phone camera, Google Lens, or Paytm/PhonePe scanners.</div>
             </div>
         </div>
 
@@ -360,10 +386,11 @@
             <div class="checkout-step">
                 <div class="step-header"><span>1️⃣</span> Cart Review</div>
                 <div class="cart-review-item">
-                    <img id="chkProductImg" src="banner_home_tag.webp" class="cart-review-img">
+                    <img id="chkProductImg" src="" class="cart-review-img">
                     <div class="cart-review-details">
                         <p class="summary-item" id="chkProductName">Product Name</p>
                         <p class="summary-qty" id="chkProductQty">Qty: 1 | Vehicle: Car</p>
+                        <p style="font-weight: bold; color: var(--primary-blue); font-size: 15px; margin: 4px 0 0 0;" id="chkBasePriceDisplay">₹0</p>
                     </div>
                 </div>
                 
@@ -380,7 +407,7 @@
             <div class="checkout-step">
                 <div class="step-header"><span>2️⃣</span> Delivery Address</div>
                 
-                <button class="btn-auto-detect" onclick="showPremiumAlert('Location', 'Feature coming soon. Please enter manually.', 'info')">
+                <button class="btn-auto-detect" id="btnAutoDetect" onclick="autoDetectLocation()">
                     📍 Auto-Detect My Location
                 </button>
 
@@ -399,7 +426,7 @@
                 <div class="row-2">
                     <div class="form-group">
                         <label class="form-label">Pincode</label>
-                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value, true)">
+                        <input type="number" id="chkPincodeCheckout" class="form-input" placeholder="6-digit" onkeyup="checkPincodeAPI(this.value)">
                     </div>
                     <div class="form-group">
                         <label class="form-label">City</label>
@@ -505,6 +532,18 @@
         </div>
     </div>
 
+    <div id="trustPolicyModal" class="overlay" style="align-items: center; z-index: 4500;">
+        <div class="modal-box" style="padding: 20px;">
+            <div style="font-size: 40px; margin-bottom: 10px;">🔄</div>
+            <h3 style="color: var(--primary-blue); margin-top: 0;">Return Policy</h3>
+            <p style="font-size: 14px; color: #444; font-weight: bold; line-height: 1.5;">You can easily return the product within 5 days of delivery.</p>
+            <div style="background: #FFEBEE; border: 1px solid #FFCDD2; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                <p style="margin:0; font-size: 12px; color: #C62828; font-weight: bold; font-style: italic;">⚠️ Note: If the sticker has been peeled and pasted on the vehicle, it cannot be returned.</p>
+            </div>
+            <button class="btn-modal-primary" style="margin-top: 20px;" onclick="document.getElementById('trustPolicyModal').style.display='none'">I Understand</button>
+        </div>
+    </div>
+
     <div id="vehicleSheet" class="overlay" style="align-items: flex-end;">
         <div class="bottom-sheet" style="padding: 20px 0;">
             <div class="drag-handle"></div>
@@ -542,8 +581,9 @@
             <div class="drag-handle"></div>
             <button class="close-btn" onclick="document.getElementById('sosSheet').style.display='none'">×</button>
             <h2 class="sheet-header" style="color:var(--sos-red); display:flex; align-items:center; gap:8px;">🚨 Emergency Helplines</h2>
-            <p style="color:#888; font-size:13px; margin-top:-5px;">Tap any number to dial instantly</p>
-            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">⚠️ You can also dial 112 for any emergency</div>
+            <div style="background:#FFEBEE; color:var(--sos-red); padding:12px; border-radius:12px; font-size:13px; font-weight:bold; text-align:center; margin-bottom:15px;">
+                ⚠️ You can also dial 112 for any emergency
+            </div>
             <a href="tel:112" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4>National Emergency</h4><p style="color:var(--sos-red);">112</p></div></a>
             <a href="tel:1033" class="list-item"><div class="list-icon" style="background:#FFEBEE;">📞</div><div class="list-text"><h4>NHAI Highway Helpline</h4><p style="color:var(--sos-red);">1033</p></div></a>
         </div>
@@ -604,6 +644,22 @@
         </div>
     </div>
 
+    <div id="postOrderRatingModal" class="overlay" style="align-items: center; z-index: 4500;">
+        <div class="modal-box" style="padding: 25px 20px;">
+            <h3 style="margin: 0; color: #1565C0;">Rate Your Purchase</h3>
+            <p style="font-size: 13px; color: #666; margin-top: 5px;">How would you rate this product?</p>
+            
+            <div style="font-size: 35px; color: #ccc; cursor: pointer; margin: 15px 0;" id="starRater">
+                <span onclick="setRating(1)">★</span><span onclick="setRating(2)">★</span><span onclick="setRating(3)">★</span><span onclick="setRating(4)">★</span><span onclick="setRating(5)">★</span>
+            </div>
+            
+            <textarea id="reviewText" class="form-input" style="height: 80px; resize: none;" placeholder="Write a short review..."></textarea>
+            
+            <button class="btn-modal-primary" onclick="submitReview()">SUBMIT REVIEW</button>
+            <button class="btn-modal-cancel" onclick="document.getElementById('postOrderRatingModal').style.display='none'">Maybe Later</button>
+        </div>
+    </div>
+
     <script>
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
@@ -619,6 +675,7 @@
         let selectedVehicleType = null;
         let sliderInterval;
         let selectedQty = 1;
+        let userRating = 5; // Default for modal
 
         let appliedPromoCode = null;
         let appliedDiscount = 0;
@@ -652,8 +709,22 @@
 
         function closeSuccessModal(goToOrders) {
             document.getElementById('successModal').style.display = 'none';
-            if(goToOrders) openOrderHistory();
-            else goBackToHome();
+            // Show Rating popup right after closing success modal
+            setRating(5); // Reset stars
+            document.getElementById('reviewText').value = "";
+            document.getElementById('postOrderRatingModal').style.display = 'flex';
+            
+            // Overriding close of rating modal to handle redirect
+            const oldCancel = document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick;
+            document.querySelector('#postOrderRatingModal .btn-modal-cancel').onclick = function() {
+                document.getElementById('postOrderRatingModal').style.display = 'none';
+                if(goToOrders) openOrderHistory(); else goBackToHome();
+            };
+            
+            const oldSubmit = document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick;
+            document.querySelector('#postOrderRatingModal .btn-modal-primary').onclick = function() {
+                submitReview(goToOrders);
+            };
         }
 
         // Image Zoom Logic
@@ -662,35 +733,140 @@
             document.getElementById('imageZoomModal').style.display = 'flex';
         }
 
+        // 🚀 Auto-Detect Location Logic
+        function autoDetectLocation() {
+            const btn = document.getElementById('btnAutoDetect');
+            btn.innerHTML = "⏳ Detecting...";
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const address = data.address;
+                        if(address) {
+                            document.getElementById('chkPincodeCheckout').value = address.postcode || '';
+                            document.getElementById('chkCity').value = address.city || address.town || address.state_district || '';
+                            document.getElementById('chkState').value = address.state || '';
+                            document.getElementById('chkAddress2').value = address.suburb || address.neighbourhood || '';
+                            btn.innerHTML = "✅ Location Detected";
+                            btn.style.background = "#E8F5E9"; btn.style.color = "#2E7D32"; btn.style.borderColor = "#2E7D32";
+                            if(address.postcode) checkPincodeAPI(address.postcode);
+                        }
+                    }).catch(err => {
+                        btn.innerHTML = "📍 Auto-Detect My Location";
+                        showPremiumAlert("Error", "Could not fetch address details automatically.", "error");
+                    });
+                }, error => {
+                    btn.innerHTML = "📍 Auto-Detect My Location";
+                    showPremiumAlert("Permission Denied", "Please allow location access in your browser or enter manually.", "error");
+                });
+            } else {
+                showPremiumAlert("Error", "Geolocation is not supported by your browser.", "error");
+            }
+        }
+
         // Pincode Lookup API for Auto-fill City & State
-        function checkPincodeAPI(val, isCheckout = false) {
+        function checkPincodeAPI(val) {
             if(val.length === 6) {
-                if(isCheckout) {
-                    document.getElementById('shiprocketCheckoutLoading').style.display = 'none';
-                    let d = new Date(); d.setDate(d.getDate() + 5);
-                    let options = { month: 'short', day: 'numeric' };
-                    let estDate = d.toLocaleDateString('en-US', options);
-                    document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
-                    document.getElementById('shiprocketCheckoutResult').style.display = 'block';
-                }
+                document.getElementById('shiprocketCheckoutLoading').style.display = 'none';
+                let d = new Date(); d.setDate(d.getDate() + 5);
+                let options = { month: 'short', day: 'numeric' };
+                let estDate = d.toLocaleDateString('en-US', options);
+                document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
+                document.getElementById('shiprocketCheckoutResult').style.display = 'block';
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
                 .then(response => response.json())
                 .then(data => {
                     if(data[0].Status === "Success") {
                         let details = data[0].PostOffice[0];
-                        if(isCheckout) {
-                            document.getElementById('chkCity').value = details.District;
-                            document.getElementById('chkState').value = details.State;
-                        }
+                        document.getElementById('chkCity').value = details.District;
+                        document.getElementById('chkState').value = details.State;
                     }
                 }).catch(e => console.log(e));
             } else {
-                if(isCheckout) {
-                    document.getElementById('shiprocketCheckoutResult').style.display = 'none';
-                    document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
-                }
+                document.getElementById('shiprocketCheckoutResult').style.display = 'none';
+                document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
             }
+        }
+
+        // Slider Swipe Logic
+        function initSliderSwipe() {
+            const track = document.getElementById('detSlider');
+            let startX = 0; let endX = 0;
+            
+            track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; clearInterval(sliderInterval); });
+            track.addEventListener('touchend', e => {
+                endX = e.changedTouches[0].clientX;
+                let currentTransform = track.style.transform;
+                let currentIndex = currentTransform ? parseInt(currentTransform.replace(/[^\d.]/g, '')) / 100 : 0;
+                
+                if (startX - endX > 50) { // Swiped left
+                    if(currentIndex < 2) currentIndex++; else currentIndex = 0;
+                } else if (endX - startX > 50) { // Swiped right
+                    if(currentIndex > 0) currentIndex--; else currentIndex = 2;
+                }
+                track.style.transform = `translateX(-${currentIndex * 100}%)`;
+                
+                // Restart auto-slide
+                sliderInterval = setInterval(() => { 
+                    currentIndex = (currentIndex + 1) % 3; 
+                    track.style.transform = `translateX(-${currentIndex * 100}%)`; 
+                }, 2500);
+            });
+        }
+
+        // 🚀 CONFETTI LOGIC
+        function fireConfetti() {
+            const container = document.getElementById('confetti-container');
+            const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
+            for (let i = 0; i < 60; i++) {
+                let conf = document.createElement('div');
+                conf.className = 'confetti';
+                conf.style.left = Math.random() * 100 + '%';
+                conf.style.animationDelay = Math.random() * 1.5 + 's';
+                conf.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(conf);
+            }
+            setTimeout(() => container.innerHTML = '', 3000);
+        }
+
+        // Real Rating Logic
+        function fetchReviews(productId) {
+            db.ref('ProductReviews/' + productId).on('value', snap => {
+                if(snap.exists()) {
+                    let total = 0; let count = 0;
+                    snap.forEach(child => { total += parseInt(child.val().rating); count++; });
+                    let avg = (total / count).toFixed(1);
+                    document.getElementById('realRatingText').innerText = avg;
+                    document.getElementById('realReviewCount').innerText = `from ${count} Reviews`;
+                } else {
+                    document.getElementById('realRatingText').innerText = "5.0";
+                    document.getElementById('realReviewCount').innerText = "New Product";
+                }
+            });
+        }
+
+        function setRating(stars) {
+            userRating = stars;
+            const starSpans = document.getElementById('starRater').children;
+            for(let i=0; i<5; i++) {
+                starSpans[i].style.color = (i < stars) ? "#FFB300" : "#ccc";
+            }
+        }
+
+        function submitReview(goToOrders) {
+            if(!selectedProductId) return;
+            let text = document.getElementById('reviewText').value.trim();
+            db.ref('ProductReviews/' + selectedProductId).push({
+                rating: userRating, text: text, phone: currentUserPhone || "Anonymous", timestamp: new Date().toLocaleString()
+            }).then(() => {
+                document.getElementById('postOrderRatingModal').style.display = 'none';
+                showPremiumAlert("Thank You!", "Your review has been submitted.", "success");
+                setTimeout(() => { if(goToOrders) openOrderHistory(); else goBackToHome(); }, 1500);
+            });
         }
 
         db.ref('ShopProducts').on('value', (snapshot) => {
@@ -726,6 +902,8 @@
             selectedQty = 1; 
             document.getElementById('qtyDisplay').innerText = selectedQty;
 
+            fetchReviews(id);
+
             document.getElementById('pageTitle').innerText = "Product Details";
             document.getElementById('detTitle').innerText = data.title;
             document.getElementById('detPrice').innerText = "₹" + data.price;
@@ -752,6 +930,7 @@
             
             clearInterval(sliderInterval); let slideIndex = 0;
             sliderInterval = setInterval(() => { slideIndex = (slideIndex + 1) % 3; slider.style.transform = `translateX(-${slideIndex * 100}%)`; }, 2500);
+            initSliderSwipe();
 
             let relatedHtml = '';
             Object.keys(currentProducts).forEach(pid => {
@@ -817,14 +996,15 @@
             // Populating Step 1: Cart Review
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
+            let totalOriginalPrice = parseInt(data.price) * selectedQty;
+            document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalOriginalPrice;
+            
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
             
             appliedPromoCode = null;
             appliedDiscount = 0;
             influencerData = null;
-            
-            let totalOriginalPrice = parseInt(data.price) * selectedQty;
             
             document.getElementById('chkPromoCode').value = '';
             document.getElementById('promoMessage').innerText = '';
@@ -868,6 +1048,9 @@
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
+                    
+                    // 🚀 CELEBRATION!
+                    fireConfetti();
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
