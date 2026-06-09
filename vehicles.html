@@ -189,7 +189,7 @@
             <div class="wp-bell">🔔</div>
             <div class="wp-texts">
                 <div class="wp-title">Enable Vehicle Alerts</div>
-                <div class="wp-desc">Get vehicle notifications instantly — without installing any app.!</div>
+                <div class="wp-desc">Apne vehicle ke alerts seedhe is device pe paao — bina app ke bhi!</div>
             </div>
         </div>
         <div class="wp-btns">
@@ -535,36 +535,87 @@
             document.getElementById('wp-banner').style.display = 'none';
 
             try {
+                // ✅ FIX 1: Pehle permission maango
                 const permission = await Notification.requestPermission();
-                if (permission !== "granted") return;
+                if (permission !== "granted") {
+                    showToastMsg("❌ Permission denied.");
+                    return;
+                }
 
-                // Service Worker register karo
+                showToastMsg("Setting up... please wait");
+
+                // ✅ FIX 2: Service Worker register karo — tagown-sw.js root mein hona chahiye
+                let reg;
+                try {
+                    reg = await navigator.serviceWorker.register('/tagown-sw.js', { scope: '/' });
+                } catch(swErr) {
+                    showToastMsg("❌ SW Error: " + swErr.message);
+                    return;
+                }
+
+                await navigator.serviceWorker.ready;
+
+                // ✅ FIX 3: Pehle existing subscription check karo
+                let subscription = await reg.pushManager.getSubscription();
+
+                // Nahi hai toh nayi banao
+                if (!subscription) {
+                    subscription = await reg.pushManager.subscribe({
+                        userVisibleOnly     : true,
+                        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                    });
+                }
+
+                if (!subscription) {
+                    showToastMsg("❌ Subscription failed.");
+                    return;
+                }
+
+                // ✅ FIX 4: Firebase mein properly save karo
+                const cleanPhone = currentUserPhone.replace(/\D/g, '').slice(-10);
+                if (!cleanPhone) {
+                    showToastMsg("❌ Phone not found. Please login again.");
+                    return;
+                }
+
+                // Subscription ko JSON string ke saath save karo
+                const subJson = JSON.stringify(subscription.toJSON());
+                await db.ref('Users/' + cleanPhone + '/web_push_subscription').set(subJson);
+
+                localStorage.removeItem('tagown_pending_subscription');
+                localStorage.setItem('tagown_wp_never', "1");
+
+                showToastMsg("✅ Notifications enabled!");
+
+            } catch(err) {
+                showToastMsg("❌ Error: " + err.message);
+            }
+        }
+
+        // ✅ Page load pe: agar already permission granted hai toh silently subscribe karo
+        async function silentlySubscribeIfGranted() {
+            if (Notification.permission !== "granted") return;
+            if (!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+
+            try {
                 const reg = await navigator.serviceWorker.register('/tagown-sw.js', { scope: '/' });
                 await navigator.serviceWorker.ready;
 
-                // Subscription banao
-                const subscription = await reg.pushManager.subscribe({
-                    userVisibleOnly     : true,
-                    applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
-                });
+                let subscription = await reg.pushManager.getSubscription();
+                if (!subscription) {
+                    subscription = await reg.pushManager.subscribe({
+                        userVisibleOnly     : true,
+                        applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                    });
+                }
 
-                // Firebase mein save karo — owner ke phone se linked
-                const cleanPhone = currentUserPhone.replace(/\D/g, '').slice(-10);
-                await db.ref('Users/' + cleanPhone + '/web_push_subscription')
-                    .set(JSON.stringify(subscription));
-
-                // Pending subscription bhi sync karo (agar pehle se tha)
-                const pending = localStorage.getItem('tagown_pending_subscription');
-                if (pending) localStorage.removeItem('tagown_pending_subscription');
-
-                // Don't show again — already allowed
-                localStorage.setItem('tagown_wp_never', "1");
-
-                showToastMsg("✅ Notifications enabled successfully!");
-
-            } catch(err) {
-                showToastMsg("Could not enable notifications.");
-            }
+                if (subscription && currentUserPhone) {
+                    const cleanPhone = currentUserPhone.replace(/\D/g, '').slice(-10);
+                    const subJson    = JSON.stringify(subscription.toJSON());
+                    // Firebase mein update karo (silently)
+                    await db.ref('Users/' + cleanPhone + '/web_push_subscription').set(subJson);
+                }
+            } catch(_) {}
         }
 
         function urlBase64ToUint8Array(base64String) {
@@ -739,6 +790,9 @@
             });
         }
         loadVehicles();
+
+        // ✅ Page load pe silently subscribe karo agar permission pehle se granted hai
+        silentlySubscribeIfGranted();
 
         function showVehicleQr(qrId, regNo) {
             if(!qrId || qrId === "undefined") { alert("No valid QR linked to this vehicle."); return; }
