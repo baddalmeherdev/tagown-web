@@ -38,7 +38,7 @@
         .header-title { font-size: 20px; font-weight: bold; color: white; font-style: italic; letter-spacing: 0.5px;}
         .back-btn { position: absolute; left: 20px; background: transparent; border: none; font-size: 24px; color: white; font-weight: bold; cursor: pointer; display: none; }
         
-        /* 🚀 TOP HEADER ICONS UPDATE */
+        /* 🚀 TOP HEADER ICONS */
         .top-icons-container { position: absolute; right: 20px; display: flex; gap: 15px; align-items: center; }
         .top-icon-btn { font-size: 22px; cursor: pointer; position: relative;}
         .cart-badge { position: absolute; top: -5px; right: -8px; background: #FFB300; color: #000; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 1px solid white;}
@@ -49,6 +49,13 @@
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* ✨ YOUTUBE STYLE SHIMMER EFFECT */
+        .shimmer-box {
+            background: #eee;
+            background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+            border-radius: 8px; 
+            background-size: 200% 100%;
+            animation: 1.5s shine linear infinite;
+        }
         .skeleton {
             background: #eee;
             background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
@@ -238,11 +245,13 @@
         .timeline-item.active .timeline-content h4 { color: #222; }
         .timeline-item.active .timeline-content p { color: #555; }
         
-        /* Live Updates Sub-Timeline */
-        .live-updates-container { margin-top: 10px; margin-bottom: 5px; border-left: 2px dashed #E0E0E0; padding-left: 15px; margin-left: 5px; display: none; }
-        .live-update-item { font-size: 12px; color: #555; padding: 5px 0; position: relative;}
-        .live-update-item::before { content: '•'; color: var(--primary-blue); position: absolute; left: -14px; font-weight: bold; font-size: 16px;}
-        .live-update-time { font-size: 10px; color: #999; display: block;}
+        /* 🚀 Live Updates Sub-Timeline FIXED ALIGNMENT */
+        .live-updates-container { margin-top: 10px; margin-bottom: 5px; display: none; position: relative;}
+        .live-update-item { font-size: 12px; color: #555; padding: 6px 0; position: relative; border-bottom: 1px dashed #f0f0f0;}
+        .live-update-item:last-child { border-bottom: none; }
+        /* Dot position exact over the vertical grey line (-22px) */
+        .live-update-item::before { content: ''; position: absolute; left: -22.5px; top: 12px; width: 7px; height: 7px; background: #E3F2FD; border: 2px solid var(--primary-blue); border-radius: 50%; }
+        .live-update-time { font-size: 10px; color: #999; display: block; margin-top: 2px;}
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
@@ -894,7 +903,7 @@
         let orderToCancel = null;
         window.userOrdersList = [];
 
-        // 🚀 BHAIG LOGIC: Local Cart State
+        // 🚀 LOCAL CART LOGIC
         let localCart = [];
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
@@ -1173,6 +1182,7 @@
             });
         }
 
+        // 🚀 ACCURATE TIMER WITH DAYS CALCULATION
         setInterval(() => {
             document.querySelectorAll('.urgency-timer').forEach(el => {
                 let endTime = parseInt(el.getAttribute('data-endtime'));
@@ -1188,15 +1198,21 @@
                     el.style.borderColor = "#E0E0E0";
                     window.currentFlashDiscount = 0;
                 } else {
+                    let d = Math.floor(distance / (1000 * 60 * 60 * 24));
                     let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     let s = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    let displayStr = "";
+                    if (d > 0) displayStr += `<b>${d}d</b> `;
                     
                     h = h < 10 ? "0" + h : h;
                     m = m < 10 ? "0" + m : m;
                     s = s < 10 ? "0" + s : s;
                     
-                    el.innerHTML = `⏱️ Sale Ends in: <b>${h}h ${m}m ${s}s</b>`;
+                    displayStr += `<b>${h}h ${m}m ${s}s</b>`;
+                    
+                    el.innerHTML = `⏱️ Sale Ends in: ${displayStr}`;
                 }
             });
         }, 1000);
@@ -1322,21 +1338,29 @@
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
+                    // 🚀 LIVE DISCOUNT LOGIC FOR LIST VIEW
+                    let basePrice = parseInt(data.price);
                     let endTime = data.offerEndTime; 
                     if(data.flashSaleActive) {
                         if(!endTime && data.oldPrice) {
                             let d = new Date(); d.setHours(23, 59, 59, 999); endTime = d.getTime();
                         }
-                    } else { endTime = null; }
+                        if(data.flashSaleDiscount && parseInt(data.flashSaleDiscount) > 0) {
+                            let disc = Math.floor((basePrice * parseInt(data.flashSaleDiscount)) / 100);
+                            basePrice -= disc;
+                        }
+                    } else { 
+                        endTime = null; 
+                    }
                     let timerHtml = endTime ? `<div class="urgency-timer" data-endtime="${endTime}" style="font-size: 10px; padding: 3px 6px; margin-top: 5px;">⏱️ Loading...</div>` : '';
 
                     grid.innerHTML += `
                         <div class="product-card" onclick="openProductDetail('${id}')">
                             ${badgeHtml}
-                            <div class="product-image-box"><img src="${img}" onerror="this.src='banner_home_tag.webp'"></div>
+                            <div class="product-image-box shimmer-box"><img src="${img}" onload="this.parentElement.classList.remove('shimmer-box')" onerror="this.src='banner_home_tag.webp'"></div>
                             <div class="product-info">
                                 <h3 class="product-title">${data.title}</h3>
-                                <div class="price-row"><span class="price-current">₹${data.price}</span>${oldPriceHtml}</div>
+                                <div class="price-row"><span class="price-current">₹${basePrice}</span>${oldPriceHtml}</div>
                                 ${timerHtml}
                             </div>
                         </div>
@@ -1356,12 +1380,13 @@
 
             document.getElementById('pageTitle').innerText = "Product Details";
             document.getElementById('detTitle').innerText = data.title;
-            document.getElementById('detPrice').innerText = "₹" + data.price;
             document.getElementById('detOldPrice').innerText = data.oldPrice ? "₹" + data.oldPrice : "";
             document.getElementById('detDesc').innerText = data.description || "Premium Tagown Vehicle Security Accessory.";
             if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
             else { document.getElementById('detBadge').style.display = "none"; }
 
+            // 🚀 Dynamic Timer & Detail Live Price Logic
+            let basePrice = parseInt(data.price);
             let endTime = data.offerEndTime; 
             if(data.flashSaleActive) { 
                 if(!endTime && data.oldPrice) {
@@ -1369,9 +1394,15 @@
                     d.setHours(23, 59, 59, 999);
                     endTime = d.getTime();
                 }
+                if(data.flashSaleDiscount && parseInt(data.flashSaleDiscount) > 0) {
+                    let disc = Math.floor((basePrice * parseInt(data.flashSaleDiscount)) / 100);
+                    basePrice -= disc;
+                }
             } else {
                 endTime = null;
             }
+
+            document.getElementById('detPrice').innerText = "₹" + basePrice;
 
             const detTimer = document.getElementById('detTimer');
             if(endTime) {
@@ -1395,9 +1426,9 @@
             if(imgs.length === 2) imgs.push(imgs[0]);
 
             slider.innerHTML = `
-                <div class="slider-slide"><img src="${imgs[0]}" onerror="this.src='banner_home_tag.webp'" onclick="openZoom(this.src)"></div>
-                <div class="slider-slide"><img src="${imgs[1]}" onerror="this.src='banner_home_privacy.webp'" onclick="openZoom(this.src)"></div>
-                <div class="slider-slide"><img src="${imgs[2]}" onerror="this.src='banner_home_vault.webp'" onclick="openZoom(this.src)"></div>
+                <div class="slider-slide shimmer-box"><img src="${imgs[0]}" onload="this.parentElement.classList.remove('shimmer-box')" onerror="this.src='banner_home_tag.webp'" onclick="openZoom(this.src)"></div>
+                <div class="slider-slide shimmer-box"><img src="${imgs[1]}" onload="this.parentElement.classList.remove('shimmer-box')" onerror="this.src='banner_home_privacy.webp'" onclick="openZoom(this.src)"></div>
+                <div class="slider-slide shimmer-box"><img src="${imgs[2]}" onload="this.parentElement.classList.remove('shimmer-box')" onerror="this.src='banner_home_vault.webp'" onclick="openZoom(this.src)"></div>
             `;
             
             clearInterval(sliderInterval); let slideIndex = 0;
@@ -1408,12 +1439,18 @@
             Object.keys(currentProducts).forEach(pid => {
                 if(pid !== id) {
                     let p = currentProducts[pid];
+                    
+                    let rpBasePrice = parseInt(p.price);
+                    if(p.flashSaleActive && p.flashSaleDiscount) {
+                        rpBasePrice -= Math.floor((rpBasePrice * parseInt(p.flashSaleDiscount)) / 100);
+                    }
+                    
                     let rImg = (p.imgUrl1 && p.imgUrl1.trim() !== "") ? p.imgUrl1 : "banner_home_tag.webp";
                     relatedHtml += `
                         <div class="related-card" onclick="openProductDetail('${pid}')">
-                            <img class="related-img" src="${rImg}">
+                            <div class="shimmer-box" style="border-radius:8px;"><img class="related-img" src="${rImg}" onload="this.parentElement.classList.remove('shimmer-box')"></div>
                             <div class="related-title">${p.title}</div>
-                            <div class="related-price">₹${p.price}</div>
+                            <div class="related-price">₹${rpBasePrice}</div>
                         </div>
                     `;
                 }
@@ -1542,13 +1579,29 @@
             localStorage.setItem('tagownLocalCart', JSON.stringify(localCart));
             updateCartBadge();
 
-            // Notify Admin Firebase
+            // Notify Admin Firebase Abandoned Cart
             let safePhone = currentUserPhone.replace(/\D/g, '');
             if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
             db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
                 productName: data.title,
                 date: new Date().toLocaleDateString()
             });
+
+            // 🚀 Notify Admin Device Push Notification
+            fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
+                method: "POST", 
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
+                    target_channel: "push",
+                    include_aliases: { external_id: ["TAGOWN-ADMIN-DEVICE"] },
+                    headings: {"en": "New Cart Addition! 🛒"}, 
+                    contents: {"en": "A user added " + data.title + " to their cart."},
+                    priority: 10, 
+                    android_visibility: 1, 
+                    small_icon: "ic_notification_stat"
+                })
+            }).catch(e => console.log("Admin Notif error:", e));
 
             // Mini Toast
             let toast = document.createElement('div');
@@ -1604,7 +1657,6 @@
             updateCartBadge();
             openCartView();
             
-            // Clean from Admin Abandoned Cart if removed
             let safePhone = currentUserPhone.replace(/\D/g, '');
             if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
             db.ref('AbandonedCarts/' + safePhone + '/' + item.id).remove();
@@ -1669,7 +1721,6 @@
             document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
 
-            // Optional: Save to abandoned cart if going to checkout without using "Add to Cart" button first
             let safePhone = currentUserPhone.replace(/\D/g, '');
             if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
             db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
@@ -2035,12 +2086,15 @@
                 if(order.shippedLocation) shippedMeta += " • " + order.shippedLocation;
                 document.getElementById('trackShippedMeta').innerText = shippedMeta;
                 
-                // 🚀 MULTIPLE UPDATES LOGIC
+                // 🚀 FLIPKART STYLE MULTIPLE UPDATES INJECTOR
                 const liveBox = document.getElementById('liveUpdatesContainer');
                 if(order.LiveUpdates) {
                     liveBox.style.display = "block";
                     let liveHtml = "";
-                    Object.values(order.LiveUpdates).forEach(update => {
+                    let updatesArr = Object.values(order.LiveUpdates);
+                    updatesArr.sort((a,b) => parseInt(a.time) - parseInt(b.time));
+
+                    updatesArr.forEach(update => {
                         let upTime = new Date(parseInt(update.time)).toLocaleString();
                         liveHtml += `
                             <div class="live-update-item">
@@ -2099,9 +2153,9 @@
                 document.getElementById('bottomNav').classList.add('hide-nav');
                 document.getElementById('btnBack').style.display = 'block';
                 
-                // Hide cart icon on other pages except Cart itself
-                if(viewId === 'viewCart') {
-                    document.getElementById('cartIcon').style.display = 'block';
+                // Show top icons on details and cart
+                if(viewId === 'viewCart' || viewId === 'viewDetail') {
+                    document.getElementById('topIconsContainer').style.display = 'flex';
                 } else {
                     document.getElementById('topIconsContainer').style.display = 'none';
                 }
