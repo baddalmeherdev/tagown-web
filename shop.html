@@ -25,6 +25,8 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
+            /* FIXED: Removed body padding so footer reaches the exact bottom */
+            padding-bottom: 0px; 
             overflow-x: hidden;
         }
 
@@ -76,6 +78,9 @@
         .price-row { display: flex; align-items: baseline; gap: 6px; }
         .price-current { font-size: 18px; font-weight: 900; color: var(--primary-blue); font-style: italic;}
         .price-old { font-size: 13px; color: #999; text-decoration: line-through; font-weight: bold; font-style: italic;}
+        
+        /* ⏳ URGENCY TIMER CSS */
+        .urgency-timer { color: #D32F2F; font-size: 11px; font-weight: 800; background: #FFEBEE; padding: 5px 8px; border-radius: 6px; display: inline-block; margin-top: 6px; font-style: italic; border: 1px solid #FFCDD2; }
 
         /* 📦 2. PRODUCT DETAIL VIEW */
         .slider-container { width: 100%; height: 240px; overflow: hidden; background: white; position: relative; border-bottom: 1px solid #E5E5EA;}
@@ -98,7 +103,7 @@
         .instruction-box { background: #E8F5E9; border: 1px solid #C8E6C9; padding: 12px; border-radius: 8px; margin-top: 15px; display: flex; align-items: flex-start; gap: 10px;}
         .instruction-text { font-size: 13px; color: #2E7D32; font-style: italic; font-weight: bold; margin:0;}
 
-        /* Trust Badges - Updated to use Images */
+        /* Trust Badges */
         .trust-badges { display: flex; justify-content: space-between; background: white; padding: 15px; margin-top: 10px; cursor: pointer;}
         .trust-item { text-align: center; font-size: 10px; color: #555; width: 25%; font-weight: bold; font-style: italic;}
         .trust-icon-img { width: 30px; height: 30px; object-fit: contain; margin-bottom: 5px; }
@@ -266,7 +271,7 @@
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
 
-        /* 🎉 Confetti Animation */
+        /* 🎉 Confetti Animation (Z-index 10000 so it stays above everything) */
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 10000; animation: fall 3s linear forwards; }
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
@@ -274,7 +279,7 @@
         .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
         .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
 
-        /* 🆕 FOOTER CSS UPDATED FOR BLUE THEME */
+        /* 🆕 FOOTER CSS UPDATED FOR BLUE THEME (EXTENDED TO BOTTOM) */
         .footer-container { background: var(--primary-blue); padding: 30px 20px 120px 20px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left; }
         .footer-container h4 { color: white; font-size: 12px; font-weight: 800; letter-spacing: 1px; margin-bottom: 15px; margin-top: 25px;}
         .social-icons { display: flex; gap: 15px; margin-top: 15px; }
@@ -333,7 +338,7 @@
         
         <div class="footer-container">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                <img src="app_logo.webp" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'" alt="Tagown App" style="width: 45px; height: 45px; object-fit: contain;">
+                <img src="app_logo.webp" alt="Tagown App" style="width: auto; height: 50px; object-fit: contain;">
             </div>
             <p style="color: white; font-size: 13px; line-height: 1.5; margin-top: 10px;">Premium vehicle security solutions delivered to your doorstep. Experience safety made simple.</p>
             
@@ -383,6 +388,8 @@
                 <span class="price-current" id="detPrice">₹0</span>
                 <span class="price-old" id="detOldPrice"></span>
             </div>
+            
+            <div id="detTimer" class="urgency-timer" style="display: none;"></div>
         </div>
 
         <div class="qty-box">
@@ -1067,6 +1074,11 @@
                     let estDate = d.toLocaleDateString('en-US', options);
                     document.getElementById('shiprocketCheckoutText').innerText = "Estimated Delivery: " + estDate;
                     document.getElementById('shiprocketCheckoutResult').style.display = 'block';
+                } else {
+                    let d = new Date(); d.setDate(d.getDate() + 5);
+                    let options = { month: 'short', day: 'numeric' };
+                    document.getElementById('pinResult').innerText = "🚚 Estimated delivery by " + d.toLocaleDateString('en-US', options);
+                    document.getElementById('pinResult').style.display = 'block';
                 }
                 
                 fetch('https://api.postalpincode.in/pincode/' + val)
@@ -1085,6 +1097,8 @@
                 if(isCheckout) {
                     document.getElementById('shiprocketCheckoutResult').style.display = 'none';
                     document.getElementById('shiprocketCheckoutLoading').style.display = 'block';
+                } else {
+                    document.getElementById('pinResult').style.display = 'none';
                 }
             }
         }
@@ -1113,7 +1127,35 @@
             });
         }
 
-        // 🚀 CONFETTI LOGIC
+        // 🚀 Timer Update Function 
+        setInterval(() => {
+            document.querySelectorAll('.urgency-timer').forEach(el => {
+                let endTime = parseInt(el.getAttribute('data-endtime'));
+                if (!endTime) return;
+                
+                let now = new Date().getTime();
+                let distance = endTime - now;
+                
+                if (distance < 0) {
+                    el.innerHTML = "⏱️ Offer Expired";
+                    el.style.background = "#EEEEEE";
+                    el.style.color = "#757575";
+                    el.style.borderColor = "#E0E0E0";
+                    window.currentFlashDiscount = 0;
+                } else {
+                    let h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    let m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    let s = Math.floor((distance % (1000 * 60)) / 1000);
+                    
+                    h = h < 10 ? "0" + h : h;
+                    m = m < 10 ? "0" + m : m;
+                    s = s < 10 ? "0" + s : s;
+                    
+                    el.innerHTML = `⏱️ Sale Ends in: <b>${h}h ${m}m ${s}s</b>`;
+                }
+            });
+        }, 1000);
+
         function fireConfetti() {
             const container = document.getElementById('confetti-container');
             const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
@@ -1235,6 +1277,15 @@
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
+                    // 🚀 Added Flash Sale Timer on Cards
+                    let endTime = data.offerEndTime; 
+                    if(data.flashSaleActive) {
+                        if(!endTime && data.oldPrice) {
+                            let d = new Date(); d.setHours(23, 59, 59, 999); endTime = d.getTime();
+                        }
+                    } else { endTime = null; }
+                    let timerHtml = endTime ? `<div class="urgency-timer" data-endtime="${endTime}" style="font-size: 10px; padding: 3px 6px; margin-top: 5px;">⏱️ Loading...</div>` : '';
+
                     grid.innerHTML += `
                         <div class="product-card" onclick="openProductDetail('${id}')">
                             ${badgeHtml}
@@ -1242,6 +1293,7 @@
                             <div class="product-info">
                                 <h3 class="product-title">${data.title}</h3>
                                 <div class="price-row"><span class="price-current">₹${data.price}</span>${oldPriceHtml}</div>
+                                ${timerHtml}
                             </div>
                         </div>
                     `;
@@ -1265,6 +1317,29 @@
             document.getElementById('detDesc').innerText = data.description || "Premium Tagown Vehicle Security Accessory.";
             if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
             else { document.getElementById('detBadge').style.display = "none"; }
+
+            // 🚀 Dynamic Timer Logic
+            let endTime = data.offerEndTime; 
+            if(data.flashSaleActive) { 
+                if(!endTime && data.oldPrice) {
+                    let d = new Date();
+                    d.setHours(23, 59, 59, 999);
+                    endTime = d.getTime();
+                }
+            } else {
+                endTime = null;
+            }
+
+            const detTimer = document.getElementById('detTimer');
+            if(endTime) {
+                detTimer.style.display = 'inline-block';
+                detTimer.setAttribute('data-endtime', endTime);
+                window.currentFlashDiscount = data.flashSaleDiscount ? parseInt(data.flashSaleDiscount) : 0; 
+            } else {
+                detTimer.style.display = 'none';
+                detTimer.removeAttribute('data-endtime');
+                window.currentFlashDiscount = 0;
+            }
 
             const slider = document.getElementById('detSlider'); 
             let imgs = [];
@@ -1385,13 +1460,18 @@
             
             let baseSellingPrice = parseInt(data.price) * selectedQty;
             let mrpPrice = (data.oldPrice ? parseInt(data.oldPrice) : parseInt(data.price) + 200) * selectedQty;
+            
+            let flashDiscountAmt = 0;
+            if(window.currentFlashDiscount && window.currentFlashDiscount > 0) {
+                flashDiscountAmt = Math.floor((baseSellingPrice * window.currentFlashDiscount) / 100);
+                baseSellingPrice = baseSellingPrice - flashDiscountAmt;
+            }
+
             let initialProductDiscount = mrpPrice - baseSellingPrice;
             let discountPercent = Math.round((initialProductDiscount / mrpPrice) * 100);
             
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
-            
-            // 🚀 BHAIG LOGIC: Update Cart Review Top Price with Green Color
             document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${baseSellingPrice}</span>`;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
@@ -1408,7 +1488,8 @@
             document.getElementById('chkOriginalPrice').innerText = "₹" + mrpPrice; 
             
             if(initialProductDiscount > 0) {
-                document.getElementById('chkProductDiscountLabel').innerText = `Product Discount (${discountPercent}%):`;
+                let labelTxt = flashDiscountAmt > 0 ? `Flash Sale (${discountPercent}%):` : `Product Discount (${discountPercent}%):`;
+                document.getElementById('chkProductDiscountLabel').innerText = labelTxt;
                 document.getElementById('chkProductDiscount').innerText = "-₹" + initialProductDiscount;
                 document.getElementById('productDiscountRow').style.display = "flex";
             } else {
@@ -1437,12 +1518,15 @@
                     const data = snap.val();
                     const product = currentProducts[selectedProductId];
                     
-                    let baseSellingPrice = parseInt(product.price) * selectedQty;
+                    let basePriceObj = parseInt(product.price) * selectedQty;
+                    if(window.currentFlashDiscount && window.currentFlashDiscount > 0) {
+                        basePriceObj = basePriceObj - Math.floor((basePriceObj * window.currentFlashDiscount) / 100);
+                    }
                     let mrpPrice = (product.oldPrice ? parseInt(product.oldPrice) : parseInt(product.price) + 200) * selectedQty;
 
                     let percentage = 20; 
-                    appliedDiscount = Math.floor((baseSellingPrice * percentage) / 100);
-                    let finalPrice = Math.max(baseSellingPrice - appliedDiscount, 0);
+                    appliedDiscount = Math.floor((basePriceObj * percentage) / 100);
+                    let finalPrice = Math.max(basePriceObj - appliedDiscount, 0);
 
                     appliedPromoCode = code;
                     influencerData = {
@@ -1455,7 +1539,6 @@
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
                     
-                    // Update the top price review block as well
                     document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
@@ -1465,12 +1548,16 @@
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
-                    let baseSellingPrice = parseInt(product.price) * selectedQty;
+                    
+                    let basePriceObj = parseInt(product.price) * selectedQty;
+                    if(window.currentFlashDiscount && window.currentFlashDiscount > 0) {
+                        basePriceObj = basePriceObj - Math.floor((basePriceObj * window.currentFlashDiscount) / 100);
+                    }
                     let mrpPrice = (product.oldPrice ? parseInt(product.oldPrice) : parseInt(product.price) + 200) * selectedQty;
                     
                     document.getElementById('discountRow').style.display = "none";
-                    document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
-                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${baseSellingPrice}</span>`;
+                    document.getElementById('chkPrice').innerText = "₹" + basePriceObj;
+                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${basePriceObj}</span>`;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
@@ -1501,8 +1588,13 @@
             localStorage.setItem('tagownSavedAddress', JSON.stringify(savedAddress));
 
             const product = currentProducts[selectedProductId];
-            const totalSellingPrice = parseInt(product.price) * selectedQty;
-            const finalPrice = Math.max(totalSellingPrice - appliedDiscount, 0);
+            
+            let baseSellingPrice = parseInt(product.price) * selectedQty;
+            if(window.currentFlashDiscount && window.currentFlashDiscount > 0) {
+                baseSellingPrice = baseSellingPrice - Math.floor((baseSellingPrice * window.currentFlashDiscount) / 100);
+            }
+            
+            const finalPrice = Math.max(baseSellingPrice - appliedDiscount, 0);
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
             const date = new Date().toLocaleString();
@@ -1518,7 +1610,7 @@
                 productTitle: product.title, 
                 productName: product.title,
                 quantity: String(selectedQty),
-                originalPrice: String(totalSellingPrice), 
+                originalPrice: String(baseSellingPrice), 
                 discountApplied: String(appliedDiscount), 
                 price: String(finalPrice), 
                 amount: String(finalPrice),
@@ -1594,10 +1686,6 @@
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
-
-        // ==========================================
-        // 📋 PREMIUM MY ORDERS SCREEN LOGIC
-        // ==========================================
 
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
