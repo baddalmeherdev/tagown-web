@@ -25,7 +25,6 @@
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); 
             margin: 0; padding: 0; color: var(--text-main); 
-            /* FIXED: Removed body padding so footer reaches the exact bottom */
             padding-bottom: 0px; 
             overflow-x: hidden;
         }
@@ -38,7 +37,11 @@
         }
         .header-title { font-size: 20px; font-weight: bold; color: white; font-style: italic; letter-spacing: 0.5px;}
         .back-btn { position: absolute; left: 20px; background: transparent; border: none; font-size: 24px; color: white; font-weight: bold; cursor: pointer; display: none; }
-        .cart-icon { position: absolute; right: 20px; font-size: 22px; cursor: pointer;}
+        
+        /* 🚀 TOP HEADER ICONS UPDATE */
+        .top-icons-container { position: absolute; right: 20px; display: flex; gap: 15px; align-items: center; }
+        .top-icon-btn { font-size: 22px; cursor: pointer; position: relative;}
+        .cart-badge { position: absolute; top: -5px; right: -8px; background: #FFB300; color: #000; font-size: 10px; font-weight: bold; padding: 2px 5px; border-radius: 10px; border: 1px solid white;}
 
         /* 📦 Views Management */
         .view-section { display: none; animation: fadeIn 0.3s ease; }
@@ -140,9 +143,24 @@
         .desc-box { background: white; padding: 15px; margin-top: 10px; }
         .desc-text { font-size: 14px; color: #444; font-style: italic; margin-top: 10px; line-height: 1.5;}
 
-        .fixed-bottom-btn { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); box-sizing: border-box; z-index: 90; }
-        .btn-buy-blue { background: var(--primary-blue); color: white; width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
-        .btn-buy-blue:active { transform: scale(0.98); }
+        /* 🚀 NEW FLIPKART STYLE BOTTOM BAR */
+        .fixed-bottom-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; box-shadow: 0 -10px 20px rgba(0,0,0,0.1); display: none; z-index: 90; }
+        .bottom-action-layout { display: flex; width: 100%; }
+        .btn-add-cart { flex: 1; background: white; color: var(--primary-blue); padding: 16px; border: none; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; transition: background 0.2s;}
+        .btn-add-cart:active { background: #f0f0f0; }
+        .btn-buy-now { flex: 1; background: var(--primary-blue); color: white; padding: 16px; border: none; font-size: 15px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; transition: 0.2s;}
+        .btn-buy-now:active { opacity: 0.9; }
+
+        /* 🛒 2.5 CART PAGE VIEW CSS */
+        .cart-container { padding: 15px; }
+        .cart-card { background: white; border-radius: 12px; border: 1px solid #E5E5EA; margin-bottom: 15px; display: flex; padding: 15px; gap: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.02);}
+        .cart-item-img { width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #eee; padding: 5px;}
+        .cart-item-info { flex: 1; display: flex; flex-direction: column; justify-content: space-between;}
+        .cart-item-title { font-size: 14px; font-weight: bold; color: #222; margin: 0 0 5px 0;}
+        .cart-item-price { font-size: 16px; font-weight: 900; color: var(--primary-blue); margin: 0;}
+        .cart-item-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; border-top: 1px dashed #eee; padding-top: 10px;}
+        .btn-remove-cart { background: transparent; border: none; color: #D32F2F; font-size: 12px; font-weight: bold; cursor: pointer; padding: 5px 0;}
+        .btn-buy-cart { background: var(--primary-green); color: white; border: none; padding: 6px 15px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;}
         
         /* 📝 3. MULTI-STEP CHECKOUT FORM VIEW */
         .checkout-container { padding: 15px; }
@@ -178,7 +196,7 @@
         .btn-place-order { background: var(--btn-yellow); color: #000; width: 100%; padding: 18px; border: none; border-radius: 12px; font-size: 15px; font-weight: bold; font-style: italic; letter-spacing: 1px; cursor: pointer; transition: 0.2s;}
         .btn-place-order:active { transform: scale(0.98); }
 
-        /* 📋 4. MY ORDERS HISTORY VIEW (UPGRADED UI) */
+        /* 📋 4. MY ORDERS HISTORY VIEW */
         .order-history-container { padding: 15px; }
         .history-card { background: white; border-radius: 12px; padding: 15px; border: 1px solid #E5E5EA; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column; gap: 12px;}
         .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #eee; padding-bottom: 8px;}
@@ -219,6 +237,12 @@
         .timeline-item.active::before { background: var(--primary-green); }
         .timeline-item.active .timeline-content h4 { color: #222; }
         .timeline-item.active .timeline-content p { color: #555; }
+        
+        /* Live Updates Sub-Timeline */
+        .live-updates-container { margin-top: 10px; margin-bottom: 5px; border-left: 2px dashed #E0E0E0; padding-left: 15px; margin-left: 5px; display: none; }
+        .live-update-item { font-size: 12px; color: #555; padding: 5px 0; position: relative;}
+        .live-update-item::before { content: '•'; color: var(--primary-blue); position: absolute; left: -14px; font-weight: bold; font-size: 16px;}
+        .live-update-time { font-size: 10px; color: #999; display: block;}
 
         .bottom-nav { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; max-width: 500px; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: flex; justify-content: space-around; align-items: center; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.5); z-index: 90; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sub); font-size: 10px; font-weight: 700; cursor: pointer; width: 60px; transition: 0.2s;}
@@ -271,7 +295,7 @@
         .btn-modal-primary:active { transform: scale(0.98); }
         .btn-modal-cancel { background: transparent; color: #888; padding: 12px; width: 100%; border: none; font-weight: bold; font-size: 14px; cursor: pointer; margin-top: 5px;}
 
-        /* 🎉 Confetti Animation (Z-index 10000 so it stays above everything) */
+        /* 🎉 Confetti Animation */
         .confetti { position: fixed; width: 10px; height: 10px; background-color: #f2d74e; opacity: 0; z-index: 10000; animation: fall 3s linear forwards; }
         @keyframes fall { 0% { top: -10%; opacity: 1; transform: translateX(0) rotate(0deg); } 100% { top: 110%; opacity: 0; transform: translateX(100px) rotate(360deg); } }
 
@@ -279,7 +303,7 @@
         .zoom-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;}
         .zoom-container img { max-width: 100%; max-height: 85vh; object-fit: contain; border-radius: 16px; transform-origin: center; transition: transform 0.1s ease-out; }
 
-        /* 🆕 FOOTER CSS UPDATED FOR BLUE THEME (EXTENDED TO BOTTOM) */
+        /* 🆕 FOOTER CSS */
         .footer-container { background: var(--primary-blue); padding: 30px 20px 120px 20px; margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: left; }
         .footer-container h4 { color: white; font-size: 12px; font-weight: 800; letter-spacing: 1px; margin-bottom: 15px; margin-top: 25px;}
         .social-icons { display: flex; gap: 15px; margin-top: 15px; }
@@ -297,7 +321,14 @@
     <div class="header">
         <button class="back-btn" id="btnBack" onclick="goBack()">«</button>
         <div class="header-title" id="pageTitle">Tagown Official Store</div>
-        <div class="cart-icon" id="cartIcon" onclick="openOrderHistory()">🛍️</div>
+        
+        <div class="top-icons-container" id="topIconsContainer">
+            <div class="top-icon-btn" onclick="openCartView()">
+                🛒
+                <span class="cart-badge" id="cartBadgeCount" style="display:none;">0</span>
+            </div>
+            <div class="top-icon-btn" onclick="openOrderHistory()">🛍️</div>
+        </div>
     </div>
 
     <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.95);">
@@ -368,6 +399,12 @@
                 © 2026 Tagown. All Rights Reserved.
             </div>
         </div>
+    </div>
+
+    <div id="viewCart" class="view-section">
+        <div class="cart-container" id="cartContainerBox">
+            </div>
+        <div style="height: 100px;"></div>
     </div>
 
     <div id="viewDetail" class="view-section">
@@ -481,8 +518,11 @@
 
         <div style="height: 100px;"></div>
 
-        <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
-            <button class="btn-buy-blue" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
+        <div class="fixed-bottom-bar" id="fixedBuyBtn">
+            <div class="bottom-action-layout">
+                <button class="btn-add-cart" onclick="addToCart()">ADD TO CART</button>
+                <button class="btn-buy-now" onclick="proceedToCheckout()">BUY NOW</button>
+            </div>
         </div>
     </div>
 
@@ -667,6 +707,9 @@
                         <h4>Shipped</h4>
                         <p>Your item is on the way.</p>
                         <div class="timeline-meta" id="trackShippedMeta"></div>
+                        
+                        <div id="liveUpdatesContainer" class="live-updates-container">
+                            </div>
                     </div>
                 </div>
                 <div class="timeline-item" id="tlOut">
@@ -851,12 +894,16 @@
         let orderToCancel = null;
         window.userOrdersList = [];
 
+        // 🚀 BHAIG LOGIC: Local Cart State
+        let localCart = [];
+
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(currentUserPhone) {
             document.getElementById('chkPhone').value = currentUserPhone;
             db.ref('Users/' + currentUserPhone).once('value').then(snap => {
                 if(snap.exists()) document.getElementById('chkName').value = snap.val().name || '';
             });
+            loadLocalCart();
         }
 
         const legalData = {
@@ -965,7 +1012,6 @@
             };
         }
 
-        // 🚀 Pinch & Pan Image Zoom Logic
         let scale = 1, panning = false, pointX = 0, pointY = 0, start = { x: 0, y: 0 };
         const zoomCont = document.getElementById('zoomContainer');
         const zoomImg = document.getElementById('zoomedImg');
@@ -1127,7 +1173,6 @@
             });
         }
 
-        // 🚀 Timer Update Function 
         setInterval(() => {
             document.querySelectorAll('.urgency-timer').forEach(el => {
                 let endTime = parseInt(el.getAttribute('data-endtime'));
@@ -1277,7 +1322,6 @@
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
-                    // 🚀 Added Flash Sale Timer on Cards
                     let endTime = data.offerEndTime; 
                     if(data.flashSaleActive) {
                         if(!endTime && data.oldPrice) {
@@ -1318,7 +1362,6 @@
             if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
             else { document.getElementById('detBadge').style.display = "none"; }
 
-            // 🚀 Dynamic Timer Logic
             let endTime = data.offerEndTime; 
             if(data.flashSaleActive) { 
                 if(!endTime && data.oldPrice) {
@@ -1390,6 +1433,12 @@
                 selectedQty += change;
                 document.getElementById('qtyDisplay').innerText = selectedQty;
                 let basePrice = parseInt(currentProducts[selectedProductId].price);
+                
+                let flashDiscountAmt = 0;
+                if(window.currentFlashDiscount && window.currentFlashDiscount > 0) {
+                    flashDiscountAmt = Math.floor((basePrice * window.currentFlashDiscount) / 100);
+                    basePrice = basePrice - flashDiscountAmt;
+                }
                 document.getElementById('detPrice').innerText = "₹" + (basePrice * selectedQty);
             }
         }
@@ -1449,6 +1498,127 @@
             toggleStep(step);
         }
         
+        // 🚀 ADD TO CART LOGIC
+        function loadLocalCart() {
+            let saved = localStorage.getItem('tagownLocalCart');
+            if(saved) {
+                localCart = JSON.parse(saved);
+            }
+            updateCartBadge();
+        }
+
+        function updateCartBadge() {
+            const badge = document.getElementById('cartBadgeCount');
+            if(localCart.length > 0) {
+                badge.style.display = 'block';
+                badge.innerText = localCart.length;
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function addToCart() {
+            if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
+            
+            const data = currentProducts[selectedProductId];
+            
+            let exists = localCart.findIndex(item => item.id === selectedProductId && item.vehicle === selectedVehicleType);
+            if(exists > -1) {
+                localCart[exists].qty += selectedQty;
+            } else {
+                localCart.push({
+                    id: selectedProductId,
+                    title: data.title,
+                    price: data.price,
+                    oldPrice: data.oldPrice,
+                    img: (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp",
+                    qty: selectedQty,
+                    vehicle: selectedVehicleType,
+                    flashDiscount: window.currentFlashDiscount
+                });
+            }
+            
+            localStorage.setItem('tagownLocalCart', JSON.stringify(localCart));
+            updateCartBadge();
+
+            // Notify Admin Firebase
+            let safePhone = currentUserPhone.replace(/\D/g, '');
+            if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
+            db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
+                productName: data.title,
+                date: new Date().toLocaleDateString()
+            });
+
+            // Mini Toast
+            let toast = document.createElement('div');
+            toast.innerText = "Added to Cart! 🛒";
+            toast.style.cssText = "position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; font-size:12px; font-weight:bold; z-index:9999;";
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function openCartView() {
+            if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
+            document.getElementById('pageTitle').innerText = "My Cart";
+            switchView('viewCart');
+            
+            let container = document.getElementById('cartContainerBox');
+            if(localCart.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:50px 20px;">
+                        <div style="font-size:50px; margin-bottom:10px;">🛒</div>
+                        <h3 style="color:#555; margin:0; font-style:italic;">Cart is Empty</h3>
+                        <p style="color:#888; font-size:13px; font-style:italic;">Looks like you haven't added anything yet.</p>
+                        <button onclick="goBackToHome()" style="margin-top:15px; background:var(--primary-blue); color:white; border:none; padding:10px 20px; border-radius:12px; font-weight:bold; font-style:italic; cursor:pointer;">Start Shopping</button>
+                    </div>
+                `;
+            } else {
+                let html = '';
+                localCart.forEach((item, index) => {
+                    html += `
+                        <div class="cart-card">
+                            <img src="${item.img}" class="cart-item-img">
+                            <div class="cart-item-info">
+                                <div>
+                                    <h3 class="cart-item-title">${item.title}</h3>
+                                    <p style="font-size:11px; color:#666; margin:0 0 5px 0;">Vehicle: ${item.vehicle} | Qty: ${item.qty}</p>
+                                    <p class="cart-item-price">₹${item.price}</p>
+                                </div>
+                                <div class="cart-item-actions">
+                                    <button class="btn-remove-cart" onclick="removeFromCart(${index})">Remove</button>
+                                    <button class="btn-buy-cart" onclick="buyFromCart(${index})">Buy Now</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        }
+
+        function removeFromCart(index) {
+            let item = localCart[index];
+            localCart.splice(index, 1);
+            localStorage.setItem('tagownLocalCart', JSON.stringify(localCart));
+            updateCartBadge();
+            openCartView();
+            
+            // Clean from Admin Abandoned Cart if removed
+            let safePhone = currentUserPhone.replace(/\D/g, '');
+            if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
+            db.ref('AbandonedCarts/' + safePhone + '/' + item.id).remove();
+        }
+
+        function buyFromCart(index) {
+            let item = localCart[index];
+            selectedProductId = item.id;
+            selectedVehicleType = item.vehicle;
+            selectedQty = item.qty;
+            window.currentFlashDiscount = item.flashDiscount;
+            proceedToCheckout();
+        }
+
         function proceedToCheckout() {
             if(!selectedVehicleType) { showPremiumAlert('Action Required', 'Please select a Vehicle Type first!', 'error'); return; }
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
@@ -1498,6 +1668,14 @@
 
             document.getElementById('chkSellingPrice').innerText = "₹" + baseSellingPrice; 
             document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
+
+            // Optional: Save to abandoned cart if going to checkout without using "Add to Cart" button first
+            let safePhone = currentUserPhone.replace(/\D/g, '');
+            if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
+            db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
+                productName: data.title,
+                date: new Date().toLocaleDateString()
+            });
 
             switchView('viewCheckout');
             toggleStep(1); 
@@ -1640,16 +1818,26 @@
 
             db.ref().update(updates).then(() => {
                 
-                let cleanPhone = phone.replace(/\D/g, '');
-                if(cleanPhone.length > 10 && cleanPhone.startsWith('91')) cleanPhone = cleanPhone.substring(cleanPhone.length - 10);
+                // 🚀 ABANDONED CART LOGIC: Remove item if order placed
+                let safePhone = phone.replace(/\D/g, '');
+                if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
+                db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).remove();
                 
+                // Also remove from local cart
+                let cartIndex = localCart.findIndex(c => c.id === selectedProductId);
+                if(cartIndex > -1) {
+                    localCart.splice(cartIndex, 1);
+                    localStorage.setItem('tagownLocalCart', JSON.stringify(localCart));
+                    updateCartBadge();
+                }
+
                 fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                     method: "POST", 
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         app_id: "bba5806a-bf29-4604-a8ca-9f796d828513", 
                         target_channel: "push",
-                        include_aliases: { external_id: [cleanPhone, "91"+cleanPhone] },
+                        include_aliases: { external_id: [safePhone, "91"+safePhone] },
                         headings: {"en": "Order Placed Successfully! 🎉"}, 
                         contents: {"en": "Your order for " + product.title + " is confirmed. We will ship it soon!"},
                         priority: 10, 
@@ -1686,6 +1874,10 @@
                 btn.innerText = "CONFIRM & PLACE ORDER"; btn.disabled = false;
             });
         }
+
+        // ==========================================
+        // 📋 PREMIUM MY ORDERS SCREEN LOGIC
+        // ==========================================
 
         function openOrderHistory() {
             if(!currentUserPhone) { document.getElementById('loginRequiredModal').style.display = 'flex'; return; }
@@ -1784,16 +1976,27 @@
 
         function processCancelOrder() {
             if(orderToCancel) {
-                let updates = {};
-                updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/status'] = "Cancelled";
-                updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/orderStatus'] = "Cancelled";
-                updates['Orders/' + orderToCancel + '/status'] = "Cancelled";
-                updates['Orders/' + orderToCancel + '/orderStatus'] = "Cancelled";
-                db.ref().update(updates).then(() => {
-                    document.getElementById('cancelOrderModal').style.display = 'none';
-                    showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
-                    orderToCancel = null;
-                });
+                const order = window.userOrdersList.find(o => o.orderId === orderToCancel);
+                if(order) {
+                    order.status = "Cancelled";
+                    order.orderStatus = "Cancelled";
+                    
+                    let updates = {};
+                    updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/status'] = "Cancelled";
+                    updates['UserOrders/' + currentUserPhone + '/' + orderToCancel + '/orderStatus'] = "Cancelled";
+                    updates['Orders/' + orderToCancel + '/status'] = "Cancelled";
+                    updates['Orders/' + orderToCancel + '/orderStatus'] = "Cancelled";
+                    
+                    // 🚀 Move fully to CancelOrderHistory
+                    updates['CancelOrderHistory/' + orderToCancel] = order;
+                    updates['Orders/' + orderToCancel] = null;
+
+                    db.ref().update(updates).then(() => {
+                        document.getElementById('cancelOrderModal').style.display = 'none';
+                        showPremiumAlert("Cancelled", "Your order has been cancelled successfully.", "success");
+                        orderToCancel = null;
+                    });
+                }
             }
         }
 
@@ -1831,8 +2034,30 @@
                 } 
                 if(order.shippedLocation) shippedMeta += " • " + order.shippedLocation;
                 document.getElementById('trackShippedMeta').innerText = shippedMeta;
+                
+                // 🚀 MULTIPLE UPDATES LOGIC
+                const liveBox = document.getElementById('liveUpdatesContainer');
+                if(order.LiveUpdates) {
+                    liveBox.style.display = "block";
+                    let liveHtml = "";
+                    Object.values(order.LiveUpdates).forEach(update => {
+                        let upTime = new Date(parseInt(update.time)).toLocaleString();
+                        liveHtml += `
+                            <div class="live-update-item">
+                                ${update.message}
+                                <span class="live-update-time">${upTime}</span>
+                            </div>
+                        `;
+                    });
+                    liveBox.innerHTML = liveHtml;
+                } else {
+                    liveBox.style.display = "none";
+                    liveBox.innerHTML = "";
+                }
+
             } else {
                 document.getElementById('trackShippedMeta').innerText = "";
+                document.getElementById('liveUpdatesContainer').style.display = "none";
             }
 
             if(sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
@@ -1873,13 +2098,20 @@
             if(viewId !== 'viewList') {
                 document.getElementById('bottomNav').classList.add('hide-nav');
                 document.getElementById('btnBack').style.display = 'block';
-                document.getElementById('cartIcon').style.display = 'none';
+                
+                // Hide cart icon on other pages except Cart itself
+                if(viewId === 'viewCart') {
+                    document.getElementById('cartIcon').style.display = 'block';
+                } else {
+                    document.getElementById('topIconsContainer').style.display = 'none';
+                }
+
                 if(viewId === 'viewDetail') document.getElementById('fixedBuyBtn').style.display = 'block';
                 else document.getElementById('fixedBuyBtn').style.display = 'none';
             } else {
                 document.getElementById('bottomNav').classList.remove('hide-nav');
                 document.getElementById('btnBack').style.display = 'none';
-                document.getElementById('cartIcon').style.display = 'block';
+                document.getElementById('topIconsContainer').style.display = 'flex';
                 document.getElementById('fixedBuyBtn').style.display = 'none';
                 document.getElementById('pageTitle').innerText = "Tagown Official Store";
                 clearInterval(sliderInterval);
@@ -1889,7 +2121,7 @@
         function goBack() {
             if(document.getElementById('viewCheckout').classList.contains('active-view')) {
                 document.getElementById('exitCheckoutModal').style.display = 'flex';
-            } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view')) {
+            } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view') || document.getElementById('viewCart').classList.contains('active-view')) {
                 goBackToHome();
             }
         }
