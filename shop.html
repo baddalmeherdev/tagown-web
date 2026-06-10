@@ -296,7 +296,7 @@
     </div>
 
     <div id="imageZoomModal" class="overlay" style="z-index: 2000; background: rgba(0,0,0,0.95);">
-        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">&times;</span>
+        <span style="position: absolute; top: 20px; right: 25px; color: white; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 2010;" onclick="closeZoom()">×</span>
         <div class="zoom-container" id="zoomContainer">
             <img id="zoomedImg" src="">
         </div>
@@ -333,8 +333,7 @@
         
         <div class="footer-container">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-                <img src="app_logo.png" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'" alt="Tagown App" style="width: 45px; height: 45px; object-fit: contain; filter: brightness(0) invert(1);">
-                <span style="font-size: 22px; font-weight: 900; color: white; font-style: italic; letter-spacing: 1px;">TAGOWN</span>
+                <img src="app_logo.webp" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png'" alt="Tagown App" style="width: 45px; height: 45px; object-fit: contain;">
             </div>
             <p style="color: white; font-size: 13px; line-height: 1.5; margin-top: 10px;">Premium vehicle security solutions delivered to your doorstep. Experience safety made simple.</p>
             
@@ -355,7 +354,7 @@
             
             <h4>GET IN TOUCH</h4>
             <div class="footer-contact">
-                <p>📍 Tagown Company, Kuamania, Kuchipali, Bargarh, Odisha, India</p>
+                <p>📍 Kuamania, Kuchipali, Bargarh, Odisha, India</p>
                 <p>📞 +91 6372980014 <br><span style="color: rgba(255,255,255,0.7); font-size: 11px; margin-left: 25px;">Mon - Fri, 10am - 6pm</span></p>
                 <p>✉️ Tagownapp@gmail.com</p>
             </div>
@@ -444,7 +443,7 @@
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q: Is it Waterproof & Sun-proof?</div>
-                <div class="faq-a">A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading or peeling.</div>
+                <div class="faq-a">A: Yes! Our smart stickers are 100% weather-proof and designed to last years without fading.</div>
             </div>
             <div class="faq-item">
                 <div class="faq-q">Q: What if the vehicle is stolen?</div>
@@ -458,6 +457,14 @@
                 <div class="faq-q">Q: Is an App required to scan?</div>
                 <div class="faq-a">A: No, anyone can scan the sticker using their normal phone camera, Google Lens, or Paytm/PhonePe scanners.</div>
             </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: Can I reuse the sticker on another vehicle?</div>
+                <div class="faq-a">A: Our stickers use strong adhesive for security. Once pasted, they cannot be easily removed without damage, so they are not reusable.</div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-q">Q: How many days for delivery?</div>
+                <div class="faq-a">A: We dispatch within 24 hours. Usually, it takes 3 to 7 working days to reach anywhere in India via Shiprocket logistics.</div>
+            </div>
         </div>
 
         <div style="padding:15px; margin-top:5px;">
@@ -465,7 +472,7 @@
             <div class="related-scroll" id="relatedProducts"></div>
         </div>
 
-        <div style="height: 120px;"></div>
+        <div style="height: 100px;"></div>
 
         <div class="fixed-bottom-btn" id="fixedBuyBtn" style="display: none;">
             <button class="btn-buy-blue" onclick="proceedToCheckout()">PROCEED TO CHECKOUT</button>
@@ -615,7 +622,7 @@
                 </div>
             </div>
 
-            <div style="height: 120px;"></div>
+            <div style="height: 40px;"></div>
         </div>
     </div>
 
@@ -845,7 +852,6 @@
             });
         }
 
-        // 🚀 Legal Content Viewer Data
         const legalData = {
             'privacy': `
                 <h4 style="color:#111; font-weight:bold;">1. Data We Collect</h4>
@@ -861,7 +867,7 @@
                 <h4 style="color:#111; font-weight:bold;">6. Cookies & Changes</h4>
                 <p>App usage analytics collected for improvement. No advertising tracking. Policy updated with 30 days notice via app notification. Continued use = acceptance.</p>
                 <h4 style="color:#111; font-weight:bold;">7. Contact</h4>
-                <p>Tagown Technologies, Odisha.<br>Email: Tagownapp@gmail.com<br>Phone: +91 6372980014</p>
+                <p>Odisha.<br>Email: Tagownapp@gmail.com<br>Phone: +91 6372980014</p>
             `,
             'return': `
                 <h4 style="color:#111; font-weight:bold;">Return Window</h4>
@@ -904,6 +910,10 @@
                 <p>A: No, this is a one-time purchase with lifetime validity. No hidden charges.</p>
                 <h4 style="color:#111; font-weight:bold;">Q: Is an App required to scan?</h4>
                 <p>A: No, anyone can scan the sticker using their normal phone camera, Google Lens, or Paytm/PhonePe scanners.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: Can I reuse the sticker on another vehicle?</h4>
+                <p>A: Our stickers use strong adhesive for security. Once pasted, they cannot be easily removed without damage, so they are not reusable.</p>
+                <h4 style="color:#111; font-weight:bold;">Q: How many days for delivery?</h4>
+                <p>A: We dispatch within 24 hours. Usually, it takes 3 to 7 working days to reach anywhere in India via Shiprocket logistics.</p>
             `
         };
 
@@ -1103,7 +1113,7 @@
             });
         }
 
-        // 🚀 CONFETTI LOGIC (Z-index updated)
+        // 🚀 CONFETTI LOGIC
         function fireConfetti() {
             const container = document.getElementById('confetti-container');
             const colors = ['#0D47A1', '#00C853', '#FFB300', '#D32F2F', '#8E8E93'];
@@ -1380,7 +1390,9 @@
             
             document.getElementById('chkProductName').innerText = data.title;
             document.getElementById('chkProductQty').innerText = `Qty: ${selectedQty} | Vehicle: ${selectedVehicleType}`;
-            document.getElementById('chkBasePriceDisplay').innerText = "₹" + baseSellingPrice;
+            
+            // 🚀 BHAIG LOGIC: Update Cart Review Top Price with Green Color
+            document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${baseSellingPrice}</span>`;
             
             let rImg = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
             document.getElementById('chkProductImg').src = rImg;
@@ -1424,11 +1436,13 @@
                 if(snap.exists() && snap.child("status").val() && String(snap.child("status").val()).toLowerCase() === "active") {
                     const data = snap.val();
                     const product = currentProducts[selectedProductId];
-                    const totalSellingPrice = parseInt(product.price) * selectedQty;
+                    
+                    let baseSellingPrice = parseInt(product.price) * selectedQty;
+                    let mrpPrice = (product.oldPrice ? parseInt(product.oldPrice) : parseInt(product.price) + 200) * selectedQty;
 
                     let percentage = 20; 
-                    appliedDiscount = Math.floor((totalSellingPrice * percentage) / 100);
-                    let finalPrice = Math.max(totalSellingPrice - appliedDiscount, 0);
+                    appliedDiscount = Math.floor((baseSellingPrice * percentage) / 100);
+                    let finalPrice = Math.max(baseSellingPrice - appliedDiscount, 0);
 
                     appliedPromoCode = code;
                     influencerData = {
@@ -1441,7 +1455,8 @@
                     document.getElementById('discountRow').style.display = "flex";
                     document.getElementById('chkPrice').innerText = "₹" + finalPrice;
                     
-                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${totalSellingPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
+                    // Update the top price review block as well
+                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${finalPrice}</span>`;
 
                     msg.innerText = `Promo code applied! (${percentage}% Off) ✅`; 
                     msg.style.color = "#00C853";
@@ -1450,11 +1465,12 @@
                 } else {
                     appliedPromoCode = null; appliedDiscount = 0; influencerData = null;
                     const product = currentProducts[selectedProductId];
-                    let totalSellingPrice = parseInt(product.price) * selectedQty;
+                    let baseSellingPrice = parseInt(product.price) * selectedQty;
+                    let mrpPrice = (product.oldPrice ? parseInt(product.oldPrice) : parseInt(product.price) + 200) * selectedQty;
                     
                     document.getElementById('discountRow').style.display = "none";
-                    document.getElementById('chkPrice').innerText = "₹" + totalSellingPrice;
-                    document.getElementById('chkBasePriceDisplay').innerText = "₹" + totalSellingPrice;
+                    document.getElementById('chkPrice').innerText = "₹" + baseSellingPrice;
+                    document.getElementById('chkBasePriceDisplay').innerHTML = `<span style="text-decoration:line-through; color:#888; font-size:13px; font-weight:normal;">₹${mrpPrice}</span> <span style="color:#00C853;">₹${baseSellingPrice}</span>`;
 
                     msg.innerText = "Invalid or expired promo code."; msg.style.color = "#D32F2F";
                 }
