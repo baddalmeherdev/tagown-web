@@ -896,6 +896,8 @@
         let sliderInterval;
         let selectedQty = 1;
         let userRating = 5; 
+        
+        let isOutOfStock = false; // 🚀 ADDED: Out of stock tracking
 
         let appliedPromoCode = null;
         let appliedDiscount = 0;
@@ -1333,7 +1335,14 @@
                 currentProducts = snapshot.val(); 
                 snapshot.forEach((child) => {
                     const id = child.key; const data = child.val();
-                    let badgeHtml = data.badge ? `<div class="product-badge">${data.badge}</div>` : '';
+                    
+                    // 🚀 OUT OF STOCK BADGE UPDATE FOR LIST VIEW
+                    let badgeHtml = '';
+                    if (data.outOfStock) {
+                        badgeHtml = `<div class="product-badge" style="background:#D32F2F;">OUT OF STOCK</div>`;
+                    } else if (data.badge) {
+                        badgeHtml = `<div class="product-badge">${data.badge}</div>`;
+                    }
                     
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
@@ -1375,6 +1384,9 @@
             selectedProductId = id; const data = currentProducts[id];
             selectedQty = 1; 
             document.getElementById('qtyDisplay').innerText = selectedQty;
+            
+            // 🚀 OUT OF STOCK CHECK
+            isOutOfStock = data.outOfStock === true;
 
             fetchReviews(id);
 
@@ -1382,8 +1394,23 @@
             document.getElementById('detTitle').innerText = data.title;
             document.getElementById('detOldPrice').innerText = data.oldPrice ? "₹" + data.oldPrice : "";
             document.getElementById('detDesc').innerText = data.description || "Premium Tagown Vehicle Security Accessory.";
-            if(data.badge) { document.getElementById('detBadge').style.display = "block"; document.getElementById('detBadge').innerText = data.badge; } 
-            else { document.getElementById('detBadge').style.display = "none"; }
+            
+            // 🚀 OUT OF STOCK BADGE AND BUTTON LOGIC
+            if (isOutOfStock) {
+                document.getElementById('detBadge').style.display = "block";
+                document.getElementById('detBadge').innerText = "OUT OF STOCK";
+                document.getElementById('detBadge').style.background = "#D32F2F";
+                document.querySelector('.btn-buy-now').style.display = "none";
+            } else {
+                document.querySelector('.btn-buy-now').style.display = "block";
+                if(data.badge) { 
+                    document.getElementById('detBadge').style.display = "block"; 
+                    document.getElementById('detBadge').innerText = data.badge; 
+                    document.getElementById('detBadge').style.background = "#E53935";
+                } else { 
+                    document.getElementById('detBadge').style.display = "none"; 
+                }
+            }
 
             // 🚀 Dynamic Timer & Detail Live Price Logic
             let basePrice = parseInt(data.price);
@@ -1586,8 +1613,13 @@
                 productName: data.title,
                 date: new Date().toLocaleDateString()
             });
+            
+            // 🚀 ADDED: OUT OF STOCK NOTIFICATION LOGIC
+            if (isOutOfStock && currentUserPhone) {
+                db.ref('RestockSubscribers/' + selectedProductId + '/' + safePhone).set(true);
+            }
 
-            // 🚀 Notify Admin Device Push Notification
+            // Notify Admin Device Push Notification
             fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                 method: "POST", 
                 headers: { "Content-Type": "application/json" },
@@ -1664,6 +1696,11 @@
 
         function buyFromCart(index) {
             let item = localCart[index];
+            // 🚀 ADDED: Safety check for out of stock items directly from cart
+            if (currentProducts[item.id] && currentProducts[item.id].outOfStock) {
+                showPremiumAlert('Out of Stock', 'Sorry, this item is currently out of stock!', 'error');
+                return;
+            }
             selectedProductId = item.id;
             selectedVehicleType = item.vehicle;
             selectedQty = item.qty;
