@@ -45,7 +45,6 @@
         .order-item:last-child { border-bottom: none; padding-bottom: 0;}
         .badge-pending { background: #FFF8E1; color: #F57F17; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
         .badge-completed { background: #E8F5E9; color: #2E7D32; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
-        /* 🚀 ADDED: Returned Badge Style */
         .badge-returned { background: #FFEBEE; color: #D32F2F; padding: 4px 10px; border-radius: 100px; font-size: 10px; font-weight: bold; }
 
         /* ✨ YOUTUBE STYLE SHIMMER EFFECT (Flash sweep) */
@@ -210,8 +209,9 @@
             </div>
 
             <div class="stats-grid">
+                <!-- 🚀 CHANGED: "Pipeline / Locked" to "Pending Earnings" -->
                 <div class="stat-box active" id="tabPending" onclick="switchTxTab('pending')">
-                    <div class="stat-title">Pipeline / Locked</div>
+                    <div class="stat-title">Pending Earnings</div>
                     <div class="stat-val" id="statPendingContainer">
                         <div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>
                     </div>
@@ -229,10 +229,19 @@
             <button class="btn-primary" id="btnWithdraw" style="background: var(--green); margin-bottom: 20px;" onclick="openWithdrawModal()">WITHDRAW FUNDS</button>
 
             <div class="card">
-                <h3 id="txTitle" style="margin-top: 0; font-size: 16px; color: var(--primary);">Pending & Locked</h3>
+                <!-- 🚀 CHANGED: "Pending & Locked" to "Pending Transactions" -->
+                <h3 id="txTitle" style="margin-top: 0; font-size: 16px; color: var(--primary);">Pending Transactions</h3>
                 
                 <div id="listPending">
-                    <div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>
+                    <!-- 🚀 ADDED: Clear Info Banner about 5-Day policy -->
+                    <div id="pendingInfoBanner" style="background: #FFF8E1; border: 1px solid #FFE082; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: none;">
+                        <p style="margin: 0; font-size: 11px; color: #E65100; font-weight: bold; line-height: 1.4;">
+                            ℹ️ Note: Commission for delivered orders remains in 'Pending' for a 5-Day verification window to account for customer returns. If not returned, it will auto-move to 'Available Payout'.
+                        </p>
+                    </div>
+                    <div id="pendingDataContainer">
+                        <div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>
+                    </div>
                 </div>
                 
                 <div id="listAvailable" class="hidden">
@@ -295,8 +304,12 @@
             <h3 style="text-align: center; color: var(--primary);">📜 Privacy Policy & Legal Terms</h3>
             <p><b>1. Authentic Representations:</b> As a Tagown Partner, you agree to make real and authentic claims about our products. No fake or exaggerated promises should be made to customers.</p>
             <p><b>2. Payout Timeline:</b> Once a withdrawal is requested, the amount will be processed and credited to your linked account within <b>10 Minutes to 24 Hours</b>.</p>
-            <p><b>3. Payout Lock Period:</b> Your commission (₹120) is credited securely. However, it will remain locked for <b>5 days</b> after product delivery. If the product is returned within 5 days, the commission will be revoked automatically.</p>
+            
+            <!-- 🚀 ADDED: Strict Legal terms for 5 Day Return and Fraud -->
+            <p><b>3. Commission & Return Policy:</b> Commissions (₹120/order) are subject to a mandatory <b>5-day verification period</b> post-delivery to account for customer returns. During this period, funds will reflect as 'Pending'. If a customer initiates a valid return within these 5 days, the associated commission will be automatically marked as 'Returned' and revoked. Tagown holds final authority on return validations to prevent fraud.</p>
             <p><b>4. DPDP Act Compliance:</b> We respect customer privacy. Extracting, saving, or misusing any partial customer data visible on this portal is strictly prohibited and legally binding.</p>
+            <p><b>5. Fraud Prevention & Legal:</b> Any attempt to generate fake orders, exploit the promo system, or manipulate the return policy will result in immediate account termination, forfeiture of all pending/available funds, and potential legal action. Tagown reserves the right to modify these terms without prior notice.</p>
+            
             <button class="btn-primary" style="margin-top: 15px;" onclick="document.getElementById('privacyModal').style.display='none'">I AGREE & UNDERSTAND</button>
         </div>
     </div>
@@ -469,7 +482,7 @@
                         
                         document.getElementById('statPendingContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
                         document.getElementById('statAvailableContainer').innerHTML = '<div class="skeleton" style="height:25px; width:60px; margin: 5px auto;"></div>';
-                        document.getElementById('listPending').innerHTML = '<div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>';
+                        document.getElementById('pendingDataContainer').innerHTML = '<div style="padding: 10px 0;"><div class="skeleton skel-box"></div><div class="skeleton skel-box"></div></div>';
                         loadDashboard(loggedInPhone);
                     });
                 }
@@ -489,7 +502,8 @@
             if(tab === 'pending') {
                 document.getElementById('tabPending').classList.add('active');
                 document.getElementById('listPending').classList.remove('hidden');
-                document.getElementById('txTitle').innerText = "Pending & Locked";
+                // 🚀 CHANGED TEXT
+                document.getElementById('txTitle').innerText = "Pending Transactions";
                 document.getElementById('txTitle').style.color = "#F57C00";
             } else {
                 document.getElementById('tabAvailable').classList.add('active');
@@ -516,9 +530,10 @@
                 let pendingTotal = 0; let grossAvailable = 0; let withdrawnAmount = 0;
                 let htmlPending = ''; let htmlAvailable = '';
                 
-                // 🚀 BHAIG LOGIC: 5 Days calculation parameters
+                // 5 Days calculation parameters
                 const FIVE_DAYS_MS = 5 * 24 * 60 * 60 * 1000;
                 const currentTime = Date.now();
+                let hasPendingItems = false; // To show/hide banner
 
                 if(snapshot.hasChild("Pending")) {
                     snapshot.child("Pending").forEach(child => {
@@ -529,12 +544,12 @@
                         let statusStr = data.status || "Pending";
                         let sLower = statusStr.toLowerCase();
 
-                        let displayStat = "Pending";
+                        let displayStat = "Pending ⏳";
                         let badgeClass = "badge-pending";
                         let isAvailable = false;
                         let isReturned = false;
 
-                        // 🚀 5-DAY LOCK & RETURN EVALUATION
+                        // 🚀 NO MORE "LOCKED" WORD. USING "PENDING"
                         if (sLower === "returned") {
                             isReturned = true;
                             displayStat = "Returned ❌";
@@ -555,7 +570,7 @@
                                 displayStat = "Available ✅";
                                 badgeClass = "badge-completed";
                             } else {
-                                displayStat = "Locked (5 Days) ⏳";
+                                displayStat = "Pending ⏳";
                                 badgeClass = "badge-pending";
                             }
                         } else {
@@ -563,7 +578,7 @@
                             badgeClass = "badge-pending";
                         }
 
-                        // 🚀 IF RETURNED: Cut the amount visually
+                        // IF RETURNED: Cut the amount visually
                         let amountDisplay = isReturned 
                                 ? `<span style="text-decoration: line-through; color: #888;">₹${amt}</span> <span style="color:#D32F2F; font-size:13px;">₹0</span>` 
                                 : `₹${amt}`;
@@ -576,10 +591,12 @@
                         `;
 
                         if (isReturned) {
-                            htmlPending += itemHtml; // Just show it in pending list as returned (0 money added)
+                            htmlPending += itemHtml; 
+                            hasPendingItems = true;
                         } else if (!isAvailable) { 
                             pendingTotal += amt; 
                             htmlPending += itemHtml;
+                            hasPendingItems = true;
                         } else { 
                             grossAvailable += amt; 
                             htmlAvailable += itemHtml;
@@ -612,7 +629,10 @@
                 document.getElementById('statAvailableContainer').innerHTML = `₹${availableTotalBalance}`;
                 document.getElementById('withdrawAvailBal').innerText = availableTotalBalance;
                 
-                document.getElementById('listPending').innerHTML = htmlPending || `<p style="text-align: center; color: #888; font-size: 13px;">No pending or locked orders.</p>`;
+                // Show Banner only if there are pending items
+                document.getElementById('pendingInfoBanner').style.display = hasPendingItems ? 'block' : 'none';
+
+                document.getElementById('pendingDataContainer').innerHTML = htmlPending || `<p style="text-align: center; color: #888; font-size: 13px;">No pending orders.</p>`;
                 document.getElementById('listAvailable').innerHTML = htmlAvailable || `<p style="text-align: center; color: #888; font-size: 13px;">No completed orders or withdrawals yet.</p>`;
             });
 
