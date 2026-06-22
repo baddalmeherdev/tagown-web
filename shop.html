@@ -881,6 +881,7 @@
     </div>
 
     <script>
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyBDnpCaYgS9pm7Ivw4o7LQ1uBFaX8GviLg",
             authDomain: "meherdevlopstudio.firebaseapp.com",
@@ -897,7 +898,7 @@
         let selectedQty = 1;
         let userRating = 5; 
         
-        let isOutOfStock = false; // 🚀 ADDED: Out of stock tracking
+        let isOutOfStock = false; 
 
         let appliedPromoCode = null;
         let appliedDiscount = 0;
@@ -905,8 +906,48 @@
         let orderToCancel = null;
         window.userOrdersList = [];
 
-        // 🚀 LOCAL CART LOGIC
         let localCart = [];
+
+        // 🚀 NEW FUNCTION: Get formatted date EXACTLY like Android (dd/MM/yyyy, hh:mm:ss a)
+        function getFormattedDate() {
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            const strHours = String(hours).padStart(2, '0');
+            
+            return `${day}/${month}/${year}, ${strHours}:${minutes}:${seconds} ${ampm}`;
+        }
+
+        // 🚀 NEW FUNCTION: Safely parse either old format or new exact Android format for sorting
+        function parseOrderDate(dateStr) {
+            if (!dateStr) return 0;
+            // Check for our exact format: 14/06/2026, 01:23:03 pm
+            let parts = String(dateStr).match(/(\d{2})\/(\d{2})\/(\d{4}), (\d{2}):(\d{2}):(\d{2}) (am|pm)/i);
+            if (parts) {
+                let day = parseInt(parts[1], 10);
+                let month = parseInt(parts[2], 10) - 1;
+                let year = parseInt(parts[3], 10);
+                let hours = parseInt(parts[4], 10);
+                let minutes = parseInt(parts[5], 10);
+                let seconds = parseInt(parts[6], 10);
+                let ampm = parts[7].toLowerCase();
+                if (ampm === 'pm' && hours < 12) hours += 12;
+                if (ampm === 'am' && hours === 12) hours = 0;
+                return new Date(year, month, day, hours, minutes, seconds).getTime();
+            }
+            // Fallback for native Date parsing (older records)
+            let parsed = new Date(dateStr).getTime();
+            return isNaN(parsed) ? 0 : parsed;
+        }
 
         const currentUserPhone = localStorage.getItem("tagownUserPhone");
         if(currentUserPhone) {
@@ -1319,8 +1360,9 @@
             let text = document.getElementById('reviewText').value.trim();
             if(!text) text = "Great product!";
             
+            // 🚀 MODIFIED: EXACT APP FORMAT
             db.ref('ProductReviews/' + selectedProductId).push({
-                rating: userRating, text: text, phone: currentUserPhone || "Customer", timestamp: new Date().toLocaleString()
+                rating: userRating, text: text, phone: currentUserPhone || "Customer", timestamp: getFormattedDate()
             }).then(() => {
                 document.getElementById('postOrderRatingModal').style.display = 'none';
                 showPremiumAlert("Thank You!", "Your review has been submitted.", "success");
@@ -1336,7 +1378,6 @@
                 snapshot.forEach((child) => {
                     const id = child.key; const data = child.val();
                     
-                    // 🚀 OUT OF STOCK BADGE UPDATE FOR LIST VIEW
                     let badgeHtml = '';
                     if (data.outOfStock) {
                         badgeHtml = `<div class="product-badge" style="background:#D32F2F;">OUT OF STOCK</div>`;
@@ -1347,7 +1388,6 @@
                     let img = (data.imgUrl1 && data.imgUrl1.trim() !== "") ? data.imgUrl1 : "banner_home_tag.webp";
                     let oldPriceHtml = data.oldPrice ? `<span class="price-old">₹${data.oldPrice}</span>` : '';
                     
-                    // 🚀 LIVE DISCOUNT LOGIC FOR LIST VIEW
                     let basePrice = parseInt(data.price);
                     let endTime = data.offerEndTime; 
                     if(data.flashSaleActive) {
@@ -1385,7 +1425,6 @@
             selectedQty = 1; 
             document.getElementById('qtyDisplay').innerText = selectedQty;
             
-            // 🚀 OUT OF STOCK CHECK
             isOutOfStock = data.outOfStock === true;
 
             fetchReviews(id);
@@ -1395,7 +1434,6 @@
             document.getElementById('detOldPrice').innerText = data.oldPrice ? "₹" + data.oldPrice : "";
             document.getElementById('detDesc').innerText = data.description || "Premium Tagown Vehicle Security Accessory.";
             
-            // 🚀 OUT OF STOCK BADGE AND BUTTON LOGIC
             if (isOutOfStock) {
                 document.getElementById('detBadge').style.display = "block";
                 document.getElementById('detBadge').innerText = "OUT OF STOCK";
@@ -1412,7 +1450,6 @@
                 }
             }
 
-            // 🚀 Dynamic Timer & Detail Live Price Logic
             let basePrice = parseInt(data.price);
             let endTime = data.offerEndTime; 
             if(data.flashSaleActive) { 
@@ -1562,7 +1599,6 @@
             toggleStep(step);
         }
         
-        // 🚀 ADD TO CART LOGIC
         function loadLocalCart() {
             let saved = localStorage.getItem('tagownLocalCart');
             if(saved) {
@@ -1606,20 +1642,18 @@
             localStorage.setItem('tagownLocalCart', JSON.stringify(localCart));
             updateCartBadge();
 
-            // Notify Admin Firebase Abandoned Cart
+            // 🚀 MODIFIED: EXACT APP FORMAT FOR CART ABANDON DATE
             let safePhone = currentUserPhone.replace(/\D/g, '');
             if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
             db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
                 productName: data.title,
-                date: new Date().toLocaleDateString()
+                date: getFormattedDate().split(',')[0].trim()
             });
             
-            // 🚀 ADDED: OUT OF STOCK NOTIFICATION LOGIC
             if (isOutOfStock && currentUserPhone) {
                 db.ref('RestockSubscribers/' + selectedProductId + '/' + safePhone).set(true);
             }
 
-            // Notify Admin Device Push Notification
             fetch("https://tagown-store-server.baddalmeherdev.workers.dev/", {
                 method: "POST", 
                 headers: { "Content-Type": "application/json" },
@@ -1635,7 +1669,6 @@
                 })
             }).catch(e => console.log("Admin Notif error:", e));
 
-            // Mini Toast
             let toast = document.createElement('div');
             toast.innerText = "Added to Cart! 🛒";
             toast.style.cssText = "position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:rgba(0,0,0,0.8); color:white; padding:10px 20px; border-radius:20px; font-size:12px; font-weight:bold; z-index:9999;";
@@ -1696,7 +1729,6 @@
 
         function buyFromCart(index) {
             let item = localCart[index];
-            // 🚀 ADDED: Safety check for out of stock items directly from cart
             if (currentProducts[item.id] && currentProducts[item.id].outOfStock) {
                 showPremiumAlert('Out of Stock', 'Sorry, this item is currently out of stock!', 'error');
                 return;
@@ -1760,9 +1792,10 @@
 
             let safePhone = currentUserPhone.replace(/\D/g, '');
             if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
+            // 🚀 MODIFIED: EXACT APP FORMAT
             db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).set({
                 productName: data.title,
-                date: new Date().toLocaleDateString()
+                date: getFormattedDate().split(',')[0].trim()
             });
 
             switchView('viewCheckout');
@@ -1863,7 +1896,8 @@
             const finalPrice = Math.max(baseSellingPrice - appliedDiscount, 0);
 
             const orderId = "ORD-" + Math.floor(100000 + Math.random() * 900000);
-            const date = new Date().toLocaleString();
+            // 🚀 MODIFIED: EXACT APP FORMAT
+            const date = getFormattedDate();
             
             const fullAddress = `${addr1}, ${addr2}, ${city}, ${district}, ${state} - ${pincode}`;
 
@@ -1906,12 +1940,10 @@
 
             db.ref().update(updates).then(() => {
                 
-                // 🚀 ABANDONED CART LOGIC: Remove item if order placed
                 let safePhone = phone.replace(/\D/g, '');
                 if(safePhone.length > 10 && safePhone.startsWith('91')) safePhone = safePhone.substring(safePhone.length - 10);
                 db.ref('AbandonedCarts/' + safePhone + '/' + selectedProductId).remove();
                 
-                // Also remove from local cart
                 let cartIndex = localCart.findIndex(c => c.id === selectedProductId);
                 if(cartIndex > -1) {
                     localCart.splice(cartIndex, 1);
@@ -1983,11 +2015,10 @@
                     snapshot.forEach(child => { orders.push(child.val()); });
                 }
                 
+                // 🚀 MODIFIED: Robust Sorting using custom exact-time parser
                 orders.sort((a, b) => {
-                    let d1 = new Date(a.timestamp);
-                    let d2 = new Date(b.timestamp);
-                    let timeA = isNaN(d1.getTime()) ? 0 : d1.getTime();
-                    let timeB = isNaN(d2.getTime()) ? 0 : d2.getTime();
+                    let timeA = parseOrderDate(a.timestamp);
+                    let timeB = parseOrderDate(b.timestamp);
                     return timeB - timeA; 
                 });
 
@@ -2075,7 +2106,6 @@
                     updates['Orders/' + orderToCancel + '/status'] = "Cancelled";
                     updates['Orders/' + orderToCancel + '/orderStatus'] = "Cancelled";
                     
-                    // 🚀 Move fully to CancelOrderHistory
                     updates['CancelOrderHistory/' + orderToCancel] = order;
                     updates['Orders/' + orderToCancel] = null;
 
@@ -2123,7 +2153,6 @@
                 if(order.shippedLocation) shippedMeta += " • " + order.shippedLocation;
                 document.getElementById('trackShippedMeta').innerText = shippedMeta;
                 
-                // 🚀 FLIPKART STYLE MULTIPLE UPDATES INJECTOR
                 const liveBox = document.getElementById('liveUpdatesContainer');
                 if(order.LiveUpdates) {
                     liveBox.style.display = "block";
@@ -2151,73 +2180,4 @@
                 document.getElementById('liveUpdatesContainer').style.display = "none";
             }
 
-            if(sLower.includes("out") || sLower.includes("deliver") || sLower.includes("complete")) {
-                document.getElementById('tlOut').classList.add('active');
-                let outMeta = (order.outForDeliveryTime || "");
-                if(order.outForDeliveryLocation) outMeta += " • " + order.outForDeliveryLocation;
-                document.getElementById('trackOutMeta').innerText = outMeta;
-            } else {
-                document.getElementById('trackOutMeta').innerText = "";
-            }
-
-            if(sLower.includes("deliver") || sLower.includes("complete")) {
-                document.getElementById('tlDelivered').classList.add('active');
-                let devMeta = (order.deliveredTime || order.completedTimestamp || "");
-                if(devMeta && !isNaN(devMeta)) {
-                    devMeta = new Date(parseInt(devMeta)).toLocaleString();
-                }
-                if(order.deliveredLocation) devMeta += " • " + order.deliveredLocation;
-                document.getElementById('trackDeliveredMeta').innerText = devMeta;
-            } else {
-                document.getElementById('trackDeliveredMeta').innerText = "";
-            }
-
-            document.getElementById('trackingModal').style.display = 'flex';
-        }
-
-        function confirmExitCheckout() {
-            document.getElementById('exitCheckoutModal').style.display = 'none';
-            document.getElementById('pageTitle').innerText = "Product Details";
-            switchView('viewDetail');
-        }
-
-        function switchView(viewId) {
-            document.querySelectorAll('.view-section').forEach(v => v.classList.remove('active-view'));
-            document.getElementById(viewId).classList.add('active-view');
-            window.scrollTo(0,0);
-            
-            if(viewId !== 'viewList') {
-                document.getElementById('bottomNav').classList.add('hide-nav');
-                document.getElementById('btnBack').style.display = 'block';
-                
-                // Show top icons on details and cart
-                if(viewId === 'viewCart' || viewId === 'viewDetail') {
-                    document.getElementById('topIconsContainer').style.display = 'flex';
-                } else {
-                    document.getElementById('topIconsContainer').style.display = 'none';
-                }
-
-                if(viewId === 'viewDetail') document.getElementById('fixedBuyBtn').style.display = 'block';
-                else document.getElementById('fixedBuyBtn').style.display = 'none';
-            } else {
-                document.getElementById('bottomNav').classList.remove('hide-nav');
-                document.getElementById('btnBack').style.display = 'none';
-                document.getElementById('topIconsContainer').style.display = 'flex';
-                document.getElementById('fixedBuyBtn').style.display = 'none';
-                document.getElementById('pageTitle').innerText = "Tagown Official Store";
-                clearInterval(sliderInterval);
-            }
-        }
-
-        function goBack() {
-            if(document.getElementById('viewCheckout').classList.contains('active-view')) {
-                document.getElementById('exitCheckoutModal').style.display = 'flex';
-            } else if(document.getElementById('viewDetail').classList.contains('active-view') || document.getElementById('viewOrders').classList.contains('active-view') || document.getElementById('viewCart').classList.contains('active-view')) {
-                goBackToHome();
-            }
-        }
-        function goBackToHome() { switchView('viewList'); }
-
-    </script>
-</body>
-</html>
+            if(sLower.includes("out") || sLower.includes("deliver") ||
